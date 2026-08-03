@@ -1,5 +1,6 @@
 import { FormEvent, useState } from 'react'
 import type { LandingPageConfig } from '../landingPageConfig'
+import { trackMetaLead } from '../lib/metaPixel'
 import { submitLead } from '../lib/submitLead'
 import { PhoneMockup } from './PhoneMockup'
 
@@ -35,6 +36,7 @@ export function LandingPage({ config }: { config: LandingPageConfig }) {
         willingnessToPay: payment,
         biggestFrustration: frustration.trim(),
       })
+      trackMetaLead()
       setSubmitted(true)
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : 'Something went wrong. Please try again.')
