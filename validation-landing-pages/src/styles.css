@@ -58,6 +58,7 @@ input[type='email'] { height: 50px; padding: 0 15px; }
 textarea { padding: 13px 15px; resize: vertical; }
 input[type='email']:focus, textarea:focus { border-color: var(--accent); }
 .field-error { margin: 7px 0 0; color: #ff8ca2; font-size: 12px; }
+.submit-error { margin: 18px 0 -7px; color: #ff9bad; font-size: 12px; line-height: 1.5; text-align: center; }
 fieldset { padding: 0; margin: 25px 0; border: 0; }
 .choice-group { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
 .choice { min-height: 45px; display: grid; place-items: center; border: 1px solid #45464d; border-radius: 10px; color: #c8c8ce; background: #2c2d34; cursor: pointer; font-size: 13px; font-weight: 600; }
@@ -65,6 +66,7 @@ fieldset { padding: 0; margin: 25px 0; border: 0; }
 .choice--selected { color: white; border-color: var(--accent); background: color-mix(in srgb, var(--accent), #222329 75%); }
 .optional { float: right; color: #85868e; font-size: 11px; font-weight: 400; }
 .submit-button { width: 100%; margin-top: 20px; }
+.submit-button:disabled { cursor: wait; opacity: .72; transform: none; }
 .privacy-note { margin: 11px 0 0; color: #7f8088; font-size: 11px; text-align: center; }
 .success { min-height: 440px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 .success__icon { width: 62px; height: 62px; display: grid; place-items: center; border-radius: 50%; color: var(--accent); background: var(--accent-soft); font-size: 27px; font-weight: 700; }

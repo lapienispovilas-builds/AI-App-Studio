@@ -38,6 +38,14 @@ For direct links such as `/adhd-spending`, `vercel.json` rewrites requests to th
 
 Edit `src/landingPageConfig.ts`. It holds the headline, subheadline, benefits, signup questions, colors, and phone-mockup content for every page.
 
-## Google Forms later
+## Save submissions to Google Sheets
 
-Submissions currently stay in the browser's component state and are not saved. The submit handler in `src/components/LandingPage.tsx` contains a clearly marked `GOOGLE FORMS INTEGRATION PLACEHOLDER` comment. That is where a future request to the form endpoint will be added.
+The existing React form submits to a Google Apps Script web app, which appends each submission to a Google Sheet. Setup instructions and the exact script to copy are in `google-apps-script/Code.gs`.
+
+After deploying the Apps Script web app, create `.env.local` in this project and add:
+
+```bash
+VITE_GOOGLE_APPS_SCRIPT_URL=https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec
+```
+
+Restart `npm run dev` after creating or changing `.env.local`. For Vercel, add the same name and URL under the project's environment variables, then redeploy.

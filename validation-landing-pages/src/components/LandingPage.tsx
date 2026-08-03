@@ -1,5 +1,6 @@
 import { FormEvent, useState } from 'react'
 import type { LandingPageConfig } from '../landingPageConfig'
+import { submitLead } from '../lib/submitLead'
 import { PhoneMockup } from './PhoneMockup'
 
 type PaymentAnswer = 'Yes' | 'Maybe' | 'No'
@@ -9,9 +10,11 @@ export function LandingPage({ config }: { config: LandingPageConfig }) {
   const [payment, setPayment] = useState<PaymentAnswer | ''>('')
   const [frustration, setFrustration] = useState('')
   const [emailError, setEmailError] = useState('')
+  const [submitError, setSubmitError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 
@@ -21,9 +24,23 @@ export function LandingPage({ config }: { config: LandingPageConfig }) {
     }
 
     setEmailError('')
-    // GOOGLE FORMS INTEGRATION PLACEHOLDER:
-    // Send { idea: config.name, email, payment, frustration } to Google Forms here.
-    setSubmitted(true)
+    setSubmitError('')
+    setIsSubmitting(true)
+
+    try {
+      await submitLead({
+        idea: config.name,
+        page: config.path,
+        email: email.trim(),
+        willingnessToPay: payment,
+        biggestFrustration: frustration.trim(),
+      })
+      setSubmitted(true)
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : 'Something went wrong. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -94,7 +111,10 @@ export function LandingPage({ config }: { config: LandingPageConfig }) {
 
               <label htmlFor="frustration">{config.frustrationQuestion} <span className="optional">Optional</span></label>
               <textarea id="frustration" name="frustration" value={frustration} onChange={(event) => setFrustration(event.target.value)} placeholder="Tell us in a sentence..." rows={3} />
-              <button className="primary-button submit-button" type="submit">Join Early Access <span>→</span></button>
+              {submitError && <p className="submit-error" role="alert">{submitError}</p>}
+              <button className="primary-button submit-button" type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Joining…' : 'Join Early Access'} {!isSubmitting && <span>→</span>}
+              </button>
               <p className="privacy-note">Your answers are only used to improve this idea.</p>
             </form>
           )}
