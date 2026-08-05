@@ -1,3 +1,5 @@
+import { assessmentPagesByPath } from './assessmentPageConfig'
+import { AssessmentPage } from './components/AssessmentPage'
 import { HomePage } from './components/HomePage'
 import { LandingPage } from './components/LandingPage'
 import { landingPagesByPath } from './landingPageConfig'
@@ -5,9 +7,11 @@ import { landingPagesByPath } from './landingPageConfig'
 export function App() {
   const path = window.location.pathname.replace(/\/$/, '') || '/'
   const config = landingPagesByPath[path]
+  const assessmentConfig = assessmentPagesByPath[path]
 
   if (path === '/') return <HomePage />
   if (config) return <LandingPage config={config} />
+  if (assessmentConfig) return <AssessmentPage config={assessmentConfig} />
 
   return (
     <main className="not-found">
