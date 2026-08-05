@@ -48,9 +48,9 @@ export function LandingPage({ config }: { config: LandingPageConfig }) {
   return (
     <main className="landing" style={{ '--accent': config.accent, '--accent-soft': config.accentSoft } as React.CSSProperties}>
       <nav className="topbar" aria-label="Main navigation">
-        <a className="brand brand--icon" href="/" aria-label={`${config.name} — view all ideas`}>
-          <img src={config.icon} alt="" />
-        </a>
+        <div className="brand brand--icon" aria-label={config.name}>
+          <img src={config.icon} alt={`${config.name} app icon`} />
+        </div>
         <a className="topbar__link" href="#early-access">Early access</a>
       </nav>
 
@@ -82,7 +82,6 @@ export function LandingPage({ config }: { config: LandingPageConfig }) {
               <div className="success__icon">✓</div>
               <h2>You’re on the list!</h2>
               <p>Thanks for helping shape {config.name}. We’ll be in touch when the first version is ready.</p>
-              <a href="/">Explore the other ideas</a>
             </div>
           ) : (
             <form onSubmit={handleSubmit} noValidate>

@@ -72,13 +72,18 @@ fieldset { padding: 0; margin: 25px 0; border: 0; }
 .success__icon { width: 62px; height: 62px; display: grid; place-items: center; border-radius: 50%; color: var(--accent); background: var(--accent-soft); font-size: 27px; font-weight: 700; }
 .success h2 { margin: 24px 0 8px; font-size: 30px; }
 .success p { max-width: 390px; color: #aaaab2; line-height: 1.6; }
-.success a { margin-top: 15px; color: var(--accent); font-weight: 700; }
 
 .home { min-height: 100vh; max-width: 1180px; margin: auto; padding: 100px 24px; }
 .home__intro { max-width: 680px; margin-bottom: 60px; }
 .home__intro h1 { margin: 0; font-size: clamp(50px, 7vw, 82px); line-height: .98; letter-spacing: -4px; }
 .home__intro > p:last-child { color: #696a72; font-size: 18px; }
+.testing-section + .testing-section { margin-top: 78px; }
+.testing-section__heading { margin-bottom: 22px; }
+.testing-section__heading p { margin: 0 0 5px; color: #85868e; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.testing-section__heading h2 { margin: 0; font-size: 30px; letter-spacing: -1.2px; }
 .idea-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
+.idea-grid--assessments .idea-card { grid-column: span 3; }
+.idea-grid--assessments .idea-card:nth-child(4) { grid-column: span 3; }
 .idea-card { --card-accent: #635bff; --card-soft: #eeecff; grid-column: span 2; min-height: 260px; padding: 26px; border: 1px solid #e4e3df; border-radius: 20px; background: white; text-decoration: none; display: flex; flex-direction: column; transition: transform .18s, box-shadow .18s; }
 .idea-card:nth-child(4) { grid-column: 2 / span 2; }
 .idea-card:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(30,30,40,.08); }
@@ -102,7 +107,7 @@ fieldset { padding: 0; margin: 25px 0; border: 0; }
   .signup-intro { text-align: center; }
   .signup-intro .eyebrow { justify-content: center; }
   .idea-grid { grid-template-columns: 1fr 1fr; }
-  .idea-card, .idea-card:nth-child(4) { grid-column: span 1; }
+  .idea-card, .idea-card:nth-child(4), .idea-grid--assessments .idea-card, .idea-grid--assessments .idea-card:nth-child(4) { grid-column: span 1; }
 }
 
 @media (max-width: 520px) {
