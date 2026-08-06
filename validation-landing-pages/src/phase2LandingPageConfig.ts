@@ -31,7 +31,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
   {
     slug: 'glp1-tracker',
     brand: 'TrackGLP',
-    logo: '/phase2-logos/trackglp.png',
+    logo: '/phase2-logos/trackglp-v2.png',
     heroKicker: 'Built around your real progress',
     headline: 'Finally understand your GLP-1 progress.',
     subheadline: 'Track injections, weight, side effects and habits in one simple place.',
