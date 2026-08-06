@@ -30,11 +30,11 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
   {
     slug: 'glp1-tracker',
     brand: 'TrackGLP',
-    heroKicker: 'Built for real progress',
+    heroKicker: 'Built around your real progress',
     headline: 'Finally understand your GLP-1 progress.',
     subheadline: 'Track injections, weight, side effects and habits in one simple place.',
     cta: 'Get my GLP-1 progress plan',
-    benefits: ['💉 Injection reminders', '📉 Progress tracking', '🥤 Daily habit logging'],
+    benefits: ['Injection reminders', 'Progress tracking', 'Daily habit logging'],
     questions: [
       {
         id: 'biggest_challenge',
@@ -51,8 +51,8 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
       context: 'Week 8',
       rows: [
         { label: 'Weight', value: '−8.2 kg' },
-        { label: 'Injection', value: '✓ Done' },
-        { label: 'Protein Goal', value: '✓ Complete' },
+        { label: 'Injection', value: 'Done' },
+        { label: 'Protein Goal', value: 'Complete' },
         { label: 'Water', value: '2.4L' },
       ],
       footer: "You're on track.",
@@ -90,7 +90,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     mockup: {
       rows: [
         { label: 'Confidence', value: '84%' },
-        { label: "Today's Practice", value: '✓ Complete' },
+        { label: "Today's Practice", value: 'Complete' },
         { label: 'Conversation Score', value: '8.9 / 10' },
         { label: 'Next Challenge', value: 'Ready' },
       ],
@@ -113,7 +113,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     subheadline: 'A simple daily check-in that helps couples communicate better, reconnect emotionally, and build stronger relationships.',
     cta: 'Reconnect with your partner',
     ctaSubtitle: 'Join couples helping shape Together before launch.',
-    benefits: ['❤️ Daily emotional check-ins', '💬 Thoughtful conversation prompts', '📈 Track your relationship over time'],
+    benefits: ['Daily emotional check-ins', 'Thoughtful conversation prompts', 'Track your relationship over time'],
     questions: [
       {
         id: 'relationship_challenge',
@@ -129,8 +129,8 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     mockup: {
       rows: [
         { label: 'Connection Score', value: '91%' },
-        { label: "Today's Check-in", value: '✓ Complete' },
-        { label: 'Partner Mood', value: '😊 Happy' },
+        { label: "Today's Check-in", value: 'Complete' },
+        { label: 'Partner Mood', value: 'Happy' },
         { label: 'Current Streak', value: '18 days' },
       ],
     },
@@ -166,7 +166,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     mockup: {
       rows: [
         { label: 'Current Streak', value: '16 days' },
-        { label: "Today's Check-in", value: '✓ Complete' },
+        { label: "Today's Check-in", value: 'Complete' },
         { label: 'Biggest Trigger', value: 'Stress' },
         { label: 'Control Score', value: '92%' },
       ],
@@ -190,7 +190,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     headline: "Never leave someone wondering if you're safe.",
     subheadline: 'Automatic safety check-ins for the people who matter most.',
     cta: 'Get automatic safety check-ins',
-    benefits: ['📍 Automatic check-ins', '❤️ Peace of mind', '⚡ Takes zero effort'],
+    benefits: ['Automatic check-ins', 'Peace of mind', 'Takes zero effort'],
     questions: [
       { id: 'primary_user', label: 'Who would use this most?', options: ['Me', 'Partner', 'Family'] },
       {
@@ -207,9 +207,9 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     mockup: {
       context: 'Safe Check-in',
       rows: [
-        { label: 'Status', value: '✓ Arrived Home' },
+        { label: 'Status', value: 'Arrived Home' },
         { label: 'Time', value: '8:47 PM' },
-        { label: 'Update', value: 'Partner notified ❤️' },
+        { label: 'Update', value: 'Partner notified' },
         { label: 'Last 30 days', value: '27/27 successful check-ins' },
       ],
       footer: 'Peace of mind',
