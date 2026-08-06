@@ -1,17 +1,17 @@
-import { assessmentPagesByPath } from './assessmentPageConfig'
-import { AssessmentPage } from './components/AssessmentPage'
 import { HomePage } from './components/HomePage'
 import { LandingPage } from './components/LandingPage'
+import { Phase2LandingPage } from './components/Phase2LandingPage'
 import { landingPagesByPath } from './landingPageConfig'
+import { phase2LandingPagesByPath } from './phase2LandingPageConfig'
 
 export function App() {
   const path = window.location.pathname.replace(/\/$/, '') || '/'
   const config = landingPagesByPath[path]
-  const assessmentConfig = assessmentPagesByPath[path]
+  const phase2Config = phase2LandingPagesByPath[path]
 
   if (path === '/') return <HomePage />
   if (config) return <LandingPage config={config} />
-  if (assessmentConfig) return <AssessmentPage config={assessmentConfig} />
+  if (phase2Config) return <Phase2LandingPage config={phase2Config} />
 
   return (
     <main className="not-found">

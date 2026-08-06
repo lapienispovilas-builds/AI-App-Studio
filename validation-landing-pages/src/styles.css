@@ -131,62 +131,81 @@ fieldset { padding: 0; margin: 25px 0; border: 0; }
 
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .primary-button, .idea-card { transition: none; } }
 
-/* Assessment funnels */
-.assessment-page {
-  min-height: 100svh;
-  padding: 20px 14px 14px;
-  color: #17181d;
-  background: #f7f7f5;
+/* Phase 2 validation pages */
+.phase2-page { min-height: 100vh; overflow: hidden; color: #191a20; background: #fbfaf8; }
+.phase2-topbar { width: min(100% - 36px, 1120px); height: 68px; margin: auto; display: flex; align-items: center; }
+.phase2-topbar span { color: var(--accent); font: 800 20px 'Manrope', sans-serif; letter-spacing: -.7px; }
+.phase2-hero { width: min(100% - 36px, 1120px); min-height: 650px; margin: auto; padding: 46px 0 75px; display: grid; grid-template-columns: 1.08fr .92fr; align-items: center; gap: 64px; }
+.phase2-hero__copy { max-width: 650px; }
+.phase2-kicker { margin: 0 0 18px; color: var(--accent); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; }
+.phase2-hero h1 { margin: 0; font-size: clamp(46px, 5.5vw, 74px); line-height: 1; letter-spacing: -4px; }
+.phase2-hero__copy > p:not(.phase2-kicker) { max-width: 570px; margin: 24px 0 30px; color: #686971; font-size: 19px; line-height: 1.55; }
+.phase2-button { min-height: 54px; padding: 0 23px; display: inline-flex; align-items: center; justify-content: center; gap: 18px; border: 0; border-radius: 12px; color: white; background: var(--accent); box-shadow: 0 11px 28px color-mix(in srgb, var(--accent), transparent 75%); text-decoration: none; font-weight: 700; cursor: pointer; }
+.phase2-button span { font-size: 20px; }
+.phase2-button:disabled { cursor: wait; opacity: .7; }
+.phase2-hero__copy small { display: block; margin-top: 12px; color: #85868e; line-height: 1.45; }
+.phase2-phone { position: relative; width: 278px; margin: auto; padding: 9px; border: 5px solid #18191e; border-radius: 42px; background: #18191e; box-shadow: 0 30px 60px rgba(24,25,30,.22); transform: rotate(2deg); }
+.phase2-phone::before { content: ''; position: absolute; z-index: -1; width: 440px; height: 440px; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%; background: var(--accent-soft); }
+.phase2-phone__notch { position: absolute; z-index: 2; top: 14px; left: 50%; width: 84px; height: 22px; transform: translateX(-50%); border-radius: 14px; background: #18191e; }
+.phase2-phone__screen { min-height: 520px; padding: 15px 17px 21px; overflow: hidden; border-radius: 31px; background: linear-gradient(155deg, #fff 42%, var(--accent-soft)); }
+.phase2-phone__status { padding: 0 4px; display: flex; justify-content: space-between; font-size: 9px; font-weight: 700; }
+.phase2-phone__brand { margin: 48px 0 4px; color: var(--accent); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .8px; }
+.phase2-phone h2 { margin: 0 0 18px; font-size: 25px; letter-spacing: -1px; }
+.phase2-phone__card { padding: 5px 14px; border-radius: 18px; background: rgba(255,255,255,.9); box-shadow: 0 10px 28px rgba(45,45,64,.08); }
+.phase2-phone__row { min-height: 62px; display: flex; flex-direction: column; justify-content: center; gap: 4px; border-bottom: 1px solid #ececf0; }
+.phase2-phone__row:last-child { border: 0; }
+.phase2-phone__row span { color: #74757d; font-size: 10px; }
+.phase2-phone__row strong { color: #22232a; font-size: 14px; }
+.phase2-phone__footer { margin: 18px 0 0; color: var(--accent); font-size: 13px; font-weight: 800; text-align: center; }
+.phase2-benefits { width: min(100% - 36px, 920px); margin: 0 auto 96px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.phase2-benefits div { min-height: 88px; padding: 20px; display: grid; place-items: center; border: 1px solid #e7e6e2; border-radius: 16px; background: white; font-weight: 700; text-align: center; }
+.phase2-signup { padding: 96px max(18px, calc((100% - 1040px)/2)); display: grid; grid-template-columns: .8fr 1.2fr; align-items: start; gap: 76px; color: white; background: #18191f; }
+.phase2-signup__intro { padding-top: 24px; }
+.phase2-signup__intro h2 { margin: 0 0 15px; font-size: clamp(38px, 4vw, 52px); line-height: 1.05; letter-spacing: -2px; }
+.phase2-signup__intro > p:last-child { color: #aaaab2; line-height: 1.6; }
+.phase2-form-card { min-height: 520px; padding: 34px; border: 1px solid #393a42; border-radius: 24px; background: #222329; }
+.phase2-form-card form > label, .phase2-form-card legend { margin-bottom: 9px; display: block; color: white; font-size: 13px; font-weight: 700; }
+.phase2-form-card input[type='email'] { width: 100%; height: 50px; padding: 0 15px; border: 1px solid #44454d; border-radius: 10px; outline: none; color: white; background: #2c2d34; }
+.phase2-form-card input[type='email']:focus { border-color: var(--accent); }
+.phase2-form-card fieldset { margin: 25px 0; }
+.phase2-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.phase2-option { min-height: 48px; padding: 10px 12px; display: flex; align-items: center; border: 1px solid #45464d; border-radius: 10px; color: #c8c8ce; background: #2c2d34; cursor: pointer; font-size: 12px; line-height: 1.35; }
+.phase2-option input { position: absolute; opacity: 0; }
+.phase2-option--selected { color: white; border-color: var(--accent); background: color-mix(in srgb, var(--accent), #222329 74%); }
+.phase2-form-error { margin: 0 0 12px; color: #ff9bad; font-size: 12px; line-height: 1.5; }
+.phase2-form-card .phase2-button { width: 100%; }
+.phase2-success { min-height: 450px; display: grid; place-content: center; text-align: center; }
+.phase2-success > span { width: 62px; height: 62px; margin: auto; display: grid; place-items: center; border-radius: 50%; color: var(--accent); background: var(--accent-soft); font-size: 27px; font-weight: 800; }
+.phase2-success h2 { margin: 22px 0 7px; font-size: 30px; }
+.phase2-success p { color: #aaaab2; }
+.phase2-faq { width: min(100% - 36px, 840px); margin: auto; padding: 100px 0 110px; }
+.phase2-faq > h2 { margin: 0 0 38px; font-size: clamp(38px, 5vw, 54px); letter-spacing: -2.2px; }
+.phase2-faq details { border-top: 1px solid #ddddd9; }
+.phase2-faq details:last-child { border-bottom: 1px solid #ddddd9; }
+.phase2-faq summary { padding: 22px 34px 22px 0; cursor: pointer; font-weight: 700; list-style-position: outside; }
+.phase2-faq details p { margin: -7px 0 24px; color: #696a72; line-height: 1.6; }
+
+@media (max-width: 800px) {
+  .phase2-hero { grid-template-columns: 1fr; gap: 52px; text-align: center; }
+  .phase2-hero__copy { margin: auto; }
+  .phase2-hero__copy > p:not(.phase2-kicker) { margin-inline: auto; }
+  .phase2-benefits { margin-bottom: 70px; }
+  .phase2-signup { grid-template-columns: 1fr; gap: 34px; padding-top: 72px; padding-bottom: 72px; }
+  .phase2-signup__intro { padding-top: 0; text-align: center; }
 }
 
-.assessment-header {
-  width: min(100%, 920px);
-  margin: 0 auto 18px;
-  text-align: center;
-}
-
-.assessment-brand {
-  margin: 0 0 12px;
-  color: #625cf6;
-  font: 800 14px 'Manrope', sans-serif;
-  letter-spacing: -.2px;
-}
-
-.assessment-header h1 {
-  max-width: 780px;
-  margin: 0 auto;
-  font-size: clamp(30px, 7.6vw, 52px);
-  line-height: 1.05;
-  letter-spacing: -1.8px;
-}
-
-.assessment-subheadline {
-  max-width: 650px;
-  margin: 12px auto 0;
-  color: #666770;
-  font-size: 16px;
-  line-height: 1.45;
-}
-
-.assessment-embed {
-  width: min(100%, 1040px);
-  height: 84svh;
-  min-height: 560px;
-  margin: 0 auto;
-  overflow: hidden;
-  border: 1px solid #e4e4e0;
-  border-radius: 20px;
-  background: white;
-  box-shadow: 0 16px 50px rgba(24, 25, 30, .08);
-}
-
-.assessment-widget {
-  width: 100%;
-  height: 100%;
-}
-
-@media (min-width: 700px) {
-  .assessment-page { padding: 28px 24px 24px; }
-  .assessment-header { margin-bottom: 22px; }
-  .assessment-embed { height: min(78vh, 850px); }
+@media (max-width: 520px) {
+  .phase2-topbar { height: 58px; }
+  .phase2-hero { padding: 40px 0 64px; }
+  .phase2-hero h1 { font-size: 43px; letter-spacing: -2.5px; }
+  .phase2-hero__copy > p:not(.phase2-kicker) { font-size: 17px; }
+  .phase2-hero .phase2-button { width: 100%; }
+  .phase2-phone { width: 252px; }
+  .phase2-phone::before { width: 350px; height: 350px; }
+  .phase2-benefits { grid-template-columns: 1fr; }
+  .phase2-benefits div { min-height: 68px; }
+  .phase2-signup { padding-inline: 14px; }
+  .phase2-form-card { padding: 24px 17px; border-radius: 18px; }
+  .phase2-options { grid-template-columns: 1fr; }
+  .phase2-faq { padding: 78px 0 85px; }
 }

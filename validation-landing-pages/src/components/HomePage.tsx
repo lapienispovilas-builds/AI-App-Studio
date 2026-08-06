@@ -1,13 +1,13 @@
-import { assessmentPages } from '../assessmentPageConfig'
 import { landingPages } from '../landingPageConfig'
+import { phase2LandingPages } from '../phase2LandingPageConfig'
 
 export function HomePage() {
   return (
     <main className="home">
       <div className="home__intro">
         <p className="eyebrow"><span />Internal testing</p>
-        <h1>Nine experiments.<br />One simple goal.</h1>
-        <p>Choose a landing page or assessment funnel to preview.</p>
+        <h1>Ten experiments.<br />One simple goal.</h1>
+        <p>Choose a validation landing page to preview.</p>
       </div>
 
       <section className="testing-section">
@@ -30,15 +30,15 @@ export function HomePage() {
       <section className="testing-section">
         <div className="testing-section__heading">
           <p>Round 2</p>
-          <h2>Assessment Funnels</h2>
+          <h2>Phase 2 Landing Pages</h2>
         </div>
         <div className="idea-grid idea-grid--assessments">
-          {assessmentPages.map((page, index) => (
-            <a className="idea-card" href={`/${page.slug}`} key={page.slug} style={{ '--card-accent': '#635bff', '--card-soft': '#eeecff' } as React.CSSProperties}>
+          {phase2LandingPages.map((page, index) => (
+            <a className="idea-card" href={`/${page.slug}`} key={page.slug} style={{ '--card-accent': page.accent, '--card-soft': page.accentSoft } as React.CSSProperties}>
               <span className="idea-card__number">0{index + 1}</span>
               <h2>{page.brand}</h2>
               <p>{page.subheadline}</p>
-              <span className="idea-card__link">View assessment →</span>
+              <span className="idea-card__link">View page →</span>
             </a>
           ))}
         </div>

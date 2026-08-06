@@ -1,6 +1,6 @@
 # Validation Landing Pages
 
-Five short, mobile-first landing pages for validating app ideas. The site uses one reusable React component; each idea's copy and mockup data live in one configuration file.
+Ten mobile-first validation pages split into Round 1 and Phase 2. Each round uses one reusable React component driven by configuration data.
 
 ## Install dependencies
 
@@ -14,7 +14,7 @@ npm install
 npm run dev
 ```
 
-Open the URL Vite prints (normally `http://localhost:5173`). The home page links to all five ideas.
+Open the URL Vite prints (normally `http://localhost:5173`). The internal home page links to all ten ideas.
 
 ## Build for production
 
@@ -36,7 +36,10 @@ For direct links such as `/adhd-spending`, `vercel.json` rewrites requests to th
 
 ## Where to edit copy
 
-Edit `src/landingPageConfig.ts`. It holds the headline, subheadline, benefits, signup questions, colors, and phone-mockup content for every page.
+- Round 1: edit `src/landingPageConfig.ts`.
+- Phase 2: edit `src/phase2LandingPageConfig.ts`.
+
+Each configuration holds the route slug, headline, subheadline, CTA, benefits, signup questions, mockup content, FAQs, social proof, and colors.
 
 ## Save submissions to Google Sheets
 
@@ -49,3 +52,5 @@ VITE_GOOGLE_APPS_SCRIPT_URL=https://script.google.com/macros/s/YOUR_DEPLOYMENT_I
 ```
 
 Restart `npm run dev` after creating or changing `.env.local`. For Vercel, add the same name and URL under the project's environment variables, then redeploy.
+
+Phase 2 adds form-answer and UTM columns to the sheet. Copy the latest `google-apps-script/Code.gs` into the spreadsheet's Apps Script editor, then update the existing web-app deployment with a new version. The existing `/exec` URL remains the same.

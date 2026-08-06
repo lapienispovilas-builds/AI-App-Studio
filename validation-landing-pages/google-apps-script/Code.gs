@@ -10,24 +10,41 @@ function doPost(e) {
     const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
     const sheet = spreadsheet.getSheetByName(SHEET_NAME) || spreadsheet.insertSheet(SHEET_NAME);
 
+    const headers = [
+      'Received at',
+      'App',
+      'Page',
+      'Email',
+      'Willingness to pay',
+      'Biggest frustration',
+      'Browser submitted at',
+      'Source URL',
+      'Form answers',
+      'Question 1',
+      'Answer 1',
+      'Question 2',
+      'Answer 2',
+      'Question 3',
+      'Answer 3',
+      'UTM source',
+      'UTM medium',
+      'UTM campaign',
+      'UTM content',
+    ];
+
     if (sheet.getLastRow() === 0) {
-      sheet.appendRow([
-        'Received at',
-        'App',
-        'Page',
-        'Email',
-        'Willingness to pay',
-        'Biggest frustration',
-        'Browser submitted at',
-        'Source URL',
-      ]);
+      sheet.appendRow(headers);
       sheet.setFrozenRows(1);
-      sheet.getRange(1, 1, 1, 8).setFontWeight('bold');
+    } else {
+      sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
     }
+    sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold');
 
     if (!data.email || !isValidEmail(data.email)) {
       return jsonResponse({ ok: false, error: 'A valid email address is required.' });
     }
+
+    const answerEntries = Object.entries(data.answers || {});
 
     sheet.appendRow([
       new Date(),
@@ -38,6 +55,17 @@ function doPost(e) {
       safeCell(data.biggestFrustration),
       safeCell(data.submittedAt),
       safeCell(data.sourceUrl),
+      safeCell(JSON.stringify(data.answers || {})),
+      safeCell(answerEntries[0] && answerEntries[0][0]),
+      safeCell(answerEntries[0] && answerEntries[0][1]),
+      safeCell(answerEntries[1] && answerEntries[1][0]),
+      safeCell(answerEntries[1] && answerEntries[1][1]),
+      safeCell(answerEntries[2] && answerEntries[2][0]),
+      safeCell(answerEntries[2] && answerEntries[2][1]),
+      safeCell(data.utmSource),
+      safeCell(data.utmMedium),
+      safeCell(data.utmCampaign),
+      safeCell(data.utmContent),
     ]);
 
     return jsonResponse({ ok: true });
