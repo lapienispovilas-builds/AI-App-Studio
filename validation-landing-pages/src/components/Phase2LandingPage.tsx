@@ -50,7 +50,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
 
       <section className="phase2-hero">
         <div className="phase2-hero__copy">
-          <p className="phase2-kicker">Built around your real progress</p>
+          <p className="phase2-kicker">{config.heroKicker}</p>
           <h1>{config.headline}</h1>
           <p>{config.subheadline}</p>
           <a className="phase2-button" href="#early-access">{config.cta} <span>→</span></a>

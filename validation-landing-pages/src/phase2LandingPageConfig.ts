@@ -7,6 +7,7 @@ export type Phase2Question = {
 export type Phase2LandingPageConfig = {
   slug: string
   brand: string
+  heroKicker: string
   headline: string
   subheadline: string
   cta: string
@@ -29,6 +30,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
   {
     slug: 'glp1-tracker',
     brand: 'TrackGLP',
+    heroKicker: 'Built for real progress',
     headline: 'Finally understand your GLP-1 progress.',
     subheadline: 'Track injections, weight, side effects and habits in one simple place.',
     cta: 'Get my GLP-1 progress plan',
@@ -68,6 +70,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
   {
     slug: 'dating-again',
     brand: 'NextDate',
+    heroKicker: 'Build confidence before your next date',
     headline: "Dating again shouldn't feel overwhelming.",
     subheadline: 'Practice conversations, rebuild confidence and feel ready before your next date.',
     cta: 'Get my dating confidence plan',
@@ -105,6 +108,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
   {
     slug: 'together',
     brand: 'Together',
+    heroKicker: 'A stronger connection starts here',
     headline: 'Feel closer in just 2 minutes a day.',
     subheadline: 'A simple daily check-in that helps couples communicate better, reconnect emotionally, and build stronger relationships.',
     cta: 'Reconnect with your partner',
@@ -142,6 +146,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
   {
     slug: 'reset',
     brand: 'RESET',
+    heroKicker: 'Private support without judgment',
     headline: 'Take back control of your habits - built for women.',
     subheadline: 'A private daily companion helping women build healthier habits without shame.',
     cta: 'Take control of your habits',
@@ -181,6 +186,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
   {
     slug: 'arrived',
     brand: 'Arrived',
+    heroKicker: 'Peace of mind for the people you love',
     headline: "Never leave someone wondering if you're safe.",
     subheadline: 'Automatic safety check-ins for the people who matter most.',
     cta: 'Get automatic safety check-ins',
