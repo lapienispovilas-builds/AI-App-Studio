@@ -2,6 +2,7 @@ import { FormEvent, useState } from 'react'
 import type { Phase2LandingPageConfig } from '../phase2LandingPageConfig'
 import { trackMetaLead } from '../lib/metaPixel'
 import { submitLead } from '../lib/submitLead'
+import { OutcomeMockup } from './OutcomeMockup'
 
 export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig }) {
   const [email, setEmail] = useState('')
@@ -59,23 +60,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
           {config.ctaSubtitle && <small>{config.ctaSubtitle}</small>}
         </div>
 
-        <div className="phase2-phone" aria-label={`${config.brand} app preview`}>
-          <div className="phase2-phone__notch" />
-          <div className="phase2-phone__screen">
-            <div className="phase2-phone__status"><span>9:41</span><span>● ●</span></div>
-            <div className="phase2-phone__brand"><img src={config.logo} alt="" /><span>{config.brand}</span></div>
-            {config.mockup.context && <h2>{config.mockup.context}</h2>}
-            <p className="phase2-phone__section-label">Your overview</p>
-            <div className="phase2-phone__card">
-              {config.mockup.rows.map((row) => (
-                <div className="phase2-phone__row" key={row.label}>
-                  <span>{row.label}</span><strong>{row.value}</strong>
-                </div>
-              ))}
-            </div>
-            {config.mockup.footer && <p className="phase2-phone__footer">{config.mockup.footer}</p>}
-          </div>
-        </div>
+        <OutcomeMockup config={config.mockup} logo={config.logo} />
       </section>
 
       <section className="phase2-benefits" aria-label="Benefits">

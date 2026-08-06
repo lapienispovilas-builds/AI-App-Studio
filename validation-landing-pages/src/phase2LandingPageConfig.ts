@@ -4,6 +4,34 @@ export type Phase2Question = {
   options: string[]
 }
 
+export type OutcomeMockupIcon =
+  | 'calendar-history'
+  | 'chat-bubble'
+  | 'chat-bubbles'
+  | 'contact-group'
+  | 'down-chart'
+  | 'flame-progress'
+  | 'heart-trend'
+  | 'insight-chart'
+  | 'leaf-check'
+  | 'location-check'
+  | 'medical-drop'
+  | 'scenario-cards'
+  | 'smiley'
+  | 'up-chart'
+  | 'water-nutrition'
+
+export type OutcomeMockupConfig = {
+  appName: string
+  hero: { label: string; value: string; supporting: string }
+  today: { title: string; status: string; secondary: string }
+  features: Array<{ title: string; description: string; icon: OutcomeMockupIcon }>
+  smallMetrics?: Array<{ label: string; value: string }>
+  outcome: string
+  navigation: string[]
+  emotion: string
+}
+
 export type Phase2LandingPageConfig = {
   slug: string
   brand: string
@@ -15,11 +43,7 @@ export type Phase2LandingPageConfig = {
   ctaSubtitle?: string
   benefits: string[]
   questions: Phase2Question[]
-  mockup: {
-    context?: string
-    rows: Array<{ label: string; value: string }>
-    footer?: string
-  }
+  mockup: OutcomeMockupConfig
   faqs: Array<{ question: string; answer: string }>
   socialProof: string
   accent: string
@@ -50,14 +74,21 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
       },
     ],
     mockup: {
-      context: 'Week 8',
-      rows: [
-        { label: 'Weight', value: '−8.2 kg' },
-        { label: 'Injection', value: 'Done' },
-        { label: 'Protein Goal', value: 'Complete' },
-        { label: 'Water', value: '2.4L' },
+      appName: 'TrackGLP',
+      hero: { label: 'Week 8 Progress', value: '-8.2 kg', supporting: "You're on track" },
+      today: { title: "Today's Injection", status: 'Logged', secondary: 'Next dose in 6 days' },
+      features: [
+        { title: 'Injection Tracker', description: 'Track doses and injection sites', icon: 'medical-drop' },
+        { title: 'Progress Timeline', description: 'Follow weight and measurements', icon: 'down-chart' },
+        { title: 'Daily Habits', description: 'Track protein and water', icon: 'water-nutrition' },
       ],
-      footer: "You're on track.",
+      smallMetrics: [
+        { label: 'Protein Goal', value: 'Complete' },
+        { label: 'Water', value: '2.4 L' },
+      ],
+      outcome: 'Everything in one place',
+      navigation: ['Today', 'Progress', 'Habits', 'Profile'],
+      emotion: 'Progress and clarity',
     },
     faqs: [
       { question: "Can't I use Notes?", answer: 'You could — but TrackGLP keeps everything together in one place, built specifically for GLP-1.' },
@@ -91,13 +122,18 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
       },
     ],
     mockup: {
-      rows: [
-        { label: 'Confidence', value: '84%' },
-        { label: "Today's Practice", value: 'Complete' },
-        { label: 'Conversation Score', value: '8.9 / 10' },
-        { label: 'Next Challenge', value: 'Ready' },
+      appName: 'NextDate',
+      hero: { label: 'Dating Confidence', value: '84%', supporting: 'Up 12% this week' },
+      today: { title: "Today's Practice", status: 'Complete', secondary: 'First-date conversation' },
+      features: [
+        { title: 'Conversation Practice', description: 'Practice messages and replies', icon: 'chat-bubbles' },
+        { title: 'Real Date Scenarios', description: 'Prepare for difficult moments', icon: 'scenario-cards' },
+        { title: 'Confidence Tracker', description: 'Watch your progress over time', icon: 'up-chart' },
       ],
-      footer: "You're improving.",
+      smallMetrics: [{ label: 'Conversation Score', value: '8.9 / 10' }],
+      outcome: "Tomorrow's challenge is ready",
+      navigation: ['Coach', 'Practice', 'Progress', 'Profile'],
+      emotion: 'Confidence',
     },
     faqs: [
       { question: 'Why not ChatGPT?', answer: 'NextDate remembers your progress and gives structured coaching — not just one-off answers.' },
@@ -131,13 +167,17 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
       },
     ],
     mockup: {
-      rows: [
-        { label: 'Connection Score', value: '91%' },
-        { label: "Today's Check-in", value: 'Complete' },
-        { label: 'Partner Mood', value: '😊 Happy' },
-        { label: 'Current Streak', value: '18 days' },
+      appName: 'Together',
+      hero: { label: 'Connection Score', value: '92%', supporting: 'Up 8% this month' },
+      today: { title: "Today's Check-in", status: 'Complete', secondary: 'Both partners answered' },
+      features: [
+        { title: 'Daily Mood', description: 'Share how you feel', icon: 'smiley' },
+        { title: 'Conversation Prompt', description: 'One meaningful question each day', icon: 'chat-bubble' },
+        { title: 'Relationship Trends', description: 'See how your connection changes', icon: 'heart-trend' },
       ],
-      footer: "You're connected.",
+      outcome: '18-day connection streak',
+      navigation: ['Today', 'Prompts', 'Trends', 'Profile'],
+      emotion: 'Connection',
     },
     faqs: [
       { question: "Can't we just talk?", answer: 'Of course — but Together makes meaningful conversations easier to start and easier to keep consistent.' },
@@ -170,13 +210,18 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
       },
     ],
     mockup: {
-      rows: [
-        { label: 'Current Streak', value: '16 days' },
-        { label: "Today's Check-in", value: 'Complete' },
-        { label: 'Biggest Trigger', value: 'Stress' },
-        { label: 'Control Score', value: '92%' },
+      appName: 'RESET',
+      hero: { label: 'Recovery Score', value: '91%', supporting: 'Stronger than last week' },
+      today: { title: "Today's Check-in", status: 'Complete', secondary: 'One urge logged' },
+      features: [
+        { title: 'Urge Check-ins', description: 'Log an urge in one tap', icon: 'leaf-check' },
+        { title: 'Trigger Insights', description: 'Understand when patterns happen', icon: 'insight-chart' },
+        { title: 'Recovery Streak', description: 'Celebrate consistent progress', icon: 'flame-progress' },
       ],
-      footer: 'Keep going.',
+      smallMetrics: [{ label: 'Biggest Trigger', value: 'Stress' }],
+      outcome: '16 days stronger',
+      navigation: ['Today', 'Insights', 'Progress', 'Profile'],
+      emotion: 'Control without shame',
     },
     faqs: [
       { question: 'What does RESET actually help with?', answer: 'Compulsive porn use, privately and without judgment.' },
@@ -212,14 +257,17 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
       },
     ],
     mockup: {
-      context: 'Safe Check-in',
-      rows: [
-        { label: 'Status', value: 'Arrived Home' },
-        { label: 'Time', value: '8:47 PM' },
-        { label: 'Update', value: 'Partner notified' },
-        { label: 'Last 30 days', value: '27/27 successful check-ins' },
+      appName: 'Arrived',
+      hero: { label: "Today's Status", value: 'Safe Home', supporting: 'Arrived at 8:42 PM' },
+      today: { title: "Today's Check-in", status: 'Sent automatically', secondary: 'Partner notified' },
+      features: [
+        { title: 'Smart Check-ins', description: 'Automatic arrival detection', icon: 'location-check' },
+        { title: 'Trusted Contacts', description: 'Notify the people you choose', icon: 'contact-group' },
+        { title: 'Arrival History', description: 'Every safe arrival in one timeline', icon: 'calendar-history' },
       ],
-      footer: 'Peace of mind',
+      outcome: '27 safe arrivals this month',
+      navigation: ['Home', 'Contacts', 'History', 'Profile'],
+      emotion: 'Peace of mind',
     },
     faqs: [
       { question: 'Does this replace Find My?', answer: 'No — it complements it.' },
