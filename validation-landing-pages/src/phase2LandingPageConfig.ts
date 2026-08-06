@@ -7,6 +7,7 @@ export type Phase2Question = {
 export type Phase2LandingPageConfig = {
   slug: string
   brand: string
+  logo: string
   heroKicker: string
   headline: string
   subheadline: string
@@ -30,6 +31,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
   {
     slug: 'glp1-tracker',
     brand: 'TrackGLP',
+    logo: '/phase2-logos/trackglp.png',
     heroKicker: 'Built around your real progress',
     headline: 'Finally understand your GLP-1 progress.',
     subheadline: 'Track injections, weight, side effects and habits in one simple place.',
@@ -70,6 +72,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
   {
     slug: 'dating-again',
     brand: 'NextDate',
+    logo: '/phase2-logos/nextdate.png',
     heroKicker: 'Build confidence before your next date',
     headline: "Dating again shouldn't feel overwhelming.",
     subheadline: 'Practice conversations, rebuild confidence and feel ready before your next date.',
@@ -108,6 +111,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
   {
     slug: 'together',
     brand: 'Together',
+    logo: '/phase2-logos/together.png',
     heroKicker: 'A stronger connection starts here',
     headline: 'Feel closer in just 2 minutes a day.',
     subheadline: 'A simple daily check-in that helps couples communicate better, reconnect emotionally, and build stronger relationships.',
@@ -130,9 +134,10 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
       rows: [
         { label: 'Connection Score', value: '91%' },
         { label: "Today's Check-in", value: 'Complete' },
-        { label: 'Partner Mood', value: 'Happy' },
+        { label: 'Partner Mood', value: '😊 Happy' },
         { label: 'Current Streak', value: '18 days' },
       ],
+      footer: "You're connected.",
     },
     faqs: [
       { question: "Can't we just talk?", answer: 'Of course — but Together makes meaningful conversations easier to start and easier to keep consistent.' },
@@ -146,6 +151,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
   {
     slug: 'reset',
     brand: 'RESET',
+    logo: '/phase2-logos/reset.png',
     heroKicker: 'Private support without judgment',
     headline: 'Take back control of your habits - built for women.',
     subheadline: 'A private daily companion helping women build healthier habits without shame.',
@@ -186,6 +192,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
   {
     slug: 'arrived',
     brand: 'Arrived',
+    logo: '/phase2-logos/arrived.png',
     heroKicker: 'Peace of mind for the people you love',
     headline: "Never leave someone wondering if you're safe.",
     subheadline: 'Automatic safety check-ins for the people who matter most.',

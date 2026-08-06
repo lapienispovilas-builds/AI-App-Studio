@@ -46,12 +46,14 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
 
   return (
     <main className="phase2-page" style={{ '--accent': config.accent, '--accent-soft': config.accentSoft } as React.CSSProperties}>
-      <header className="phase2-topbar"><span>{config.brand}</span></header>
+      <header className="phase2-topbar">
+        <div className="phase2-brand"><img src={config.logo} alt="" /><span>{config.brand}</span></div>
+      </header>
 
       <section className="phase2-hero">
         <div className="phase2-hero__copy">
           <p className="phase2-kicker">{config.heroKicker}</p>
-          <h1>{config.headline}</h1>
+          <h1><span>{config.headline}</span></h1>
           <p>{config.subheadline}</p>
           <a className="phase2-button" href="#early-access">{config.cta} <span>→</span></a>
           {config.ctaSubtitle && <small>{config.ctaSubtitle}</small>}
@@ -61,8 +63,9 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
           <div className="phase2-phone__notch" />
           <div className="phase2-phone__screen">
             <div className="phase2-phone__status"><span>9:41</span><span>● ●</span></div>
-            <p className="phase2-phone__brand">{config.brand}</p>
+            <div className="phase2-phone__brand"><img src={config.logo} alt="" /><span>{config.brand}</span></div>
             {config.mockup.context && <h2>{config.mockup.context}</h2>}
+            <p className="phase2-phone__section-label">Your overview</p>
             <div className="phase2-phone__card">
               {config.mockup.rows.map((row) => (
                 <div className="phase2-phone__row" key={row.label}>
@@ -82,7 +85,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
       <section className="phase2-signup" id="early-access">
         <div className="phase2-signup__intro">
           <p className="phase2-kicker">Early access</p>
-          <h2>Join Early Access</h2>
+          <h2>{config.headline}</h2>
           <p>{config.socialProof}</p>
         </div>
 
@@ -146,6 +149,16 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
           ))}
         </div>
       </section>
+
+      <footer className="phase2-footer">
+        <div className="phase2-brand"><img src={config.logo} alt="" /><span>{config.brand}</span></div>
+        <div className="phase2-footer__legal" aria-label="Legal information">
+          <span>Privacy Statement</span>
+          <span>Terms and Conditions</span>
+          <span>DMCA Policy</span>
+          <span>Do Not Sell My Info</span>
+        </div>
+      </footer>
     </main>
   )
 }
