@@ -32,16 +32,27 @@ export type OutcomeMockupConfig = {
   emotion: string
 }
 
+export type LandingBenefitIcon = 'bell' | 'chart' | 'check' | 'clock' | 'heart' | 'lock' | 'message' | 'sparkles' | 'target'
+
+export type LandingBenefit = {
+  title: string
+  description: string
+  icon: LandingBenefitIcon
+}
+
 export type Phase2LandingPageConfig = {
   slug: string
   brand: string
   logo: string
   heroKicker: string
   headline: string
+  heroHighlight: string
   subheadline: string
+  subheadlineHighlight?: string
   cta: string
   ctaSubtitle?: string
-  benefits: string[]
+  ctaReassurance: string
+  benefits: LandingBenefit[]
   questions: Phase2Question[]
   mockup: OutcomeMockupConfig
   faqs: Array<{ question: string; answer: string }>
@@ -58,9 +69,16 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     logo: '/phase2-logos/trackglp-v2.png',
     heroKicker: 'Built around your real progress',
     headline: 'Finally understand your GLP-1 progress.',
+    heroHighlight: 'GLP-1 progress',
     subheadline: 'Track injections, weight, side effects and habits in one simple place.',
+    subheadlineHighlight: 'in one simple place',
     cta: 'Get my GLP-1 progress plan',
-    benefits: ['Injection reminders', 'Progress tracking', 'Daily habit logging'],
+    ctaReassurance: 'No spam. Just early access.',
+    benefits: [
+      { title: 'Injection reminders', description: 'Stay consistent without relying on memory.', icon: 'bell' },
+      { title: 'Progress tracking', description: 'See meaningful changes over time.', icon: 'chart' },
+      { title: 'Daily habit logging', description: 'Keep protein, water and habits together.', icon: 'check' },
+    ],
     questions: [
       {
         id: 'biggest_challenge',
@@ -91,10 +109,10 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
       emotion: 'Progress and clarity',
     },
     faqs: [
-      { question: "Can't I use Notes?", answer: 'You could — but TrackGLP keeps everything together in one place, built specifically for GLP-1.' },
-      { question: 'Why pay for this on top of my medication?', answer: 'Less than the cost of one injection, to make sure every injection actually counts.' },
-      { question: 'Can I export data?', answer: 'Yes.' },
-      { question: 'Will it work with all GLP-1 medications?', answer: 'Yes.' },
+      { question: "Can't I use Notes?", answer: 'You can, and many people start there. TrackGLP is designed to keep injections, progress and daily habits together in a consistent format, so you spend less time searching through separate notes. The goal is a clearer view of your journey at a glance.' },
+      { question: 'Why pay for this on top of my medication?', answer: 'The value is in making your day-to-day tracking simpler and your progress easier to understand. TrackGLP brings the information you already care about into one focused place, helping you get more clarity from the routine you are already following.' },
+      { question: 'Can I export data?', answer: 'Exporting your information is part of the planned experience. The aim is to make it easy to keep a copy or bring a clear summary into conversations with your healthcare professional.' },
+      { question: 'Will it work with all GLP-1 medications?', answer: 'TrackGLP is being designed around common GLP-1 tracking needs rather than one specific brand. It is a progress companion, not a source of medical advice, and treatment decisions should always stay with your healthcare professional.' },
     ],
     socialProof: 'Join early users building the next generation GLP-1 tracker.',
     accent: '#207d67',
@@ -106,9 +124,16 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     logo: '/phase2-logos/nextdate.png',
     heroKicker: 'Build confidence before your next date',
     headline: "Dating again shouldn't feel overwhelming.",
+    heroHighlight: 'Dating again',
     subheadline: 'Practice conversations, rebuild confidence and feel ready before your next date.',
+    subheadlineHighlight: 'rebuild confidence',
     cta: 'Get my dating confidence plan',
-    benefits: ['Practice real conversations', 'Build confidence', 'Feel ready to date again'],
+    ctaReassurance: 'Private practice at your own pace.',
+    benefits: [
+      { title: 'Practice real conversations', description: 'Try replies before the moment feels high-pressure.', icon: 'message' },
+      { title: 'Build confidence', description: 'Improve through small, structured practice.', icon: 'sparkles' },
+      { title: 'Feel ready to date again', description: 'Prepare at a pace that feels right for you.', icon: 'target' },
+    ],
     questions: [
       {
         id: 'hardest_right_now',
@@ -136,9 +161,9 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
       emotion: 'Confidence',
     },
     faqs: [
-      { question: 'Why not ChatGPT?', answer: 'NextDate remembers your progress and gives structured coaching — not just one-off answers.' },
-      { question: 'Will AI judge me?', answer: 'Never. This is a private space to practice — no judgment, ever.' },
-      { question: 'Can beginners use it?', answer: 'Absolutely — NextDate meets you wherever you’re starting from.' },
+      { question: 'Why not ChatGPT?', answer: 'A general chat tool can help with one conversation at a time. NextDate is planned as a focused, structured practice experience that follows your progress and keeps each exercise connected to your confidence goals. You spend less time deciding what to ask and more time actually practising.' },
+      { question: 'Will AI judge me?', answer: 'No. NextDate is intended to be a private place to practise awkward or difficult moments without social pressure. The guidance is supportive and focused on helping you feel more prepared, not grading who you are.' },
+      { question: 'Can beginners use it?', answer: 'Absolutely. The experience is designed to meet you wherever you are starting, including if you have not dated for a long time or simply feel unsure. Practice can begin with small, manageable situations before moving forward.' },
     ],
     socialProof: 'Join early users helping shape the future of dating confidence.',
     accent: '#d45178',
@@ -150,10 +175,17 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     logo: '/phase2-logos/together.png',
     heroKicker: 'A stronger connection starts here',
     headline: 'Feel closer in just 2 minutes a day.',
+    heroHighlight: '2 minutes a day',
     subheadline: 'A simple daily check-in that helps couples communicate better, reconnect emotionally, and build stronger relationships.',
+    subheadlineHighlight: 'reconnect emotionally',
     cta: 'Reconnect with your partner',
     ctaSubtitle: 'Join couples helping shape Together before launch.',
-    benefits: ['Daily emotional check-ins', 'Thoughtful conversation prompts', 'Track your relationship over time'],
+    ctaReassurance: 'A small daily habit for both of you.',
+    benefits: [
+      { title: 'Daily emotional check-ins', description: 'Share how you feel in a couple of minutes.', icon: 'heart' },
+      { title: 'Thoughtful conversation prompts', description: 'Make important conversations easier to begin.', icon: 'message' },
+      { title: 'Track your relationship over time', description: 'Notice patterns in how you connect together.', icon: 'chart' },
+    ],
     questions: [
       {
         id: 'relationship_challenge',
@@ -180,9 +212,9 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
       emotion: 'Connection',
     },
     faqs: [
-      { question: "Can't we just talk?", answer: 'Of course — but Together makes meaningful conversations easier to start and easier to keep consistent.' },
-      { question: 'Will my partner need the app?', answer: 'Yes. Together works best when both partners participate.' },
-      { question: 'Does this replace therapy?', answer: "No. It's a simple daily habit that helps couples stay connected between life's busy moments." },
+      { question: "Can't we just talk?", answer: "Of course — Together isn't meant to replace normal conversations. It's designed to make meaningful conversations easier to start when life gets busy or you don't know what to ask. The goal is a tiny daily habit that keeps important conversations from disappearing." },
+      { question: 'Will my partner need the app?', answer: 'Together works best when both partners participate, because each person contributes to the shared check-in. The experience is intentionally short so it can fit into both routines without becoming another demanding task.' },
+      { question: 'Does this replace therapy?', answer: "No. Together is a simple relationship habit, not therapy or a substitute for professional support. It is designed to help couples stay connected between life's busy moments and make everyday communication easier to begin." },
     ],
     socialProof: 'Join couples helping shape Together before public launch.',
     accent: '#d85886',
@@ -194,9 +226,16 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     logo: '/phase2-logos/reset.png',
     heroKicker: 'Private support without judgment',
     headline: 'Take back control of your habits - built for women.',
+    heroHighlight: 'Take back control',
     subheadline: 'A private daily companion helping women build healthier habits without shame.',
+    subheadlineHighlight: 'private daily companion',
     cta: 'Take control of your habits',
-    benefits: ['Private by design', 'Understand your patterns', 'Small daily wins'],
+    ctaReassurance: 'Private by design.',
+    benefits: [
+      { title: 'Private by design', description: 'A discreet space built around your privacy.', icon: 'lock' },
+      { title: 'Understand your patterns', description: 'Notice when triggers and urges tend to appear.', icon: 'chart' },
+      { title: 'Small daily wins', description: 'Build control through realistic daily actions.', icon: 'check' },
+    ],
     questions: [
       {
         id: 'strongest_urges',
@@ -224,11 +263,11 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
       emotion: 'Control without shame',
     },
     faqs: [
-      { question: 'What does RESET actually help with?', answer: 'Compulsive porn use, privately and without judgment.' },
-      { question: 'Is my data private?', answer: 'Yes. Your entries are private and never shared, sold, or shown to anyone — this app was built specifically to be a safe space.' },
-      { question: 'Will anyone see my entries?', answer: 'Never.' },
-      { question: 'Do I need an account?', answer: 'Only your email for early access.' },
-      { question: 'Do I need to feel like I have a “real problem” to use this?', answer: "No. If it's on your mind at all, that's reason enough." },
+      { question: 'What does RESET actually help with?', answer: 'RESET is being designed to help women understand and change patterns around compulsive porn use, privately and without judgment. Daily check-ins make triggers easier to notice, while small progress markers help you focus on what you can do next.' },
+      { question: 'Is my data private?', answer: 'Privacy is central to the planned product. Personal entries are intended to remain private and not be sold or shown to other people. The goal is to create a space where you can be honest without feeling exposed.' },
+      { question: 'Will anyone see my entries?', answer: 'Your personal check-ins are intended for you, not for a public profile or social feed. RESET is being designed as a discreet personal companion so you can reflect on patterns without an audience.' },
+      { question: 'Do I need an account?', answer: 'For early access, only your email is needed so you can be contacted about the product. The finished experience may use an account to keep your progress available to you, but the setup is intended to remain simple and private.' },
+      { question: 'Do I need to feel like I have a “real problem” to use this?', answer: "No. You do not need a label or a particular level of severity to want more control over a habit. If the pattern is on your mind or does not feel aligned with how you want to live, that is enough reason to explore support." },
     ],
     socialProof: "Help us build RESET together — join early access and shape how it's designed.",
     accent: '#6848c7',
@@ -240,9 +279,16 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     logo: '/phase2-logos/arrived.png',
     heroKicker: 'Peace of mind for the people you love',
     headline: "Never leave someone wondering if you're safe.",
+    heroHighlight: 'safe',
     subheadline: 'Automatic safety check-ins for the people who matter most.',
+    subheadlineHighlight: 'Automatic safety check-ins',
     cta: 'Get automatic safety check-ins',
-    benefits: ['Automatic check-ins', 'Peace of mind', 'Takes zero effort'],
+    ctaReassurance: 'Be first to try it.',
+    benefits: [
+      { title: 'Automatic check-ins', description: 'Share an arrival update without another reminder.', icon: 'check' },
+      { title: 'Peace of mind', description: 'Help the people you trust know you arrived safely.', icon: 'heart' },
+      { title: 'Takes zero effort', description: 'Let the routine happen quietly in the background.', icon: 'clock' },
+    ],
     questions: [
       { id: 'primary_user', label: 'Who would use this most?', options: ['Me', 'Partner', 'Family'] },
       {
@@ -270,9 +316,9 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
       emotion: 'Peace of mind',
     },
     faqs: [
-      { question: 'Does this replace Find My?', answer: 'No — it complements it.' },
-      { question: 'Will it drain my battery?', answer: 'Designed to be lightweight.' },
-      { question: 'Do both people need the app?', answer: 'No.' },
+      { question: 'Does this replace Find My?', answer: 'No — Arrived is intended to complement location-sharing tools rather than replace them. Its focus is the simple outcome people usually care about: knowing that you reached your destination safely without waiting for a manual text.' },
+      { question: 'Will it drain my battery?', answer: 'Arrived is being designed to keep automatic check-ins lightweight rather than constantly demanding attention. Battery efficiency will be an important part of testing the experience before launch.' },
+      { question: 'Do both people need the app?', answer: 'No. The person using Arrived would set up the check-in and choose who should receive the update. Trusted contacts should be able to receive that reassurance without needing to manage the same routine themselves.' },
     ],
     socialProof: 'Join early access and help shape Arrived before launch.',
     accent: '#dd4f73',

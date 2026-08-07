@@ -1,8 +1,29 @@
 import { FormEvent, useState } from 'react'
-import type { Phase2LandingPageConfig } from '../phase2LandingPageConfig'
+import { Bell, ChartNoAxesCombined, Check, Clock3, Heart, LockKeyhole, MessageCircle, Sparkles, Target, UsersRound, type LucideIcon } from 'lucide-react'
+import type { LandingBenefitIcon, Phase2LandingPageConfig } from '../phase2LandingPageConfig'
 import { trackMetaLead } from '../lib/metaPixel'
 import { submitLead } from '../lib/submitLead'
 import { OutcomeMockup } from './OutcomeMockup'
+
+const benefitIcons: Record<LandingBenefitIcon, LucideIcon> = {
+  bell: Bell,
+  chart: ChartNoAxesCombined,
+  check: Check,
+  clock: Clock3,
+  heart: Heart,
+  lock: LockKeyhole,
+  message: MessageCircle,
+  sparkles: Sparkles,
+  target: Target,
+}
+
+function highlightPhrase(text: string, phrase?: string) {
+  if (!phrase) return text
+  const index = text.indexOf(phrase)
+  if (index === -1) return text
+
+  return <>{text.slice(0, index)}<span className="phase2-highlight">{phrase}</span>{text.slice(index + phrase.length)}</>
+}
 
 export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig }) {
   const [email, setEmail] = useState('')
@@ -54,23 +75,27 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
       <section className="phase2-hero">
         <div className="phase2-hero__copy">
           <p className="phase2-kicker">{config.heroKicker}</p>
-          <h1><span>{config.headline}</span></h1>
-          <p>{config.subheadline}</p>
+          <h1>{highlightPhrase(config.headline, config.heroHighlight)}</h1>
+          <p>{highlightPhrase(config.subheadline, config.subheadlineHighlight)}</p>
           <a className="phase2-button" href="#early-access">{config.cta} <span>→</span></a>
-          {config.ctaSubtitle && <small>{config.ctaSubtitle}</small>}
+          <small>{config.ctaSubtitle ?? config.ctaReassurance}</small>
         </div>
 
         <OutcomeMockup config={config.mockup} logo={config.logo} />
       </section>
 
       <section className="phase2-benefits" aria-label="Benefits">
-        {config.benefits.map((benefit) => <div key={benefit}>{benefit}</div>)}
+        {config.benefits.map((benefit) => {
+          const Icon = benefitIcons[benefit.icon]
+          return <article key={benefit.title}><span><Icon size={21} strokeWidth={2.3} /></span><h2>{benefit.title}</h2><p>{benefit.description}</p></article>
+        })}
       </section>
 
       <section className="phase2-signup" id="early-access">
         <div className="phase2-signup__intro">
           <p className="phase2-kicker">Early access</p>
           <h2>{config.headline}</h2>
+          <div className="phase2-proof-badge"><UsersRound size={16} /> Built with early users</div>
           <p>{config.socialProof}</p>
         </div>
 
