@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react'
+import { FormEvent, useRef, useState } from 'react'
 import { Bell, ChartNoAxesCombined, Check, Clock3, Heart, LockKeyhole, MessageCircle, Sparkles, Target, UsersRound, type LucideIcon } from 'lucide-react'
 import type { LandingBenefitIcon, Phase2LandingPageConfig } from '../phase2LandingPageConfig'
 import { trackMetaLead } from '../lib/metaPixel'
@@ -31,6 +31,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
   const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const hasTrackedLead = useRef(false)
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -57,7 +58,9 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
           config.questions.map((question) => [question.label, answers[question.id]]),
         ),
       })
-      trackMetaLead()
+      if (!hasTrackedLead.current) {
+        hasTrackedLead.current = trackMetaLead()
+      }
       setSubmitted(true)
     } catch (submissionError) {
       setError(submissionError instanceof Error ? submissionError.message : 'Something went wrong. Please try again.')

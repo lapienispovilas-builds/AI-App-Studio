@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react'
+import { FormEvent, useRef, useState } from 'react'
 import type { LandingPageConfig } from '../landingPageConfig'
 import { trackMetaLead } from '../lib/metaPixel'
 import { submitLead } from '../lib/submitLead'
@@ -14,6 +14,7 @@ export function LandingPage({ config }: { config: LandingPageConfig }) {
   const [submitError, setSubmitError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const hasTrackedLead = useRef(false)
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -36,7 +37,9 @@ export function LandingPage({ config }: { config: LandingPageConfig }) {
         willingnessToPay: payment,
         biggestFrustration: frustration.trim(),
       })
-      trackMetaLead()
+      if (!hasTrackedLead.current) {
+        hasTrackedLead.current = trackMetaLead()
+      }
       setSubmitted(true)
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : 'Something went wrong. Please try again.')

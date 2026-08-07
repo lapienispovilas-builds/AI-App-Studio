@@ -6,6 +6,11 @@ declare global {
   }
 }
 
-export function trackMetaLead() {
-  window.fbq?.('track', 'Lead')
+export function trackMetaLead(): boolean {
+  if (typeof window !== 'undefined' && window.fbq) {
+    window.fbq('track', 'Lead')
+    return true
+  }
+
+  return false
 }
