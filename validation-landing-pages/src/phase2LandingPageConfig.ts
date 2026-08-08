@@ -175,7 +175,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     trustNote: 'TrackGLP is a progress companion, not a medical device or source of treatment advice. Medication decisions should always be made with a qualified healthcare professional.',
     testimonials: [
       { quote: 'I wanted one place where I can see my injections, symptoms and habits without piecing the week together from different apps. A clear summary from TrackGLP made appointments feel much less stressful.', name: 'Jonathan - early TrackGLP user', descriptor: 'Used to track across notes and reminders' },
-      { quote: 'The number on the scale never told the whole story as I still felt bad. TrackGLP helped me notice how my routine and how I feel changed between doses.', name: 'Chris - earlyTrackGLP user', descriptor: 'Looking for a clearer weekly view' },
+      { quote: 'The number on the scale never told the whole story as I still felt bad. TrackGLP helped me notice how my routine and how I feel changed between doses.', name: 'Chris - earlyTrackGLP user', descriptor: 'Struggled with tracking side effects and habits' },
     ],
     finalCta: { headline: 'Make your GLP-1 journey easier to understand.', headlineHighlight: 'easier to understand', description: 'Join early access, answer two quick questions and help shape the first version of TrackGLP.' },
     questions: [
@@ -322,7 +322,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     trustNote: 'Together is being designed as a private shared space for two partners. It is a daily communication habit, not therapy or a substitute for professional relationship support.',
     testimonials: [
       { quote: 'We talked every day, but most of it was about schedules and chores. Together gave us a tiny prompt that helped to get past the practical stuff without making it feel like homework.', name: 'Jemima - early Together user', descriptor: 'Struggled with meaningful check-ins' },
-      { quote: 'Two minutes was all we needed even on a hectic day. Together helped us bring up the small things before they quietly turned into distance.', name: 'Lisa - early Together user', descriptor: 'Almost gave up on the marriage before Together' },
+      { quote: 'Two minutes was all we needed even on a hectic day. Together helped us bring up the small things before they quietly turned into distance.', name: 'Lisa - early Together user', descriptor: 'Almost gave up on her marriage before Together' },
     ],
     finalCta: { headline: 'Make two minutes for the relationship that matters.', headlineHighlight: 'two minutes', description: 'Join early access and help shape a daily check-in that works for real couples and real schedules.' },
     questions: [
