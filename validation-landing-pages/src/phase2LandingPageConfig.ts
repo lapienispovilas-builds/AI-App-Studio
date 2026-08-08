@@ -56,6 +56,7 @@ export type ProductScreenConfig = {
   chart?: number[]
   action?: string
   notification?: { title: string; body: string }
+  participants?: Array<{ name: string; avatar: string }>
 }
 
 export type LandingScenario = {
@@ -78,6 +79,7 @@ export type LandingTestimonial = {
   quote: string
   name: string
   descriptor: string
+  avatar: string
 }
 
 export type Phase2LandingPageConfig = {
@@ -137,7 +139,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     subheadline: 'Track injections, weight, side effects and habits in one simple place.',
     subheadlineHighlight: 'in one simple place',
     cta: 'Track my GLP-1 progress',
-    ctaReassurance: 'No spam. Just early access.',
+    ctaReassurance: 'Join people helping shape the future of GLP-1 tracking..',
     stickyCta: 'Track my GLP-1 progress',
     benefits: [
       { title: 'Injection reminders', description: 'Stay consistent without relying on memory.', icon: 'bell' },
@@ -174,8 +176,8 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     },
     trustNote: 'TrackGLP is a progress companion, not a medical device or source of treatment advice. Medication decisions should always be made with a qualified healthcare professional.',
     testimonials: [
-      { quote: 'I wanted one place where I can see my injections, symptoms and habits without piecing the week together from different apps. A clear summary from TrackGLP made appointments feel much less stressful.', name: 'Jonathan - early TrackGLP user', descriptor: 'Used to track across notes and reminders' },
-      { quote: 'The number on the scale never told the whole story as I still felt bad. TrackGLP helped me notice how my routine and how I feel changed between doses.', name: 'Chris - earlyTrackGLP user', descriptor: 'Struggled with tracking side effects and habits' },
+      { quote: 'I wanted one place where I can see my injections, symptoms and habits without piecing the week together from different apps. A clear summary from TrackGLP made appointments feel much less stressful.', name: 'Jonathan - early TrackGLP user', descriptor: 'Used to track across notes and reminders', avatar: '/testimonial-avatars/jonathan.jpg' },
+      { quote: 'The number on the scale never told the whole story as I still felt bad. TrackGLP helped me notice how my routine and how I feel changed between doses.', name: 'Chris - earlyTrackGLP user', descriptor: 'Struggled with tracking side effects and habits', avatar: '/testimonial-avatars/chris.jpg' },
     ],
     finalCta: { headline: 'Make your GLP-1 journey easier to understand.', headlineHighlight: 'easier to understand', description: 'Join early access, answer two quick questions and help shape the first version of TrackGLP.' },
     questions: [
@@ -306,7 +308,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     howHighlight: 'keeps you connected',
     howItWorks: [
       { title: 'Open today’s check-in', description: 'Both partners receive one short mood check and one thoughtful question.', screen: { mode: 'question', eyebrow: 'Question of the day', title: 'What do you need more of from us this week?', secondary: 'A two-minute check-in for both of you.', action: 'Answer privately' } },
-      { title: 'Answer in your own words', description: 'Take a quiet moment to share what is easy to miss in everyday conversation.', screen: { mode: 'reply', eyebrow: 'Partner check-in', title: 'Jamie answered', primary: 'Waiting for you', rows: [{ label: 'Jamie’s mood', value: 'Hopeful' }, { label: 'Your mood', value: 'Add yours' }], action: 'Share my answer' } },
+      { title: 'Answer in your own words', description: 'Take a quiet moment to share what is easy to miss in everyday conversation.', screen: { mode: 'reply', eyebrow: 'Partner check-in', title: 'Jemima answered', primary: 'Waiting for Chris', rows: [{ label: 'Jemima’s mood', value: 'Hopeful' }, { label: 'Chris’s mood', value: 'Add yours' }], participants: [{ name: 'Jemima', avatar: '/testimonial-avatars/jemima.jpg' }, { name: 'Chris', avatar: '/testimonial-avatars/chris.jpg' }], action: 'Share my answer' } },
       { title: 'Reconnect together', description: 'See the shared check-in, start a meaningful conversation and notice your connection over time.', screen: { mode: 'insights', eyebrow: 'Weekly connection', title: 'You made space for each other', primary: '6 of 7 days', chart: [48, 62, 56, 72, 69, 84, 91], notification: { title: 'Growing together', body: 'Listening was your strongest theme' } } },
     ],
     difference: {
@@ -321,8 +323,8 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     },
     trustNote: 'Together is being designed as a private shared space for two partners. It is a daily communication habit, not therapy or a substitute for professional relationship support.',
     testimonials: [
-      { quote: 'We talked every day, but most of it was about schedules and chores. Together gave us a tiny prompt that helped to get past the practical stuff without making it feel like homework.', name: 'Jemima - early Together user', descriptor: 'Struggled with meaningful check-ins' },
-      { quote: 'Two minutes was all we needed even on a hectic day. Together helped us bring up the small things before they quietly turned into distance.', name: 'Lisa - early Together user', descriptor: 'Almost gave up on her marriage before Together' },
+      { quote: 'We talked every day, but most of it was about schedules and chores. Together gave us a tiny prompt that helped to get past the practical stuff without making it feel like homework.', name: 'Jemima - early Together user', descriptor: 'Struggled with meaningful check-ins', avatar: '/testimonial-avatars/jemima.jpg' },
+      { quote: 'Two minutes was all we needed even on a hectic day. Together helped us bring up the small things before they quietly turned into distance.', name: 'Lisa - early Together user', descriptor: 'Almost gave up on her marriage before Together', avatar: '/testimonial-avatars/lisa.jpg' },
     ],
     finalCta: { headline: 'Make two minutes for the relationship that matters.', headlineHighlight: 'two minutes', description: 'Join early access and help shape a daily check-in that works for real couples and real schedules.' },
     questions: [
@@ -423,7 +425,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     subheadline: 'Automatic safety check-ins for the people who matter most.',
     subheadlineHighlight: 'Automatic safety check-ins',
     cta: 'Get automatic safety check-ins',
-    ctaReassurance: 'Be first to try it.',
+    ctaReassurance: 'Be safe and help them know you are safe.',
     stickyCta: 'Get automatic safety check-ins',
     benefits: [
       { title: 'Automatic check-ins', description: 'Share an arrival update without another reminder.', icon: 'check' },
@@ -460,8 +462,8 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     },
     trustNote: 'Arrived is a proposed reassurance tool, not an emergency monitoring service or guarantee of personal safety. The finished experience is intended to make sharing deliberate and controlled by the person travelling.',
     testimonials: [
-      { quote: 'I always meant to text when I get home, but after a long night it used to be the first thing I forget. Arrived automatic confirmations saved both me and my family a lot of unnecessary worry.', name: 'Loren - early Arrived user', descriptor: 'Often travels home alone after work' },
-      { quote: 'I used to watch my daughter on a Find My app all evening. Now Arrived allows me to know they made it home safely without having to chase them for a reply.', name: 'Sarah - early Arrived user', descriptor: 'Worried mother' },
+      { quote: 'I always meant to text when I get home, but after a long night it used to be the first thing I forget. Arrived automatic confirmations saved both me and my family a lot of unnecessary worry.', name: 'Loren - early Arrived user', descriptor: 'Often travels home alone after work', avatar: '/testimonial-avatars/loren.jpg' },
+      { quote: 'I used to watch my daughter on a Find My app all evening. Now Arrived allows me to know they made it home safely without having to chase them for a reply.', name: 'Sarah - early Arrived user', descriptor: 'Worried mother', avatar: '/testimonial-avatars/sarah.jpg' },
     ],
     finalCta: { headline: 'Give the people you trust one less reason to worry.', headlineHighlight: 'one less reason to worry', description: 'Join early access and help shape a simpler, more intentional way to confirm you arrived safely.' },
     questions: [

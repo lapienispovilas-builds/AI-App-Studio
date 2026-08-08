@@ -92,7 +92,13 @@ export function ProductScreen({ screen, compact = false }: { screen: ProductScre
           </div>
         )}
 
-        {screen.mode === 'reply' && <div className="story-partners"><span>J</span><i /><span>Y</span></div>}
+        {screen.mode === 'reply' && (
+          <div className="story-partners">
+            {screen.participants?.[0] ? <span><img src={screen.participants[0].avatar} alt={screen.participants[0].name} /></span> : <span>J</span>}
+            <i />
+            {screen.participants?.[1] ? <span><img src={screen.participants[1].avatar} alt={screen.participants[1].name} /></span> : <span>Y</span>}
+          </div>
+        )}
 
         {screen.notification && (
           <div className="story-notification">
