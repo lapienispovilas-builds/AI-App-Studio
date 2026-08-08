@@ -26,6 +26,21 @@ function highlightPhrase(text: string, phrase?: string) {
   return <>{text.slice(0, index)}<span className="phase2-highlight">{phrase}</span>{text.slice(index + phrase.length)}</>
 }
 
+function SectionCta({ brand, text, reassurance }: { brand: string; text: string; reassurance: string }) {
+  return (
+    <section className="phase2-inline-cta">
+      <div>
+        <small>{brand} early access</small>
+        <h2>{text}</h2>
+      </div>
+      <div className="phase2-inline-cta__action">
+        <a className="phase2-button" href="#early-access">Join early access <span>→</span></a>
+        <small>{reassurance}</small>
+      </div>
+    </section>
+  )
+}
+
 export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig }) {
   const [email, setEmail] = useState('')
   const [answers, setAnswers] = useState<Record<string, string>>({})
@@ -108,6 +123,8 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
         </section>
       )}
 
+      {config.problem && <SectionCta brand={config.brand} text={config.sectionCtas.afterProblem} reassurance={config.ctaReassurance} />}
+
       {config.howItWorks && (
         <section className="phase2-how">
           <div className="phase2-section-heading phase2-section-heading--center">
@@ -128,6 +145,8 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
           </div>
         </section>
       )}
+
+      {config.howItWorks && <SectionCta brand={config.brand} text={config.sectionCtas.afterHow} reassurance={config.ctaReassurance} />}
 
       <section className="phase2-benefits" aria-label="Benefits">
         {config.benefits.map((benefit) => {
@@ -235,6 +254,8 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
         </section>
       )}
 
+      {config.testimonials && <SectionCta brand={config.brand} text={config.sectionCtas.afterTestimonials} reassurance={config.ctaReassurance} />}
+
       <section className="phase2-faq">
         <p className="phase2-kicker">FAQ</p>
         <h2>Questions, answered.</h2>
@@ -267,6 +288,8 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
           <span>Do Not Sell My Info</span>
         </div>
       </footer>
+
+      <a className="phase2-sticky-cta" href="#early-access">{config.sectionCtas.sticky} <span>→</span></a>
     </main>
   )
 }

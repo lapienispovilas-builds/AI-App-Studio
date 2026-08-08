@@ -92,6 +92,12 @@ export type Phase2LandingPageConfig = {
   cta: string
   ctaSubtitle?: string
   ctaReassurance: string
+  sectionCtas: {
+    afterProblem: string
+    afterHow: string
+    afterTestimonials: string
+    sticky: string
+  }
   benefits: LandingBenefit[]
   problem?: {
     kicker: string
@@ -137,6 +143,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     subheadlineHighlight: 'in one simple place',
     cta: 'Get my GLP-1 progress plan',
     ctaReassurance: 'No spam. Just early access.',
+    sectionCtas: { afterProblem: 'Track your first week', afterHow: 'Start logging today', afterTestimonials: 'Build your clearer progress view', sticky: 'Join TrackGLP early access' },
     benefits: [
       { title: 'Injection reminders', description: 'Stay consistent without relying on memory.', icon: 'bell' },
       { title: 'Progress tracking', description: 'See meaningful changes over time.', icon: 'chart' },
@@ -230,6 +237,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     subheadlineHighlight: 'rebuild confidence',
     cta: 'Get my dating confidence plan',
     ctaReassurance: 'Private practice at your own pace.',
+    sectionCtas: { afterProblem: 'Rebuild your confidence', afterHow: 'Feel ready for your next date', afterTestimonials: 'Start practising privately', sticky: 'Join NextDate early access' },
     benefits: [
       { title: 'Practice real conversations', description: 'Try replies before the moment feels high-pressure.', icon: 'message' },
       { title: 'Build confidence', description: 'Improve through small, structured practice.', icon: 'sparkles' },
@@ -282,6 +290,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     cta: 'Reconnect with your partner',
     ctaSubtitle: 'Join couples helping shape Together before launch.',
     ctaReassurance: 'A small daily habit for both of you.',
+    sectionCtas: { afterProblem: 'Bring back meaningful conversations', afterHow: 'Start reconnecting', afterTestimonials: 'Make time for each other', sticky: 'Join Together early access' },
     benefits: [
       { title: 'Daily emotional check-ins', description: 'Share how you feel in a couple of minutes.', icon: 'heart' },
       { title: 'Thoughtful conversation prompts', description: 'Make important conversations easier to begin.', icon: 'message' },
@@ -366,6 +375,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     subheadlineHighlight: 'private daily companion',
     cta: 'Take control of your habits',
     ctaReassurance: 'Private by design.',
+    sectionCtas: { afterProblem: 'Understand what triggers you', afterHow: 'Take back control', afterTestimonials: 'Start building a stronger routine', sticky: 'Join RESET early access' },
     benefits: [
       { title: 'Private by design', description: 'A discreet space built around your privacy.', icon: 'lock' },
       { title: 'Understand your patterns', description: 'Notice when triggers and urges tend to appear.', icon: 'chart' },
@@ -419,6 +429,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     subheadlineHighlight: 'Automatic safety check-ins',
     cta: 'Get automatic safety check-ins',
     ctaReassurance: 'Be first to try it.',
+    sectionCtas: { afterProblem: "Don't make them worry", afterHow: 'Protect someone you love', afterTestimonials: 'Give them peace of mind', sticky: 'Join Arrived early access' },
     benefits: [
       { title: 'Automatic check-ins', description: 'Share an arrival update without another reminder.', icon: 'check' },
       { title: 'Peace of mind', description: 'Help the people you trust know you arrived safely.', icon: 'heart' },
