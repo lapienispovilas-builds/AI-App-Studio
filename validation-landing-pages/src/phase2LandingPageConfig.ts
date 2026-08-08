@@ -141,9 +141,9 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     heroHighlight: 'GLP-1 progress',
     subheadline: 'Track injections, weight, side effects and habits in one simple place.',
     subheadlineHighlight: 'in one simple place',
-    cta: 'Get my GLP-1 progress plan',
+    cta: 'Track my GLP-1 progress',
     ctaReassurance: 'No spam. Just early access.',
-    sectionCtas: { afterProblem: 'Track your first week', afterHow: 'Start logging today', afterTestimonials: 'Build your clearer progress view', sticky: 'Join TrackGLP early access' },
+    sectionCtas: { afterProblem: 'Track your first week', afterHow: 'Start logging today', afterTestimonials: 'Join early access', sticky: 'Track my GLP-1 progress' },
     benefits: [
       { title: 'Injection reminders', description: 'Stay consistent without relying on memory.', icon: 'bell' },
       { title: 'Progress tracking', description: 'See meaningful changes over time.', icon: 'chart' },
@@ -287,10 +287,10 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     heroHighlight: '2 minutes a day',
     subheadline: 'A simple daily check-in that helps couples communicate better, reconnect emotionally, and build stronger relationships.',
     subheadlineHighlight: 'reconnect emotionally',
-    cta: 'Reconnect with your partner',
+    cta: 'Start reconnecting',
     ctaSubtitle: 'Join couples helping shape Together before launch.',
     ctaReassurance: 'A small daily habit for both of you.',
-    sectionCtas: { afterProblem: 'Bring back meaningful conversations', afterHow: 'Start reconnecting', afterTestimonials: 'Make time for each other', sticky: 'Join Together early access' },
+    sectionCtas: { afterProblem: 'Bring back meaningful conversations', afterHow: 'Start reconnecting', afterTestimonials: 'Join early access', sticky: 'Start reconnecting' },
     benefits: [
       { title: 'Daily emotional check-ins', description: 'Share how you feel in a couple of minutes.', icon: 'heart' },
       { title: 'Thoughtful conversation prompts', description: 'Make important conversations easier to begin.', icon: 'message' },
@@ -429,7 +429,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     subheadlineHighlight: 'Automatic safety check-ins',
     cta: 'Get automatic safety check-ins',
     ctaReassurance: 'Be first to try it.',
-    sectionCtas: { afterProblem: "Don't make them worry", afterHow: 'Protect someone you love', afterTestimonials: 'Give them peace of mind', sticky: 'Join Arrived early access' },
+    sectionCtas: { afterProblem: 'Protect someone you love', afterHow: "Don't make them worry", afterTestimonials: 'Join early access', sticky: 'Get automatic safety check-ins' },
     benefits: [
       { title: 'Automatic check-ins', description: 'Share an arrival update without another reminder.', icon: 'check' },
       { title: 'Peace of mind', description: 'Help the people you trust know you arrived safely.', icon: 'heart' },

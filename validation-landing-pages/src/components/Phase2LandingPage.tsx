@@ -1,4 +1,4 @@
-import { FormEvent, useRef, useState } from 'react'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 import { ArrowRight, Bell, ChartNoAxesCombined, Check, Clock3, Heart, LockKeyhole, MessageCircle, Quote, Sparkles, Target, UsersRound, type LucideIcon } from 'lucide-react'
 import type { LandingBenefitIcon, Phase2LandingPageConfig } from '../phase2LandingPageConfig'
 import { trackMetaLead } from '../lib/metaPixel'
@@ -31,10 +31,10 @@ function SectionCta({ brand, text, reassurance }: { brand: string; text: string;
     <section className="phase2-inline-cta">
       <div>
         <small>{brand} early access</small>
-        <h2>{text}</h2>
+        <h2>Ready to take the next step with {brand}?</h2>
       </div>
       <div className="phase2-inline-cta__action">
-        <a className="phase2-button" href="#early-access">Join early access <span>→</span></a>
+        <a className="phase2-button" href="#early-access">{text} <span>→</span></a>
         <small>{reassurance}</small>
       </div>
     </section>
@@ -47,7 +47,31 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
   const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [showStickyCta, setShowStickyCta] = useState(false)
   const hasTrackedLead = useRef(false)
+  const heroRef = useRef<HTMLElement>(null)
+  const footerRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    function updateStickyCta() {
+      if (!window.matchMedia('(max-width: 520px)').matches) {
+        setShowStickyCta(false)
+        return
+      }
+
+      const heroHasPassed = (heroRef.current?.getBoundingClientRect().bottom ?? 1) < 0
+      const footerIsNear = (footerRef.current?.getBoundingClientRect().top ?? Infinity) < window.innerHeight + 24
+      setShowStickyCta(heroHasPassed && !footerIsNear)
+    }
+
+    updateStickyCta()
+    window.addEventListener('scroll', updateStickyCta, { passive: true })
+    window.addEventListener('resize', updateStickyCta)
+    return () => {
+      window.removeEventListener('scroll', updateStickyCta)
+      window.removeEventListener('resize', updateStickyCta)
+    }
+  }, [])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -98,7 +122,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
         <div className="phase2-brand"><img src={config.logo} alt="" /><span>{config.brand}</span></div>
       </header>
 
-      <section className="phase2-hero">
+      <section className="phase2-hero" ref={heroRef}>
         <div className="phase2-hero__copy">
           <p className="phase2-kicker">{config.heroKicker}</p>
           <h1>{highlightPhrase(config.headline, config.heroHighlight)}</h1>
@@ -279,7 +303,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
         </section>
       )}
 
-      <footer className="phase2-footer">
+      <footer className="phase2-footer" ref={footerRef}>
         <div className="phase2-brand"><img src={config.logo} alt="" /><span>{config.brand}</span></div>
         <div className="phase2-footer__legal" aria-label="Legal information">
           <span>Privacy Statement</span>
@@ -289,7 +313,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
         </div>
       </footer>
 
-      <a className="phase2-sticky-cta" href="#early-access">{config.sectionCtas.sticky} <span>→</span></a>
+      <a className={showStickyCta ? 'phase2-sticky-cta is-visible' : 'phase2-sticky-cta'} href="#early-access">{config.sectionCtas.sticky} <span>→</span></a>
     </main>
   )
 }
