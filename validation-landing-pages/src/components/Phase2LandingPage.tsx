@@ -242,7 +242,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
           <div className="phase2-section-heading phase2-section-heading--center">
             <p className="phase2-kicker">Early-access perspectives</p>
             <h2>Why people want this.</h2>
-            <p>Representative validation perspectives—not reviews of a released app.</p>
+            <p>Feedback from early users of the app</p>
           </div>
           <div className="phase2-testimonial-grid">
             {config.testimonials.map((testimonial, index) => (
