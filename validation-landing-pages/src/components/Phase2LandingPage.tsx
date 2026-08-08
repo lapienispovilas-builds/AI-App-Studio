@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useRef, useState } from 'react'
-import { ArrowRight, Bell, ChartNoAxesCombined, Check, Clock3, Heart, LockKeyhole, MessageCircle, Quote, Sparkles, Target, UserRound, UsersRound, type LucideIcon } from 'lucide-react'
+import { ArrowRight, Bell, ChartNoAxesCombined, Check, Clock3, Heart, LockKeyhole, MessageCircle, Quote, Sparkles, Target, UsersRound, type LucideIcon } from 'lucide-react'
 import type { LandingBenefitIcon, Phase2LandingPageConfig } from '../phase2LandingPageConfig'
 import { trackMetaLead } from '../lib/metaPixel'
 import { submitLead } from '../lib/submitLead'
@@ -250,7 +250,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
                 <Quote size={28} aria-hidden="true" />
                 <blockquote>“{testimonial.quote}”</blockquote>
                 <footer>
-                  <span className={`phase2-avatar phase2-avatar--${(index % 2) + 1}`} aria-label={`Illustrated avatar for ${testimonial.name}`} role="img"><UserRound size={25} strokeWidth={1.9} /></span>
+                  <img className="phase2-avatar" src={testimonial.avatar} alt={`Portrait of ${testimonial.name.split(' - ')[0]}`} />
                   <div><strong>{testimonial.name}</strong><small>{testimonial.descriptor}</small></div>
                 </footer>
               </article>
