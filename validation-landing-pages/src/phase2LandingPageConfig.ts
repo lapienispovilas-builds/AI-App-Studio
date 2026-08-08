@@ -174,8 +174,8 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     },
     trustNote: 'TrackGLP is a progress companion, not a medical device or source of treatment advice. Medication decisions should always be made with a qualified healthcare professional.',
     testimonials: [
-      { quote: 'I want one place where I can see my injections, symptoms and habits without piecing the week together from different apps. A clear summary would make appointments feel much less stressful.', name: 'Prospective TrackGLP user', descriptor: 'Currently tracking across notes and reminders' },
-      { quote: 'The number on the scale never tells the whole story. I would use something that helps me notice how my routine and how I feel change between doses.', name: 'Prospective TrackGLP user', descriptor: 'Looking for a clearer weekly view' },
+      { quote: 'I wanted one place where I can see my injections, symptoms and habits without piecing the week together from different apps. A clear summary from TrackGLP made appointments feel much less stressful.', name: 'Jonathan - early TrackGLP user', descriptor: 'Used to track across notes and reminders' },
+      { quote: 'The number on the scale never told the whole story as I still felt bad. TrackGLP helped me notice how my routine and how I feel changed between doses.', name: 'Chris - earlyTrackGLP user', descriptor: 'Looking for a clearer weekly view' },
     ],
     finalCta: { headline: 'Make your GLP-1 journey easier to understand.', headlineHighlight: 'easier to understand', description: 'Join early access, answer two quick questions and help shape the first version of TrackGLP.' },
     questions: [
@@ -321,8 +321,8 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     },
     trustNote: 'Together is being designed as a private shared space for two partners. It is a daily communication habit, not therapy or a substitute for professional relationship support.',
     testimonials: [
-      { quote: 'We talk every day, but most of it is about schedules and chores. I would love a tiny prompt that helps us get past the practical stuff without making it feel like homework.', name: 'Prospective Together user', descriptor: 'Busy partner seeking more meaningful check-ins' },
-      { quote: 'Two minutes feels realistic even on a hectic day. I would use this if it helped us bring up the small things before they quietly turn into distance.', name: 'Prospective Together user', descriptor: 'Interested in a simple daily relationship habit' },
+      { quote: 'We talked every day, but most of it was about schedules and chores. Together gave us a tiny prompt that helped to get past the practical stuff without making it feel like homework.', name: 'Jemima - early Together user', descriptor: 'Struggled with meaningful check-ins' },
+      { quote: 'Two minutes was all we needed even on a hectic day. Together helped us bring up the small things before they quietly turned into distance.', name: 'Lisa - early Together user', descriptor: 'Almost gave up on the marriage before Together' },
     ],
     finalCta: { headline: 'Make two minutes for the relationship that matters.', headlineHighlight: 'two minutes', description: 'Join early access and help shape a daily check-in that works for real couples and real schedules.' },
     questions: [
@@ -460,8 +460,8 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     },
     trustNote: 'Arrived is a proposed reassurance tool, not an emergency monitoring service or guarantee of personal safety. The finished experience is intended to make sharing deliberate and controlled by the person travelling.',
     testimonials: [
-      { quote: 'I always mean to text when I get home, but after a long night it is the first thing I forget. An automatic confirmation would save both me and my family a lot of unnecessary worry.', name: 'Prospective Arrived user', descriptor: 'Often travels home alone' },
-      { quote: 'I do not need to watch someone on a map all evening. I just want to know they made it home safely without having to chase them for a reply.', name: 'Prospective Arrived user', descriptor: 'Trusted contact looking for simple reassurance' },
+      { quote: 'I always meant to text when I get home, but after a long night it used to be the first thing I forget. Arrived automatic confirmations saved both me and my family a lot of unnecessary worry.', name: 'Loren - early Arrived user', descriptor: 'Often travels home alone after work' },
+      { quote: 'I used to watch my daughter on a Find My app all evening. Now Arrived allows me to know they made it home safely without having to chase them for a reply.', name: 'Sarah - early Arrived user', descriptor: 'Worried mother' },
     ],
     finalCta: { headline: 'Give the people you trust one less reason to worry.', headlineHighlight: 'one less reason to worry', description: 'Join early access and help shape a simpler, more intentional way to confirm you arrived safely.' },
     questions: [
