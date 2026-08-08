@@ -452,7 +452,12 @@ fieldset { padding: 0; margin: 25px 0; border: 0; }
 .phase2-testimonial-grid > article > svg { color: var(--accent); }
 .phase2-testimonial-grid blockquote { margin: 26px 0 34px; font-size: clamp(19px, 2vw, 24px); font-weight: 700; line-height: 1.45; letter-spacing: -.5px; }
 .phase2-testimonial-grid footer { margin-top: auto; display: flex; align-items: center; gap: 12px; }
-.phase2-avatar { flex: 0 0 auto; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; color: white; background: var(--accent); font-size: 12px; font-weight: 800; }
+.phase2-avatar { position: relative; flex: 0 0 auto; width: 48px; height: 48px; overflow: hidden; display: grid; place-items: end center; border: 2px solid color-mix(in srgb, var(--accent), white 55%); border-radius: 50%; color: color-mix(in srgb, var(--accent), #191a20 22%); background: linear-gradient(145deg, color-mix(in srgb, var(--accent-soft), white 8%), white); box-shadow: 0 7px 15px color-mix(in srgb, var(--accent), transparent 82%); }
+.phase2-avatar svg { position: relative; z-index: 2; width: 31px; height: 31px; margin-bottom: 3px; fill: color-mix(in srgb, var(--accent-soft), white 25%); }
+.phase2-avatar::before { content: ''; position: absolute; width: 35px; height: 19px; left: 6px; bottom: -8px; border-radius: 50% 50% 0 0; background: color-mix(in srgb, var(--accent), white 48%); }
+.phase2-avatar--2 { color: color-mix(in srgb, var(--accent-deep, var(--accent)), #191a20 28%); background: linear-gradient(145deg, white, color-mix(in srgb, var(--accent-soft), white 2%)); }
+.phase2-avatar--2::before { left: 4px; width: 39px; background: color-mix(in srgb, var(--accent), white 66%); }
+.phase2-avatar--2 svg { transform: translateX(1px) scale(.94); }
 .phase2-testimonial-grid footer div { display: flex; flex-direction: column; gap: 3px; }
 .phase2-testimonial-grid footer strong { font-size: 13px; }
 .phase2-testimonial-grid footer small { color: #74757d; font-size: 11px; line-height: 1.35; }
