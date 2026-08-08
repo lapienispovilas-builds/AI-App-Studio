@@ -1,9 +1,10 @@
 import { FormEvent, useRef, useState } from 'react'
-import { Bell, ChartNoAxesCombined, Check, Clock3, Heart, LockKeyhole, MessageCircle, Sparkles, Target, UsersRound, type LucideIcon } from 'lucide-react'
+import { ArrowRight, Bell, ChartNoAxesCombined, Check, Clock3, Heart, LockKeyhole, MessageCircle, Quote, Sparkles, Target, UsersRound, type LucideIcon } from 'lucide-react'
 import type { LandingBenefitIcon, Phase2LandingPageConfig } from '../phase2LandingPageConfig'
 import { trackMetaLead } from '../lib/metaPixel'
 import { submitLead } from '../lib/submitLead'
 import { OutcomeMockup } from './OutcomeMockup'
+import { ProductScreen, ScenarioStory } from './ProductStoryMockups'
 
 const benefitIcons: Record<LandingBenefitIcon, LucideIcon> = {
   bell: Bell,
@@ -70,7 +71,14 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
   }
 
   return (
-    <main className="phase2-page" style={{ '--accent': config.accent, '--accent-soft': config.accentSoft } as React.CSSProperties}>
+    <main className="phase2-page" style={{
+      '--accent': config.accent,
+      '--accent-soft': config.accentSoft,
+      '--accent-deep': config.accentDeep ?? config.accent,
+      '--page-text': config.textColor ?? '#191a20',
+      '--muted-text': config.mutedText ?? '#6f7078',
+      '--page-background': config.pageBackground ?? '#ffffff',
+    } as React.CSSProperties}>
       <header className="phase2-topbar">
         <div className="phase2-brand"><img src={config.logo} alt="" /><span>{config.brand}</span></div>
       </header>
@@ -87,6 +95,40 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
         <OutcomeMockup config={config.mockup} logo={config.logo} />
       </section>
 
+      {config.problem && (
+        <section className="phase2-problem">
+          <div className="phase2-section-heading">
+            <p className="phase2-kicker">{config.problem.kicker}</p>
+            <h2>{highlightPhrase(config.problem.headline, config.problem.headlineHighlight)}</h2>
+            <p>{config.problem.description}</p>
+          </div>
+          <div className="phase2-situations">
+            {config.problem.situations.map((situation) => <ScenarioStory key={situation.title} scenario={situation} />)}
+          </div>
+        </section>
+      )}
+
+      {config.howItWorks && (
+        <section className="phase2-how">
+          <div className="phase2-section-heading phase2-section-heading--center">
+            <p className="phase2-kicker">How it works</p>
+            <h2>{highlightPhrase(config.howHeadline ?? 'From today’s action to a clearer outcome.', config.howHighlight)}</h2>
+          </div>
+          <div className="phase2-steps">
+            {config.howItWorks.map((step, index) => (
+              <article key={step.title}>
+                <div className="phase2-step-copy">
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <h3>{step.title}</h3>
+                  <p>{step.description}</p>
+                </div>
+                <ProductScreen screen={step.screen} />
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
       <section className="phase2-benefits" aria-label="Benefits">
         {config.benefits.map((benefit) => {
           const Icon = benefitIcons[benefit.icon]
@@ -94,12 +136,33 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
         })}
       </section>
 
+      {config.difference && (
+        <section className="phase2-difference">
+          <div className="phase2-difference__copy">
+            <p className="phase2-kicker">Why this is different</p>
+            <h2>{highlightPhrase(config.difference.headline, config.difference.headlineHighlight)}</h2>
+            <p>{config.difference.description}</p>
+          </div>
+          <div className="phase2-comparisons">
+            {config.difference.comparisons.map((comparison) => (
+              <article key={comparison.current}>
+                <span>{comparison.current}</span>
+                <ArrowRight size={18} />
+                <strong>{comparison.better}</strong>
+              </article>
+            ))}
+          </div>
+          {config.howItWorks?.[2] && <div className="phase2-difference__phone"><ProductScreen screen={config.howItWorks[2].screen} /></div>}
+        </section>
+      )}
+
       <section className="phase2-signup" id="early-access">
         <div className="phase2-signup__intro">
           <p className="phase2-kicker">Early access</p>
           <h2>{config.headline}</h2>
           <div className="phase2-proof-badge"><UsersRound size={16} /> Built with early users</div>
           <p>{config.socialProof}</p>
+          {config.trustNote && <p className="phase2-trust-note"><LockKeyhole size={16} /> <span>{config.trustNote}</span></p>}
         </div>
 
         <div className="phase2-form-card">
@@ -150,6 +213,28 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
         </div>
       </section>
 
+      {config.testimonials && (
+        <section className="phase2-testimonials">
+          <div className="phase2-section-heading phase2-section-heading--center">
+            <p className="phase2-kicker">Early-access perspectives</p>
+            <h2>Why people want this.</h2>
+            <p>Representative validation perspectives—not reviews of a released app.</p>
+          </div>
+          <div className="phase2-testimonial-grid">
+            {config.testimonials.map((testimonial, index) => (
+              <article key={`${testimonial.name}-${index}`}>
+                <Quote size={28} aria-hidden="true" />
+                <blockquote>“{testimonial.quote}”</blockquote>
+                <footer>
+                  <span className="phase2-avatar" aria-hidden="true">{index + 1}</span>
+                  <div><strong>{testimonial.name}</strong><small>{testimonial.descriptor}</small></div>
+                </footer>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
       <section className="phase2-faq">
         <p className="phase2-kicker">FAQ</p>
         <h2>Questions, answered.</h2>
@@ -162,6 +247,16 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
           ))}
         </div>
       </section>
+
+      {config.finalCta && (
+        <section className="phase2-final-cta">
+          <img src={config.logo} alt="" />
+          <h2>{highlightPhrase(config.finalCta.headline, config.finalCta.headlineHighlight)}</h2>
+          <p>{config.finalCta.description}</p>
+          <a className="phase2-button" href="#early-access">{config.cta} <span>→</span></a>
+          <small>{config.ctaReassurance}</small>
+        </section>
+      )}
 
       <footer className="phase2-footer">
         <div className="phase2-brand"><img src={config.logo} alt="" /><span>{config.brand}</span></div>
