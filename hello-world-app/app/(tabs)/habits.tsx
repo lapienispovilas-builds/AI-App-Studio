@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import {
+  Alert,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -20,6 +21,11 @@ import { DateTimeField } from '@/components/track-glp/date-time-field';
 import { ProgressBar } from '@/components/track-glp/progress-bar';
 import { TrackGLPColors } from '@/constants/track-glp-theme';
 import { useAppData } from '@/context/app-data-context';
+import {
+  cancelReminder,
+  ensureNotificationPermission,
+  replaceDailyReminder,
+} from '@/services/local-notifications';
 import type { HabitKind } from '@/types/app-data';
 import { getTodayHabits } from '@/utils/app-data-helpers';
 
@@ -104,16 +110,68 @@ export default function HabitsScreen() {
     setEditingHabit(null);
   }
 
-  function toggleReminder(kind: HabitKind, enabled: boolean) {
-    updateReminderSettings(kind === 'water' ? { waterEnabled: enabled } : { proteinEnabled: enabled });
+  async function applyHabitReminder(kind: HabitKind, enabled: boolean, time: string) {
+    const idKey = kind === 'water' ? 'waterNotificationId' : 'proteinNotificationId';
+    const enabledKey = kind === 'water' ? 'waterEnabled' : 'proteinEnabled';
+    const timeKey = kind === 'water' ? 'waterTime' : 'proteinTime';
+    const currentId = data.reminders[idKey];
+
+    if (!enabled) {
+      await cancelReminder(currentId);
+      updateReminderSettings({ [enabledKey]: false, [timeKey]: time, [idKey]: undefined });
+      return true;
+    }
+
+    const granted = await ensureNotificationPermission(!data.reminders.notificationPermissionDenied);
+    if (!granted) {
+      updateReminderSettings({ [enabledKey]: false, [idKey]: undefined, notificationPermissionDenied: true });
+      Alert.alert('Notifications unavailable', 'Notifications are disabled in iPhone Settings.');
+      return false;
+    }
+
+    const notificationId = await replaceDailyReminder(kind, currentId, time);
+    if (!notificationId) {
+      updateReminderSettings({ [enabledKey]: false, [idKey]: undefined });
+      Alert.alert('Reminder not scheduled', 'This device could not schedule the reminder. Please try again.');
+      return false;
+    }
+
+    updateReminderSettings({
+      [enabledKey]: true,
+      [timeKey]: time,
+      [idKey]: notificationId,
+      notificationPermissionDenied: false,
+    });
+    return true;
   }
 
-  function saveReminder(setting: ReminderSetting) {
+  async function toggleReminder(kind: HabitKind, enabled: boolean) {
+    const time = kind === 'water'
+      ? data.reminders.waterTime ?? '10:00'
+      : data.reminders.proteinTime ?? '13:00';
+    try {
+      await applyHabitReminder(kind, enabled, time);
+    } catch (error) {
+      if (__DEV__) console.warn(`Could not update ${kind} reminder.`, error);
+      updateReminderSettings(kind === 'water'
+        ? { waterEnabled: false, waterNotificationId: undefined }
+        : { proteinEnabled: false, proteinNotificationId: undefined });
+      Alert.alert('Reminder not scheduled', 'This device could not update the reminder. Please try again.');
+    }
+  }
+
+  async function saveReminder(setting: ReminderSetting) {
     const time = dateToTimeString(setting.time);
-    updateReminderSettings(setting.habit === 'water'
-      ? { waterEnabled: setting.enabled, waterTime: time }
-      : { proteinEnabled: setting.enabled, proteinTime: time });
-    setEditingReminder(null);
+    try {
+      await applyHabitReminder(setting.habit, setting.enabled, time);
+      setEditingReminder(null);
+    } catch (error) {
+      if (__DEV__) console.warn(`Could not save ${setting.habit} reminder.`, error);
+      updateReminderSettings(setting.habit === 'water'
+        ? { waterEnabled: false, waterNotificationId: undefined }
+        : { proteinEnabled: false, proteinNotificationId: undefined });
+      Alert.alert('Reminder not scheduled', 'This device could not update the reminder. Please try again.');
+    }
   }
 
   return (
@@ -150,7 +208,7 @@ export default function HabitsScreen() {
 
         <View style={styles.reminderSection}>
           <Text style={styles.sectionTitle}>Daily reminders</Text>
-          <Text style={styles.reminderDisclosure}>Settings are saved locally. OS alerts will be connected in a later build.</Text>
+          <Text style={styles.reminderDisclosure}>Reminders use your device&apos;s local time.</Text>
           <View style={styles.reminderList}>
             {(Object.keys(reminders) as HabitKind[]).map((kind, index) => (
               <ReminderRow
@@ -372,7 +430,7 @@ function ReminderModal({ setting, onClose, onSave }: ReminderModalProps) {
             />
           </View>
 
-          <Text style={styles.notificationNote}>This saves your preference locally. OS notification scheduling is the next implementation step.</Text>
+          <Text style={styles.notificationNote}>Your reminder is scheduled locally on this device.</Text>
 
           <TouchableOpacity style={styles.saveButton} onPress={() => onSave(draft)} accessibilityRole="button">
             <Text style={styles.saveButtonText}>Save reminder</Text>

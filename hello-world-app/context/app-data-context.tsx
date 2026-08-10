@@ -2,6 +2,7 @@ import { createContext, type PropsWithChildren, useCallback, useContext, useEffe
 
 import { createDefaultAppData, defaultAppData } from '@/data/default-app-data';
 import { loadAppData, saveAppData } from '@/storage/app-storage';
+import { cancelReminder } from '@/services/local-notifications';
 import type {
   AppData,
   DailyHabitEntry,
@@ -146,7 +147,16 @@ export function AppDataProvider({ children }: PropsWithChildren) {
   }, []);
 
   const resetAppData = useCallback(() => {
-    setData(createDefaultAppData());
+    setData((current) => {
+      void Promise.all([
+        cancelReminder(current.reminders.doseNotificationId),
+        cancelReminder(current.reminders.waterNotificationId),
+        cancelReminder(current.reminders.proteinNotificationId),
+      ]).catch((error) => {
+        if (__DEV__) console.warn('Could not clear local reminders while resetting app data.', error);
+      });
+      return createDefaultAppData();
+    });
   }, []);
 
   const completeOnboarding = useCallback(async (answers: OnboardingData) => {
@@ -192,8 +202,11 @@ export function AppDataProvider({ children }: PropsWithChildren) {
       dailyHabits: [{ date: toDateKey(), waterAmount: 0, proteinAmount: 0, waterGoal: 2500, proteinGoal: 100 }],
       reminders: {
         doseEnabled: false,
+        doseTime: '09:00',
         waterEnabled: false,
+        waterTime: '10:00',
         proteinEnabled: false,
+        proteinTime: '13:00',
       },
     };
     const saved = await saveAppData(nextData);

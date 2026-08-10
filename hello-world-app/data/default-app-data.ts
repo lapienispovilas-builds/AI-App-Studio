@@ -47,7 +47,7 @@ export const defaultAppData: AppData = {
   ],
   reminders: {
     doseEnabled: true,
-    doseTime: '08:00',
+    doseTime: '09:00',
     waterEnabled: true,
     waterTime: '10:00',
     proteinEnabled: true,

@@ -1,12 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useMemo, useState } from 'react';
 import {
+  Alert,
   KeyboardAvoidingView,
   Modal,
   Platform,
   Pressable,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   TextInput,
   TouchableOpacity,
@@ -18,6 +20,11 @@ import { DashboardCard } from '@/components/track-glp/dashboard-card';
 import { DateTimeField } from '@/components/track-glp/date-time-field';
 import { TrackGLPColors } from '@/constants/track-glp-theme';
 import { useAppData } from '@/context/app-data-context';
+import {
+  cancelReminder,
+  ensureNotificationPermission,
+  replaceDoseReminder,
+} from '@/services/local-notifications';
 import type { DoseEntry, DosePlan } from '@/types/app-data';
 import { getDoseTiming, parseStoredDate } from '@/utils/app-data-helpers';
 
@@ -31,9 +38,10 @@ function formatDose(amount: number, unit: string) {
 }
 
 export default function DosesScreen() {
-  const { data, addDoseEntry, updateDosePlan, updateProfile } = useAppData();
+  const { data, addDoseEntry, updateDosePlan, updateProfile, updateReminderSettings } = useAppData();
   const [isLogDoseOpen, setIsLogDoseOpen] = useState(false);
   const [isScheduleOpen, setIsScheduleOpen] = useState(false);
+  const [isDoseReminderOpen, setIsDoseReminderOpen] = useState(false);
   const [selectedSite, setSelectedSite] = useState<InjectionSite | null>(null);
   const [doseDate, setDoseDate] = useState(new Date());
 
@@ -65,18 +73,88 @@ export default function DosesScreen() {
     setIsLogDoseOpen(false);
   }
 
-  function saveSchedule(values: ScheduleDraft) {
+  async function saveSchedule(values: ScheduleDraft) {
     const nextDate = getNextScheduledDate(values.scheduledDay, new Date(), false);
-    updateDosePlan({
+    const updatedPlan: DosePlan = {
       medication: values.medication,
       dose: values.dose,
       unit: 'mg',
       frequency: 'weekly',
       scheduledDay: values.scheduledDay,
       nextDoseDate: nextDate.toISOString(),
-    });
+    };
+    updateDosePlan(updatedPlan);
     updateProfile({ glp1Status: 'started', currentMedication: values.medication });
+
+    if (data.reminders.doseEnabled) {
+      try {
+        const notificationId = await replaceDoseReminder(
+          data.reminders.doseNotificationId,
+          updatedPlan,
+          data.reminders.doseTime ?? '09:00',
+        );
+        updateReminderSettings({
+          doseEnabled: Boolean(notificationId),
+          doseNotificationId: notificationId ?? undefined,
+        });
+      } catch (error) {
+        if (__DEV__) console.warn('Could not reschedule dose reminder.', error);
+        updateReminderSettings({ doseEnabled: false, doseNotificationId: undefined });
+        Alert.alert('Reminder not scheduled', 'Your schedule was saved, but the reminder could not be updated.');
+      }
+    }
     setIsScheduleOpen(false);
+  }
+
+  async function applyDoseReminder(enabled: boolean, time: string) {
+    if (!enabled) {
+      await cancelReminder(data.reminders.doseNotificationId);
+      updateReminderSettings({ doseEnabled: false, doseTime: time, doseNotificationId: undefined });
+      return true;
+    }
+
+    const granted = await ensureNotificationPermission(!data.reminders.notificationPermissionDenied);
+    if (!granted) {
+      updateReminderSettings({ doseEnabled: false, doseNotificationId: undefined, notificationPermissionDenied: true });
+      Alert.alert('Notifications unavailable', 'Notifications are disabled in iPhone Settings.');
+      return false;
+    }
+
+    const notificationId = await replaceDoseReminder(data.reminders.doseNotificationId, plan, time);
+    if (!notificationId) {
+      updateReminderSettings({ doseEnabled: false, doseNotificationId: undefined });
+      Alert.alert('Reminder not scheduled', 'This device could not schedule the reminder. Please try again.');
+      return false;
+    }
+
+    updateReminderSettings({
+      doseEnabled: true,
+      doseTime: time,
+      doseNotificationId: notificationId,
+      notificationPermissionDenied: false,
+    });
+    return true;
+  }
+
+  async function toggleDoseReminder(enabled: boolean) {
+    try {
+      await applyDoseReminder(enabled, data.reminders.doseTime ?? '09:00');
+    } catch (error) {
+      if (__DEV__) console.warn('Could not update dose reminder.', error);
+      updateReminderSettings({ doseEnabled: false, doseNotificationId: undefined });
+      Alert.alert('Reminder not scheduled', 'This device could not update the reminder. Please try again.');
+    }
+  }
+
+  async function saveDoseReminder(time: Date, enabled: boolean) {
+    try {
+      await applyDoseReminder(enabled, dateToTimeString(time));
+      setIsDoseReminderOpen(false);
+    } catch (error) {
+      if (__DEV__) console.warn('Could not save dose reminder.', error);
+      updateReminderSettings({ doseEnabled: false, doseNotificationId: undefined });
+      Alert.alert('Reminder not scheduled', 'This device could not update the reminder. Please try again.');
+    }
   }
 
   return (
@@ -129,6 +207,25 @@ export default function DosesScreen() {
                 <ScheduleRow label="Next dose" value={nextDoseDate ? formatShortDate(nextDoseDate) : 'Not scheduled'} last />
               </View>
 
+              <View style={styles.doseReminderRow}>
+                <TouchableOpacity style={styles.doseReminderMain} onPress={() => setIsDoseReminderOpen(true)} accessibilityRole="button">
+                  <View style={styles.doseReminderIcon}>
+                    <Ionicons name="notifications-outline" size={18} color={TrackGLPColors.plum} />
+                  </View>
+                  <View style={styles.doseReminderCopy}>
+                    <Text style={styles.doseReminderTitle}>Dose reminder</Text>
+                    <Text style={styles.doseReminderTime}>{plan.scheduledDay} · {formatTime(timeStringToDate(data.reminders.doseTime ?? '09:00'))}</Text>
+                  </View>
+                </TouchableOpacity>
+                <Switch
+                  value={data.reminders.doseEnabled}
+                  onValueChange={toggleDoseReminder}
+                  trackColor={{ false: '#D8CFDA', true: '#A681B2' }}
+                  thumbColor={data.reminders.doseEnabled ? TrackGLPColors.plum : '#FFFFFF'}
+                  accessibilityLabel="Dose reminder enabled"
+                />
+              </View>
+
               <TouchableOpacity style={styles.editButton} onPress={() => setIsScheduleOpen(true)} accessibilityRole="button">
                 <Text style={styles.editButtonText}>Edit schedule</Text>
                 <Ionicons name="chevron-forward" size={16} color={TrackGLPColors.plum} />
@@ -178,7 +275,69 @@ export default function DosesScreen() {
         onClose={() => setIsScheduleOpen(false)}
         onSave={saveSchedule}
       />
+
+      <DoseReminderModal
+        visible={isDoseReminderOpen}
+        initialTime={timeStringToDate(data.reminders.doseTime ?? '09:00')}
+        initialEnabled={data.reminders.doseEnabled}
+        onClose={() => setIsDoseReminderOpen(false)}
+        onSave={saveDoseReminder}
+      />
     </SafeAreaView>
+  );
+}
+
+function DoseReminderModal({
+  visible,
+  initialTime,
+  initialEnabled,
+  onClose,
+  onSave,
+}: {
+  visible: boolean;
+  initialTime: Date;
+  initialEnabled: boolean;
+  onClose: () => void;
+  onSave: (time: Date, enabled: boolean) => void;
+}) {
+  const [time, setTime] = useState(initialTime);
+  const [enabled, setEnabled] = useState(initialEnabled);
+
+  function prepare() {
+    setTime(initialTime);
+    setEnabled(initialEnabled);
+  }
+
+  return (
+    <Modal visible={visible} transparent animationType="slide" onShow={prepare} onRequestClose={onClose}>
+      <View style={styles.modalRoot}>
+        <Pressable style={styles.backdrop} onPress={onClose} accessibilityLabel="Close dose reminder" />
+        <SafeAreaView style={styles.sheet} edges={['bottom']}>
+          <SheetHeader title="Dose reminder" onClose={onClose} />
+          <View style={styles.fieldGroup}>
+            <Text style={styles.fieldLabel}>Remind me at</Text>
+            <DateTimeField value={time} onChange={setTime} mode="time" />
+          </View>
+          <View style={styles.reminderToggleRow}>
+            <View>
+              <Text style={styles.reminderToggleTitle}>Reminder enabled</Text>
+              <Text style={styles.reminderToggleSupport}>{enabled ? 'On' : 'Off'}</Text>
+            </View>
+            <Switch
+              value={enabled}
+              onValueChange={setEnabled}
+              trackColor={{ false: '#D8CFDA', true: '#A681B2' }}
+              thumbColor={enabled ? TrackGLPColors.plum : '#FFFFFF'}
+              accessibilityLabel="Reminder enabled"
+            />
+          </View>
+          <Text style={styles.notificationNote}>Your weekly reminder is scheduled locally on this device.</Text>
+          <TouchableOpacity style={styles.saveButton} onPress={() => onSave(time, enabled)} accessibilityRole="button">
+            <Text style={styles.saveButtonText}>Save reminder</Text>
+          </TouchableOpacity>
+        </SafeAreaView>
+      </View>
+    </Modal>
   );
 }
 
@@ -357,6 +516,21 @@ function formatHistoryDate(value: string) {
   return date.toDateString() === new Date().toDateString() ? 'Today' : formatShortDate(date);
 }
 
+function formatTime(value: Date) {
+  return value.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+}
+
+function timeStringToDate(value: string) {
+  const [hours = 9, minutes = 0] = value.split(':').map(Number);
+  const date = new Date();
+  date.setHours(hours, minutes, 0, 0);
+  return date;
+}
+
+function dateToTimeString(value: Date) {
+  return `${String(value.getHours()).padStart(2, '0')}:${String(value.getMinutes()).padStart(2, '0')}`;
+}
+
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: TrackGLPColors.background },
   content: { paddingHorizontal: 20, paddingTop: 18, paddingBottom: 28, gap: 16 },
@@ -384,6 +558,12 @@ const styles = StyleSheet.create({
   rowBorder: { borderBottomWidth: 1, borderBottomColor: '#EEE8EF' },
   scheduleLabel: { color: TrackGLPColors.muted, fontSize: 12 },
   scheduleValue: { color: TrackGLPColors.text, fontSize: 13, fontWeight: '700', textAlign: 'right', marginLeft: 16 },
+  doseReminderRow: { flexDirection: 'row', alignItems: 'center', borderTopWidth: 1, borderTopColor: '#EEE8EF', marginTop: 8, paddingTop: 13 },
+  doseReminderMain: { flex: 1, minWidth: 0, flexDirection: 'row', alignItems: 'center' },
+  doseReminderIcon: { width: 36, height: 36, borderRadius: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: TrackGLPColors.lavender },
+  doseReminderCopy: { flex: 1, minWidth: 0, marginLeft: 10 },
+  doseReminderTitle: { color: TrackGLPColors.text, fontSize: 13, fontWeight: '700' },
+  doseReminderTime: { color: TrackGLPColors.muted, fontSize: 10, marginTop: 2 },
   editButton: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingTop: 14, gap: 3 },
   editButtonText: { color: TrackGLPColors.plum, fontSize: 13, fontWeight: '700' },
   historySection: { marginTop: 3 },
@@ -436,6 +616,10 @@ const styles = StyleSheet.create({
   doseInputWrap: { flexDirection: 'row', alignItems: 'center', backgroundColor: TrackGLPColors.card, borderWidth: 1, borderColor: TrackGLPColors.border, borderRadius: 16, paddingHorizontal: 15 },
   doseInput: { flex: 1, color: TrackGLPColors.text, fontSize: 22, fontWeight: '700', paddingVertical: 12 },
   inputUnit: { color: TrackGLPColors.muted, fontSize: 14, fontWeight: '700' },
+  reminderToggleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: TrackGLPColors.card, borderWidth: 1, borderColor: TrackGLPColors.border, borderRadius: 16, padding: 14, marginTop: 18 },
+  reminderToggleTitle: { color: TrackGLPColors.text, fontSize: 14, fontWeight: '700' },
+  reminderToggleSupport: { color: TrackGLPColors.muted, fontSize: 11, marginTop: 2 },
+  notificationNote: { color: TrackGLPColors.muted, fontSize: 10, lineHeight: 15, marginTop: 12 },
   saveButton: { backgroundColor: TrackGLPColors.plum, borderRadius: 15, alignItems: 'center', paddingVertical: 15, marginTop: 22 },
   disabledButton: { opacity: 0.38 },
   saveButtonText: { color: '#FFFFFF', fontSize: 15, fontWeight: '700' },

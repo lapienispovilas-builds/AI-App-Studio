@@ -75,12 +75,16 @@ export interface DailyHabitEntry {
 }
 
 export interface ReminderSettings {
+  notificationPermissionDenied?: boolean;
   doseEnabled: boolean;
   doseTime?: string;
+  doseNotificationId?: string;
   waterEnabled: boolean;
   waterTime?: string;
+  waterNotificationId?: string;
   proteinEnabled: boolean;
   proteinTime?: string;
+  proteinNotificationId?: string;
 }
 
 export interface AppData {
