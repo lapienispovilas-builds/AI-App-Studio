@@ -27,7 +27,10 @@ export function WeightTrendChart({
   const valueRange = Math.max(maxValue - minValue, 1);
   const plotTop = 16;
   const plotBottom = height - 40;
-  const points = values.map((value) => plotTop + ((maxValue - value) / valueRange) * (plotBottom - plotTop));
+  const points = values.map((value) => values.length === 1
+    ? (plotTop + plotBottom) / 2
+    : plotTop + ((maxValue - value) / valueRange) * (plotBottom - plotTop));
+  const pointOffset = values.length === 1 ? lineWidth / 2 : 0;
 
   return (
     <View
@@ -54,7 +57,7 @@ export function WeightTrendChart({
           );
         })}
         {points.map((point, index) => (
-          <View key={`dot-${index}`} style={[styles.dot, { left: index * stepWidth - 3, top: point - 3 }]} />
+          <View key={`dot-${index}`} style={[styles.dot, { left: pointOffset + index * stepWidth - 3, top: point - 3 }]} />
         ))}
       </View>
     </View>
