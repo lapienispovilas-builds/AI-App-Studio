@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "hello-world-app",
-    "slug": "hello-world-app",
+    "name": "TrackGLP",
+    "slug": "track-glp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "helloworldapp",
-    "userInterfaceStyle": "automatic",
+    "scheme": "trackglp",
+    "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
