@@ -1,120 +1,81 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
+  KeyboardAvoidingView,
   Modal,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { DashboardCard } from '@/components/track-glp/dashboard-card';
+import { DateTimeField } from '@/components/track-glp/date-time-field';
 import { TrackGLPColors } from '@/constants/track-glp-theme';
+import { useAppData } from '@/context/app-data-context';
+import type { DoseEntry, DosePlan } from '@/types/app-data';
 
-type MedicationRoute = 'injection' | 'oral' | 'other';
-type DoseStatus = 'logged';
 type InjectionSite = 'Abdomen' | 'Thigh' | 'Upper arm';
 
-type MedicationPlan = {
-  id: string;
-  name: string;
-  route: MedicationRoute;
-  dose: {
-    amount: number;
-    unit: 'mg' | 'mcg' | 'mL';
-  };
-  schedule: {
-    cadence: 'daily' | 'weekly' | 'custom';
-    label: string;
-  };
-};
+const medications = ['Ozempic', 'Wegovy', 'Mounjaro', 'Zepbound', 'Other'];
+const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-type NextDose = {
-  fullDateLabel: string;
-  shortDateLabel: string;
-  daysRemaining: number;
-};
-
-type DoseLog = {
-  id: string;
-  dateLabel: string;
-  medicationId: string;
-  medicationName: string;
-  doseAmount: number;
-  doseUnit: MedicationPlan['dose']['unit'];
-  status: DoseStatus;
-  administrationSite?: InjectionSite;
-};
-
-const medicationPlan: MedicationPlan = {
-  id: 'ozempic-weekly',
-  name: 'Ozempic',
-  route: 'injection',
-  dose: { amount: 1, unit: 'mg' },
-  schedule: { cadence: 'weekly', label: 'Every Thursday' },
-};
-
-const initialNextDose: NextDose = {
-  fullDateLabel: 'Thursday, Aug 13',
-  shortDateLabel: 'Aug 13',
-  daysRemaining: 3,
-};
-
-const nextDoseAfterLogging: NextDose = {
-  fullDateLabel: 'Thursday, Aug 20',
-  shortDateLabel: 'Aug 20',
-  daysRemaining: 10,
-};
-
-const initialDoseHistory: DoseLog[] = [
-  createDoseLog('2026-08-06', 'Aug 6', 1),
-  createDoseLog('2026-07-30', 'Jul 30', 1),
-  createDoseLog('2026-07-23', 'Jul 23', 0.5),
-  createDoseLog('2026-07-16', 'Jul 16', 0.5),
-];
-
-function createDoseLog(id: string, dateLabel: string, amount: number, administrationSite?: InjectionSite): DoseLog {
-  return {
-    id,
-    dateLabel,
-    medicationId: medicationPlan.id,
-    medicationName: medicationPlan.name,
-    doseAmount: amount,
-    doseUnit: medicationPlan.dose.unit,
-    status: 'logged',
-    administrationSite,
-  };
-}
-
-function formatDose(amount: number, doseUnit: DoseLog['doseUnit']) {
-  return `${amount.toFixed(amount % 1 === 0 ? 1 : 1)} ${doseUnit}`;
+function formatDose(amount: number, unit: string) {
+  return `${amount.toFixed(1)} ${unit}`;
 }
 
 export default function DosesScreen() {
-  const [nextDose, setNextDose] = useState(initialNextDose);
-  const [doseHistory, setDoseHistory] = useState(initialDoseHistory);
+  const { data, addDoseEntry, updateDosePlan, updateProfile } = useAppData();
   const [isLogDoseOpen, setIsLogDoseOpen] = useState(false);
+  const [isScheduleOpen, setIsScheduleOpen] = useState(false);
   const [selectedSite, setSelectedSite] = useState<InjectionSite | null>(null);
+  const [doseDate, setDoseDate] = useState(new Date());
+
+  const plan = data.dosePlan;
+  const hasPlan = Boolean(plan.medication && plan.dose > 0 && plan.scheduledDay);
+  const doseHistory = useMemo(
+    () => [...data.doseEntries].filter(isValidDoseEntry).sort((a, b) => Date.parse(b.date) - Date.parse(a.date)),
+    [data.doseEntries],
+  );
+  const nextDoseDate = parseDate(plan.nextDoseDate);
+  const timing = nextDoseDate ? getDoseTiming(nextDoseDate) : null;
 
   function openLogDose() {
     setSelectedSite(null);
+    setDoseDate(new Date());
     setIsLogDoseOpen(true);
   }
 
   function logDose() {
-    const newDose = createDoseLog(
-      `logged-${Date.now()}`,
-      'Today',
-      medicationPlan.dose.amount,
-      selectedSite ?? undefined,
-    );
-
-    setDoseHistory((currentHistory) => [newDose, ...currentHistory]);
-    setNextDose(nextDoseAfterLogging);
+    if (!hasPlan) return;
+    addDoseEntry({
+      medication: plan.medication,
+      dose: plan.dose,
+      unit: plan.unit,
+      date: doseDate.toISOString(),
+      injectionSite: selectedSite ?? undefined,
+    });
+    updateDosePlan({ nextDoseDate: getNextScheduledDate(plan.scheduledDay!, doseDate, true).toISOString() });
     setIsLogDoseOpen(false);
+  }
+
+  function saveSchedule(values: ScheduleDraft) {
+    const nextDate = getNextScheduledDate(values.scheduledDay, new Date(), false);
+    updateDosePlan({
+      medication: values.medication,
+      dose: values.dose,
+      unit: 'mg',
+      frequency: 'weekly',
+      scheduledDay: values.scheduledDay,
+      nextDoseDate: nextDate.toISOString(),
+    });
+    updateProfile({ glp1Status: 'started', currentMedication: values.medication });
+    setIsScheduleOpen(false);
   }
 
   return (
@@ -122,72 +83,99 @@ export default function DosesScreen() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <Text style={styles.screenTitle}>Doses</Text>
 
-        <DashboardCard style={styles.nextDoseCard}>
-          <View style={styles.nextDoseTopRow}>
-            <View style={styles.medicationIcon}>
-              <Ionicons name="medical-outline" size={25} color={TrackGLPColors.plum} />
-            </View>
-            <View style={styles.countdownBadge}>
-              <Text style={styles.countdownNumber}>{nextDose.daysRemaining}</Text>
-              <Text style={styles.countdownLabel}>DAYS</Text>
-            </View>
-          </View>
+        {hasPlan ? (
+          <>
+            <DashboardCard style={styles.nextDoseCard}>
+              <View style={styles.nextDoseTopRow}>
+                <View style={styles.medicationIcon}>
+                  <Ionicons name="medical-outline" size={25} color={TrackGLPColors.plum} />
+                </View>
+                <View style={styles.countdownBadge}>
+                  <Text style={styles.countdownNumber}>{timing?.badgeNumber ?? '—'}</Text>
+                  <Text style={styles.countdownLabel}>DAYS</Text>
+                </View>
+              </View>
 
-          <Text style={styles.nextDoseEyebrow}>NEXT DOSE</Text>
-          <View style={styles.medicationLine}>
-            <Text style={styles.medicationName}>{medicationPlan.name}</Text>
-            <Text style={styles.dosePill}>{formatDose(medicationPlan.dose.amount, medicationPlan.dose.unit)}</Text>
-          </View>
-          <Text style={styles.nextDoseDate}>{nextDose.fullDateLabel}</Text>
-          <Text style={styles.nextDoseTiming}>{nextDose.daysRemaining} days remaining</Text>
+              <Text style={styles.nextDoseEyebrow}>NEXT DOSE</Text>
+              <View style={styles.medicationLine}>
+                <Text style={styles.medicationName}>{plan.medication}</Text>
+                <Text style={styles.dosePill}>{formatDose(plan.dose, plan.unit)}</Text>
+              </View>
+              <Text style={styles.nextDoseDate}>{nextDoseDate ? formatFullDate(nextDoseDate) : 'Not scheduled'}</Text>
+              <Text style={styles.nextDoseTiming}>{timing?.label ?? 'Choose a schedule to see the next date'}</Text>
 
-          <TouchableOpacity style={styles.primaryButton} onPress={openLogDose} accessibilityRole="button">
-            <Ionicons name="add" size={20} color="#FFFFFF" />
-            <Text style={styles.primaryButtonText}>Log dose</Text>
-          </TouchableOpacity>
-        </DashboardCard>
+              <TouchableOpacity style={styles.primaryButton} onPress={openLogDose} accessibilityRole="button">
+                <Ionicons name="add" size={20} color="#FFFFFF" />
+                <Text style={styles.primaryButtonText}>Log dose</Text>
+              </TouchableOpacity>
+            </DashboardCard>
 
-        <DashboardCard>
-          <View style={styles.cardHeader}>
-            <View>
-              <Text style={styles.cardEyebrow}>CURRENT PLAN</Text>
-              <Text style={styles.cardTitle}>Your schedule</Text>
-            </View>
-            <View style={styles.scheduleIcon}>
-              <Ionicons name="calendar-outline" size={21} color={TrackGLPColors.plum} />
-            </View>
-          </View>
+            <DashboardCard>
+              <View style={styles.cardHeader}>
+                <View>
+                  <Text style={styles.cardEyebrow}>CURRENT PLAN</Text>
+                  <Text style={styles.cardTitle}>Your schedule</Text>
+                </View>
+                <View style={styles.scheduleIcon}>
+                  <Ionicons name="calendar-outline" size={21} color={TrackGLPColors.plum} />
+                </View>
+              </View>
 
-          <View style={styles.scheduleList}>
-            <ScheduleRow label="Medication" value={medicationPlan.name} />
-            <ScheduleRow label="Dose" value={formatDose(medicationPlan.dose.amount, medicationPlan.dose.unit)} />
-            <ScheduleRow label="Schedule" value={medicationPlan.schedule.label} />
-            <ScheduleRow label="Next dose" value={nextDose.shortDateLabel} last />
-          </View>
+              <View style={styles.scheduleList}>
+                <ScheduleRow label="Medication" value={plan.medication} />
+                <ScheduleRow label="Dose" value={formatDose(plan.dose, plan.unit)} />
+                <ScheduleRow label="Schedule" value={`Every ${plan.scheduledDay}`} />
+                <ScheduleRow label="Next dose" value={nextDoseDate ? formatShortDate(nextDoseDate) : 'Not scheduled'} last />
+              </View>
 
-          <TouchableOpacity style={styles.editButton} accessibilityRole="button">
-            <Text style={styles.editButtonText}>Edit schedule</Text>
-            <Ionicons name="chevron-forward" size={16} color={TrackGLPColors.plum} />
-          </TouchableOpacity>
-        </DashboardCard>
+              <TouchableOpacity style={styles.editButton} onPress={() => setIsScheduleOpen(true)} accessibilityRole="button">
+                <Text style={styles.editButtonText}>Edit schedule</Text>
+                <Ionicons name="chevron-forward" size={16} color={TrackGLPColors.plum} />
+              </TouchableOpacity>
+            </DashboardCard>
+          </>
+        ) : (
+          <DashboardCard style={styles.emptySetupCard}>
+            <View style={styles.emptySetupIcon}><Ionicons name="calendar-outline" size={27} color={TrackGLPColors.plum} /></View>
+            <Text style={styles.emptySetupTitle}>Dose tracking</Text>
+            <Text style={styles.emptySetupCopy}>{"You haven't set up a medication yet."}</Text>
+            <TouchableOpacity style={styles.primaryButton} onPress={() => setIsScheduleOpen(true)} accessibilityRole="button">
+              <Text style={styles.primaryButtonText}>Set up medication</Text>
+            </TouchableOpacity>
+          </DashboardCard>
+        )}
 
         <View style={styles.historySection}>
           <Text style={styles.sectionTitle}>Dose history</Text>
           <View style={styles.historyList}>
-            {doseHistory.map((dose, index) => (
+            {doseHistory.length > 0 ? doseHistory.map((dose, index) => (
               <DoseHistoryRow key={dose.id} dose={dose} last={index === doseHistory.length - 1} />
-            ))}
+            )) : (
+              <View style={styles.emptyHistory}>
+                <Text style={styles.emptyHistoryTitle}>No doses logged yet</Text>
+                <Text style={styles.emptyHistoryCopy}>Your logged doses will appear here.</Text>
+              </View>
+            )}
           </View>
         </View>
       </ScrollView>
 
       <LogDoseModal
         visible={isLogDoseOpen}
-        medication={medicationPlan}
+        plan={plan}
         selectedSite={selectedSite}
-        onSelectSite={setSelectedSite}
+        doseDate={doseDate}
+        onSelectSite={(site) => setSelectedSite((current) => current === site ? null : site)}
+        onChangeDate={setDoseDate}
         onClose={() => setIsLogDoseOpen(false)}
         onLog={logDose}
+      />
+
+      <ScheduleModal
+        visible={isScheduleOpen}
+        plan={hasPlan ? plan : null}
+        onClose={() => setIsScheduleOpen(false)}
+        onSave={saveSchedule}
       />
     </SafeAreaView>
   );
@@ -202,18 +190,18 @@ function ScheduleRow({ label, value, last }: { label: string; value: string; las
   );
 }
 
-function DoseHistoryRow({ dose, last }: { dose: DoseLog; last: boolean }) {
+function DoseHistoryRow({ dose, last }: { dose: DoseEntry; last: boolean }) {
   return (
     <View style={[styles.historyRow, !last && styles.rowBorder]}>
       <View style={styles.historyDateBlock}>
         <View style={styles.historyDot} />
-        <Text style={styles.historyDate}>{dose.dateLabel}</Text>
+        <Text style={styles.historyDate}>{formatHistoryDate(dose.date)}</Text>
       </View>
       <View style={styles.historyMedication}>
-        <Text style={styles.historyMedicationName}>{dose.medicationName}</Text>
+        <Text style={styles.historyMedicationName}>{dose.medication}</Text>
         <Text style={styles.historyDose}>
-          {formatDose(dose.doseAmount, dose.doseUnit)}
-          {dose.administrationSite ? ` · ${dose.administrationSite}` : ''}
+          {formatDose(dose.dose, dose.unit)}
+          {dose.injectionSite ? ` · ${dose.injectionSite}` : ''}
         </Text>
       </View>
       <View style={styles.loggedBadge}>
@@ -226,87 +214,168 @@ function DoseHistoryRow({ dose, last }: { dose: DoseLog; last: boolean }) {
 
 type LogDoseModalProps = {
   visible: boolean;
-  medication: MedicationPlan;
+  plan: DosePlan;
   selectedSite: InjectionSite | null;
+  doseDate: Date;
   onSelectSite: (site: InjectionSite) => void;
+  onChangeDate: (date: Date) => void;
   onClose: () => void;
   onLog: () => void;
 };
 
-function LogDoseModal({
-  visible,
-  medication,
-  selectedSite,
-  onSelectSite,
-  onClose,
-  onLog,
-}: LogDoseModalProps) {
+function LogDoseModal({ visible, plan, selectedSite, doseDate, onSelectSite, onChangeDate, onClose, onLog }: LogDoseModalProps) {
   const injectionSites: InjectionSite[] = ['Abdomen', 'Thigh', 'Upper arm'];
-
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <View style={styles.modalRoot}>
+      <KeyboardAvoidingView style={styles.modalRoot} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <Pressable style={styles.backdrop} onPress={onClose} accessibilityLabel="Close log dose" />
         <SafeAreaView style={styles.sheet} edges={['bottom']}>
-          <View style={styles.sheetHandle} />
-          <View style={styles.sheetHeader}>
-            <Text style={styles.sheetTitle}>Log dose</Text>
-            <TouchableOpacity style={styles.closeButton} onPress={onClose} accessibilityLabel="Close">
-              <Ionicons name="close" size={21} color={TrackGLPColors.text} />
-            </TouchableOpacity>
-          </View>
+          <SheetHeader title="Log dose" onClose={onClose} />
 
           <View style={styles.modalDetails}>
-            <ModalDetail icon="medkit-outline" label="Medication" value={medication.name} />
-            <ModalDetail icon="speedometer-outline" label="Dose" value={formatDose(medication.dose.amount, medication.dose.unit)} />
-            <ModalDetail icon="calendar-outline" label="Date" value="Today" />
+            <ModalDetail icon="medkit-outline" label="Medication" value={plan.medication} />
+            <ModalDetail icon="speedometer-outline" label="Dose" value={formatDose(plan.dose, plan.unit)} />
           </View>
 
-          {medication.route === 'injection' && (
-            <View style={styles.siteGroup}>
-              <View style={styles.optionalLabelRow}>
-                <Text style={styles.fieldLabel}>Injection site</Text>
-                <Text style={styles.optionalLabel}>Optional</Text>
-              </View>
-              <View style={styles.siteOptions}>
-                {injectionSites.map((site) => (
-                  <TouchableOpacity
-                    key={site}
-                    style={[styles.siteOption, selectedSite === site && styles.siteOptionSelected]}
-                    onPress={() => onSelectSite(site)}
-                    accessibilityRole="button"
-                    accessibilityState={{ selected: selectedSite === site }}
-                  >
-                    <Text style={[styles.siteOptionText, selectedSite === site && styles.siteOptionTextSelected]}>
-                      {site}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
+          <View style={styles.fieldGroup}>
+            <Text style={styles.fieldLabel}>Date</Text>
+            <DateTimeField value={doseDate} onChange={onChangeDate} />
+          </View>
+
+          <View style={styles.siteGroup}>
+            <View style={styles.optionalLabelRow}>
+              <Text style={styles.fieldLabel}>Injection site</Text>
+              <Text style={styles.optionalLabel}>Optional</Text>
             </View>
-          )}
+            <View style={styles.siteOptions}>
+              {injectionSites.map((site) => (
+                <TouchableOpacity
+                  key={site}
+                  style={[styles.siteOption, selectedSite === site && styles.siteOptionSelected]}
+                  onPress={() => onSelectSite(site)}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: selectedSite === site }}
+                >
+                  <Text style={[styles.siteOptionText, selectedSite === site && styles.siteOptionTextSelected]}>{site}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
 
           <TouchableOpacity style={styles.saveButton} onPress={onLog} accessibilityRole="button">
             <Text style={styles.saveButtonText}>Log dose</Text>
           </TouchableOpacity>
         </SafeAreaView>
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }
 
-function ModalDetail({ icon, label, value }: { icon: keyof typeof Ionicons.glyphMap; label: string; value: string }) {
+type ScheduleDraft = { medication: string; dose: number; scheduledDay: string };
+
+function ScheduleModal({ visible, plan, onClose, onSave }: { visible: boolean; plan: DosePlan | null; onClose: () => void; onSave: (values: ScheduleDraft) => void }) {
+  const [medication, setMedication] = useState('');
+  const [dose, setDose] = useState('');
+  const [scheduledDay, setScheduledDay] = useState('');
+
+  function prepare() {
+    setMedication(plan?.medication ?? '');
+    setDose(plan?.dose ? String(plan.dose) : '');
+    setScheduledDay(plan?.scheduledDay ?? '');
+  }
+
+  const parsedDose = Number.parseFloat(dose.replace(',', '.'));
+  const valid = Boolean(medication && scheduledDay && Number.isFinite(parsedDose) && parsedDose > 0);
+
   return (
-    <View style={styles.modalDetailRow}>
-      <View style={styles.modalDetailIcon}>
-        <Ionicons name={icon} size={19} color={TrackGLPColors.plum} />
-      </View>
-      <View>
-        <Text style={styles.modalDetailLabel}>{label}</Text>
-        <Text style={styles.modalDetailValue}>{value}</Text>
-      </View>
-    </View>
+    <Modal visible={visible} transparent animationType="slide" onShow={prepare} onRequestClose={onClose}>
+      <KeyboardAvoidingView style={styles.modalRoot} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <Pressable style={styles.backdrop} onPress={onClose} accessibilityLabel="Close schedule editor" />
+        <SafeAreaView style={[styles.sheet, styles.scheduleSheet]} edges={['bottom']}>
+          <SheetHeader title={plan ? 'Edit schedule' : 'Set up medication'} onClose={onClose} />
+          <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
+            <Text style={styles.fieldLabel}>Medication</Text>
+            <View style={styles.choiceGrid}>
+              {medications.map((item) => <ChoiceChip key={item} label={item} selected={medication === item} onPress={() => setMedication(item)} />)}
+            </View>
+
+            <View style={styles.fieldGroup}>
+              <Text style={styles.fieldLabel}>Dose</Text>
+              <View style={styles.doseInputWrap}>
+                <TextInput style={styles.doseInput} value={dose} onChangeText={setDose} keyboardType="decimal-pad" placeholder="0" accessibilityLabel="Dose in mg" />
+                <Text style={styles.inputUnit}>mg</Text>
+              </View>
+            </View>
+
+            <View style={styles.fieldGroup}>
+              <Text style={styles.fieldLabel}>Scheduled day</Text>
+              <View style={styles.choiceGrid}>
+                {weekdays.map((day) => <ChoiceChip key={day} label={day} selected={scheduledDay === day} onPress={() => setScheduledDay(day)} />)}
+              </View>
+            </View>
+
+            <TouchableOpacity style={[styles.saveButton, !valid && styles.disabledButton]} disabled={!valid} onPress={() => onSave({ medication, dose: parsedDose, scheduledDay })} accessibilityRole="button">
+              <Text style={styles.saveButtonText}>Save schedule</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
+    </Modal>
   );
+}
+
+function ChoiceChip({ label, selected, onPress }: { label: string; selected: boolean; onPress: () => void }) {
+  return <TouchableOpacity style={[styles.choiceChip, selected && styles.choiceChipSelected]} onPress={onPress}><Text style={[styles.choiceChipText, selected && styles.choiceChipTextSelected]}>{label}</Text></TouchableOpacity>;
+}
+
+function SheetHeader({ title, onClose }: { title: string; onClose: () => void }) {
+  return <><View style={styles.sheetHandle} /><View style={styles.sheetHeader}><Text style={styles.sheetTitle}>{title}</Text><TouchableOpacity style={styles.closeButton} onPress={onClose} accessibilityLabel="Close"><Ionicons name="close" size={21} color={TrackGLPColors.text} /></TouchableOpacity></View></>;
+}
+
+function ModalDetail({ icon, label, value }: { icon: keyof typeof Ionicons.glyphMap; label: string; value: string }) {
+  return <View style={styles.modalDetailRow}><View style={styles.modalDetailIcon}><Ionicons name={icon} size={19} color={TrackGLPColors.plum} /></View><View><Text style={styles.modalDetailLabel}>{label}</Text><Text style={styles.modalDetailValue}>{value}</Text></View></View>;
+}
+
+function isValidDoseEntry(entry: DoseEntry) {
+  return Boolean(entry.medication && entry.dose > 0 && Number.isFinite(Date.parse(entry.date)));
+}
+
+function parseDate(value: string) {
+  const date = new Date(value);
+  return Number.isFinite(date.getTime()) ? date : null;
+}
+
+function getDoseTiming(date: Date) {
+  const today = startOfDay(new Date());
+  const due = startOfDay(date);
+  const difference = Math.round((due.getTime() - today.getTime()) / 86400000);
+  if (difference === 0) return { badgeNumber: '0', label: 'Due today' };
+  if (difference === 1) return { badgeNumber: '1', label: 'Due tomorrow' };
+  if (difference > 1) return { badgeNumber: String(difference), label: `${difference} days remaining` };
+  const overdue = Math.abs(difference);
+  return { badgeNumber: String(overdue), label: `${overdue} ${overdue === 1 ? 'day' : 'days'} overdue` };
+}
+
+function getNextScheduledDate(dayName: string, from: Date, strictlyAfter: boolean) {
+  const target = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(dayName);
+  const result = new Date(from);
+  const sameDayOffset = (target - result.getDay() + 7) % 7;
+  result.setDate(result.getDate() + (sameDayOffset === 0 && strictlyAfter ? 7 : sameDayOffset));
+  result.setHours(8, 0, 0, 0);
+  return result;
+}
+
+function startOfDay(value: Date) {
+  const date = new Date(value);
+  date.setHours(0, 0, 0, 0);
+  return date;
+}
+
+function formatFullDate(date: Date) { return date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }); }
+function formatShortDate(date: Date) { return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); }
+function formatHistoryDate(value: string) {
+  const date = new Date(value);
+  return date.toDateString() === new Date().toDateString() ? 'Today' : formatShortDate(date);
 }
 
 const styles = StyleSheet.create({
@@ -350,27 +419,45 @@ const styles = StyleSheet.create({
   historyDose: { color: TrackGLPColors.muted, fontSize: 11, marginTop: 3 },
   loggedBadge: { flexDirection: 'row', alignItems: 'center', gap: 2, backgroundColor: TrackGLPColors.lavender, borderRadius: 11, paddingHorizontal: 7, paddingVertical: 5, marginLeft: 8 },
   loggedText: { color: TrackGLPColors.plum, fontSize: 9, fontWeight: '700' },
+  emptySetupCard: { alignItems: 'center', padding: 24 },
+  emptySetupIcon: { width: 56, height: 56, borderRadius: 19, alignItems: 'center', justifyContent: 'center', backgroundColor: TrackGLPColors.lavender },
+  emptySetupTitle: { color: TrackGLPColors.text, fontSize: 21, fontWeight: '800', marginTop: 15 },
+  emptySetupCopy: { color: TrackGLPColors.muted, fontSize: 13, marginTop: 5 },
+  emptyHistory: { alignItems: 'center', paddingVertical: 24 },
+  emptyHistoryTitle: { color: TrackGLPColors.text, fontSize: 14, fontWeight: '700' },
+  emptyHistoryCopy: { color: TrackGLPColors.muted, fontSize: 11, marginTop: 4 },
   modalRoot: { flex: 1, justifyContent: 'flex-end' },
   backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(37, 30, 39, 0.42)' },
-  sheet: { backgroundColor: TrackGLPColors.background, borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 20, paddingTop: 10, paddingBottom: 12 },
+  sheet: { maxHeight: '90%', backgroundColor: TrackGLPColors.background, borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 20, paddingTop: 10, paddingBottom: 12 },
+  scheduleSheet: { paddingBottom: 18 },
   sheetHandle: { width: 42, height: 5, borderRadius: 3, backgroundColor: '#D7CDD9', alignSelf: 'center', marginBottom: 15 },
-  sheetHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  sheetHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 },
   sheetTitle: { color: TrackGLPColors.text, fontSize: 24, fontWeight: '800', letterSpacing: -0.5 },
   closeButton: { width: 38, height: 38, borderRadius: 19, backgroundColor: TrackGLPColors.lavender, alignItems: 'center', justifyContent: 'center' },
-  modalDetails: { backgroundColor: TrackGLPColors.card, borderWidth: 1, borderColor: TrackGLPColors.border, borderRadius: 18, marginTop: 19, paddingHorizontal: 14 },
+  modalDetails: { backgroundColor: TrackGLPColors.card, borderWidth: 1, borderColor: TrackGLPColors.border, borderRadius: 18, paddingHorizontal: 14 },
   modalDetailRow: { flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 61, borderBottomWidth: 1, borderBottomColor: '#EEE8EF' },
   modalDetailIcon: { width: 36, height: 36, borderRadius: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: TrackGLPColors.lavender },
   modalDetailLabel: { color: TrackGLPColors.muted, fontSize: 10, fontWeight: '600' },
   modalDetailValue: { color: TrackGLPColors.text, fontSize: 14, fontWeight: '700', marginTop: 2 },
+  fieldGroup: { marginTop: 19 },
   siteGroup: { marginTop: 19 },
   optionalLabelRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 9 },
-  fieldLabel: { color: TrackGLPColors.text, fontSize: 13, fontWeight: '700' },
+  fieldLabel: { color: TrackGLPColors.text, fontSize: 13, fontWeight: '700', marginBottom: 9 },
   optionalLabel: { color: TrackGLPColors.muted, fontSize: 10 },
   siteOptions: { flexDirection: 'row', gap: 7 },
   siteOption: { flex: 1, minWidth: 0, alignItems: 'center', paddingVertical: 11, borderRadius: 13, borderWidth: 1, borderColor: TrackGLPColors.border, backgroundColor: TrackGLPColors.card },
   siteOptionSelected: { backgroundColor: TrackGLPColors.plum, borderColor: TrackGLPColors.plum },
   siteOptionText: { color: TrackGLPColors.muted, fontSize: 11, fontWeight: '700' },
   siteOptionTextSelected: { color: '#FFFFFF' },
+  choiceGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  choiceChip: { borderWidth: 1, borderColor: TrackGLPColors.border, backgroundColor: TrackGLPColors.card, borderRadius: 13, paddingHorizontal: 12, paddingVertical: 10 },
+  choiceChipSelected: { backgroundColor: TrackGLPColors.plum, borderColor: TrackGLPColors.plum },
+  choiceChipText: { color: TrackGLPColors.muted, fontSize: 11, fontWeight: '700' },
+  choiceChipTextSelected: { color: '#FFFFFF' },
+  doseInputWrap: { flexDirection: 'row', alignItems: 'center', backgroundColor: TrackGLPColors.card, borderWidth: 1, borderColor: TrackGLPColors.border, borderRadius: 16, paddingHorizontal: 15 },
+  doseInput: { flex: 1, color: TrackGLPColors.text, fontSize: 22, fontWeight: '700', paddingVertical: 12 },
+  inputUnit: { color: TrackGLPColors.muted, fontSize: 14, fontWeight: '700' },
   saveButton: { backgroundColor: TrackGLPColors.plum, borderRadius: 15, alignItems: 'center', paddingVertical: 15, marginTop: 22 },
+  disabledButton: { opacity: 0.38 },
   saveButtonText: { color: '#FFFFFF', fontSize: 15, fontWeight: '700' },
 });
