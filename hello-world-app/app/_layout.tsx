@@ -56,8 +56,8 @@ function AppEntry() {
   return (
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      <Stack.Screen name="dev-data" options={{ headerShown: false }} />
+      {__DEV__ && <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />}
+      {__DEV__ && <Stack.Screen name="dev-data" options={{ headerShown: false }} />}
     </Stack>
   );
 }
