@@ -3,20 +3,18 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { TrackGLPColors } from '@/constants/track-glp-theme';
 
-const defaultValues = [92, 91.3, 90.8, 89.7, 88.9, 87.4, 86.2, 84.6];
-
 type WeightTrendChartProps = {
-  values?: number[];
+  values: number[];
   height?: number;
-  startLabel?: string;
-  endLabel?: string;
+  startLabel: string;
+  endLabel: string;
 };
 
 export function WeightTrendChart({
-  values = defaultValues,
+  values,
   height = 128,
-  startLabel = '92',
-  endLabel = '84.6',
+  startLabel,
+  endLabel,
 }: WeightTrendChartProps) {
   const [chartWidth, setChartWidth] = useState(252);
   const horizontalPadding = 14;
