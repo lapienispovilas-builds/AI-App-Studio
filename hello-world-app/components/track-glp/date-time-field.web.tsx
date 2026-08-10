@@ -6,9 +6,10 @@ import { TrackGLPColors } from '@/constants/track-glp-theme';
 type DateTimeFieldProps = {
   value: Date;
   onChange: (value: Date) => void;
+  mode?: 'dateTime' | 'time';
 };
 
-export function DateTimeField({ value, onChange }: DateTimeFieldProps) {
+export function DateTimeField({ value, onChange, mode = 'dateTime' }: DateTimeFieldProps) {
   function updateDate(event: ChangeEvent<HTMLInputElement>) {
     const [year, month, day] = event.target.value.split('-').map(Number);
     const nextValue = new Date(value);
@@ -25,8 +26,8 @@ export function DateTimeField({ value, onChange }: DateTimeFieldProps) {
 
   return (
     <View style={styles.row}>
-      <input type="date" value={toDateInput(value)} onChange={updateDate} style={inputStyle} aria-label="Symptom date" />
-      <input type="time" value={toTimeInput(value)} onChange={updateTime} style={inputStyle} aria-label="Symptom time" />
+      {mode === 'dateTime' && <input type="date" value={toDateInput(value)} onChange={updateDate} style={inputStyle} aria-label="Symptom date" />}
+      <input type="time" value={toTimeInput(value)} onChange={updateTime} style={inputStyle} aria-label={mode === 'time' ? 'Reminder time' : 'Symptom time'} />
     </View>
   );
 }

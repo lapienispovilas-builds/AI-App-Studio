@@ -8,9 +8,10 @@ import { TrackGLPColors } from '@/constants/track-glp-theme';
 type DateTimeFieldProps = {
   value: Date;
   onChange: (value: Date) => void;
+  mode?: 'dateTime' | 'time';
 };
 
-export function DateTimeField({ value, onChange }: DateTimeFieldProps) {
+export function DateTimeField({ value, onChange, mode = 'dateTime' }: DateTimeFieldProps) {
   const [androidMode, setAndroidMode] = useState<'date' | 'time' | null>(null);
 
   function handleChange(event: DateTimePickerEvent, nextValue?: Date) {
@@ -21,7 +22,7 @@ export function DateTimeField({ value, onChange }: DateTimeFieldProps) {
   if (Platform.OS === 'ios') {
     return (
       <View style={styles.iosRow}>
-        <DateTimePicker value={value} mode="date" display="compact" onChange={handleChange} />
+        {mode === 'dateTime' && <DateTimePicker value={value} mode="date" display="compact" onChange={handleChange} />}
         <DateTimePicker value={value} mode="time" display="compact" onChange={handleChange} />
       </View>
     );
@@ -30,7 +31,7 @@ export function DateTimeField({ value, onChange }: DateTimeFieldProps) {
   return (
     <View style={styles.androidWrap}>
       <View style={styles.androidRow}>
-        <PickerButton icon="calendar-outline" label={formatDate(value)} onPress={() => setAndroidMode('date')} />
+        {mode === 'dateTime' && <PickerButton icon="calendar-outline" label={formatDate(value)} onPress={() => setAndroidMode('date')} />}
         <PickerButton icon="time-outline" label={formatTime(value)} onPress={() => setAndroidMode('time')} />
       </View>
       {androidMode && (
