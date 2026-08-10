@@ -17,18 +17,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { DashboardCard } from '@/components/track-glp/dashboard-card';
 import { DateTimeField } from '@/components/track-glp/date-time-field';
 import { TrackGLPColors } from '@/constants/track-glp-theme';
+import { useAppData } from '@/context/app-data-context';
+import type { SymptomEntry, SymptomSeverity } from '@/types/app-data';
 
 type Severity = 'Mild' | 'Moderate' | 'Severe';
 type SymptomOption = (typeof symptomOptions)[number];
-
-type SymptomEntry = {
-  id: string;
-  symptom: string;
-  severity: Severity;
-  occurredAt: Date;
-  displayDate: string;
-  note?: string;
-};
 
 const symptomOptions = [
   'Nausea',
@@ -44,62 +37,31 @@ const symptomOptions = [
 
 const severityOptions: Severity[] = ['Mild', 'Moderate', 'Severe'];
 
-const initialSymptoms: SymptomEntry[] = [
-  {
-    id: 'nausea-today',
-    symptom: 'Nausea',
-    severity: 'Mild',
-    occurredAt: new Date(2026, 7, 10, 9, 30),
-    displayDate: 'Today · 9:30 AM',
-    note: 'Felt slightly nauseous after breakfast',
-  },
-  {
-    id: 'fatigue-yesterday',
-    symptom: 'Fatigue',
-    severity: 'Moderate',
-    occurredAt: new Date(2026, 7, 9, 16, 20),
-    displayDate: 'Yesterday · 4:20 PM',
-  },
-  {
-    id: 'headache-aug-8',
-    symptom: 'Headache',
-    severity: 'Mild',
-    occurredAt: new Date(2026, 7, 8, 11, 45),
-    displayDate: 'Aug 8 · 11:45 AM',
-  },
-];
-
-const initialWeeklyCounts: Record<string, number> = { Nausea: 2, Fatigue: 1 };
-
 export default function SymptomJournalScreen() {
-  const [symptoms, setSymptoms] = useState(initialSymptoms);
-  const [weeklyCounts, setWeeklyCounts] = useState(initialWeeklyCounts);
+  const { data, addSymptomEntry } = useAppData();
   const [isLoggerOpen, setIsLoggerOpen] = useState(false);
 
-  const weeklyTotal = Object.values(weeklyCounts).reduce((total, count) => total + count, 0);
-  const mostFrequent = useMemo(
-    () => Object.entries(weeklyCounts).sort((a, b) => b[1] - a[1])[0] ?? ['—', 0],
-    [weeklyCounts],
+  const symptoms = useMemo(
+    () => data.symptomEntries
+      .filter((entry) => Boolean(entry.symptom) && isValidDate(entry.date))
+      .slice()
+      .sort((a, b) => Date.parse(b.date) - Date.parse(a.date)),
+    [data.symptomEntries],
   );
+  const weeklySummary = useMemo(() => getWeeklySummary(symptoms), [symptoms]);
 
   function saveSymptom(draft: SymptomDraft) {
     const symptomName = draft.symptom === 'Other' ? draft.otherSymptom.trim() : draft.symptom;
     if (!symptomName || !draft.severity) return;
 
-    const newEntry: SymptomEntry = {
-      id: `symptom-${Date.now()}`,
-      symptom: symptomName,
-      severity: draft.severity,
-      occurredAt: draft.occurredAt,
-      displayDate: formatEntryDate(draft.occurredAt),
-      note: draft.note.trim() || undefined,
-    };
+    if (!Number.isFinite(draft.occurredAt.getTime())) return;
 
-    setSymptoms((currentSymptoms) => [newEntry, ...currentSymptoms]);
-    setWeeklyCounts((currentCounts) => ({
-      ...currentCounts,
-      [symptomName]: (currentCounts[symptomName] ?? 0) + 1,
-    }));
+    addSymptomEntry({
+      symptom: symptomName,
+      severity: draft.severity.toLowerCase() as SymptomSeverity,
+      date: draft.occurredAt.toISOString(),
+      note: draft.note.trim() || undefined,
+    });
     setIsLoggerOpen(false);
   }
 
@@ -123,9 +85,14 @@ export default function SymptomJournalScreen() {
         <View style={styles.recentSection}>
           <Text style={styles.sectionTitle}>Recent symptoms</Text>
           <View style={styles.symptomList}>
-            {symptoms.map((entry, index) => (
+            {symptoms.length > 0 ? symptoms.map((entry, index) => (
               <SymptomRow key={entry.id} entry={entry} last={index === symptoms.length - 1} />
-            ))}
+            )) : (
+              <View style={styles.emptyState}>
+                <Text style={styles.emptyStateTitle}>No symptoms logged yet</Text>
+                <Text style={styles.emptyStateCopy}>Your symptom history will appear here.</Text>
+              </View>
+            )}
           </View>
         </View>
 
@@ -141,16 +108,18 @@ export default function SymptomJournalScreen() {
           </View>
           <View style={styles.weekStats}>
             <View style={styles.weekStat}>
-              <Text style={styles.weekStatValue}>{weeklyTotal}</Text>
+              <Text style={styles.weekStatValue}>{weeklySummary.total}</Text>
               <Text style={styles.weekStatLabel}>symptoms logged</Text>
             </View>
-            <View style={styles.weekDivider} />
-            <View style={styles.weekStat}>
-              <Text style={styles.weekStatLabel}>Most frequent</Text>
-              <Text style={styles.frequentValue}>
-                {mostFrequent[0]} · {mostFrequent[1]} {mostFrequent[1] === 1 ? 'time' : 'times'}
-              </Text>
-            </View>
+            {weeklySummary.mostFrequent && <>
+              <View style={styles.weekDivider} />
+              <View style={styles.weekStat}>
+                <Text style={styles.weekStatLabel}>Most frequent</Text>
+                <Text style={styles.frequentValue}>
+                  {weeklySummary.mostFrequent.symptom} · {weeklySummary.mostFrequent.count} {weeklySummary.mostFrequent.count === 1 ? 'time' : 'times'}
+                </Text>
+              </View>
+            </>}
           </View>
         </DashboardCard>
       </ScrollView>
@@ -174,25 +143,26 @@ function SymptomRow({ entry, last }: { entry: SymptomEntry; last: boolean }) {
         </View>
         <SeverityBadge severity={entry.severity} />
       </View>
-      <Text style={styles.symptomDate}>{entry.displayDate}</Text>
+      <Text style={styles.symptomDate}>{formatEntryDate(entry.date)}</Text>
       {entry.note && <Text style={styles.symptomNote}>“{entry.note}”</Text>}
     </View>
   );
 }
 
-function SeverityBadge({ severity }: { severity: Severity }) {
+function SeverityBadge({ severity }: { severity: SymptomSeverity }) {
+  const label = capitalize(severity);
   return (
     <View style={[
       styles.severityBadge,
-      severity === 'Moderate' && styles.severityBadgeModerate,
-      severity === 'Severe' && styles.severityBadgeSevere,
+      severity === 'moderate' && styles.severityBadgeModerate,
+      severity === 'severe' && styles.severityBadgeSevere,
     ]}>
       <Text style={[
         styles.severityBadgeText,
-        severity === 'Moderate' && styles.severityBadgeTextModerate,
-        severity === 'Severe' && styles.severityBadgeTextSevere,
+        severity === 'moderate' && styles.severityBadgeTextModerate,
+        severity === 'severe' && styles.severityBadgeTextSevere,
       ]}>
-        {severity}
+        {label}
       </Text>
     </View>
   );
@@ -335,13 +305,48 @@ function LogSymptomModal({ visible, onClose, onSave }: LogSymptomModalProps) {
   );
 }
 
-function formatEntryDate(value: Date) {
+function isValidDate(value: string) {
+  return Number.isFinite(Date.parse(value));
+}
+
+function getWeeklySummary(entries: SymptomEntry[]) {
   const now = new Date();
-  const isToday = value.getFullYear() === now.getFullYear()
-    && value.getMonth() === now.getMonth()
-    && value.getDate() === now.getDate();
-  const date = isToday ? 'Today' : value.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  const time = value.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  const weekStart = new Date(now);
+  const daysSinceMonday = (weekStart.getDay() + 6) % 7;
+  weekStart.setDate(weekStart.getDate() - daysSinceMonday);
+  weekStart.setHours(0, 0, 0, 0);
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekEnd.getDate() + 7);
+
+  const counts = new Map<string, { symptom: string; count: number }>();
+  for (const entry of entries) {
+    const occurredAt = new Date(entry.date);
+    if (occurredAt < weekStart || occurredAt >= weekEnd) continue;
+    const key = entry.symptom.trim().toLocaleLowerCase();
+    const current = counts.get(key);
+    counts.set(key, { symptom: current?.symptom ?? entry.symptom, count: (current?.count ?? 0) + 1 });
+  }
+
+  const mostFrequent = [...counts.values()].sort((a, b) => b.count - a.count)[0] ?? null;
+  return {
+    total: [...counts.values()].reduce((total, item) => total + item.count, 0),
+    mostFrequent,
+  };
+}
+
+function capitalize(value: string) {
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function formatEntryDate(value: string) {
+  const dateValue = new Date(value);
+  const now = new Date();
+  const isToday = dateValue.getFullYear() === now.getFullYear()
+    && dateValue.getMonth() === now.getMonth()
+    && dateValue.getDate() === now.getDate();
+  const isYesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1).toDateString() === dateValue.toDateString();
+  const date = isToday ? 'Today' : isYesterday ? 'Yesterday' : dateValue.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const time = dateValue.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
   return `${date} · ${time}`;
 }
 
@@ -368,6 +373,9 @@ const styles = StyleSheet.create({
   recentSection: { marginTop: 3 },
   sectionTitle: { color: TrackGLPColors.text, fontSize: 20, fontWeight: '700', marginBottom: 10 },
   symptomList: { backgroundColor: TrackGLPColors.card, borderRadius: 20, borderWidth: 1, borderColor: TrackGLPColors.border, paddingHorizontal: 16 },
+  emptyState: { alignItems: 'center', paddingVertical: 24 },
+  emptyStateTitle: { color: TrackGLPColors.text, fontSize: 14, fontWeight: '700' },
+  emptyStateCopy: { color: TrackGLPColors.muted, fontSize: 11, marginTop: 4 },
   symptomRow: { paddingVertical: 15 },
   rowBorder: { borderBottomWidth: 1, borderBottomColor: '#EEE8EF' },
   symptomRowTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 },
