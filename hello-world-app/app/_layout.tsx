@@ -3,7 +3,8 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
-import { AppDataProvider } from '@/context/app-data-context';
+import { OnboardingFlow, OnboardingLoadingScreen } from '@/components/onboarding/onboarding-flow';
+import { AppDataProvider, useAppData } from '@/context/app-data-context';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export const unstable_settings = {
@@ -16,12 +17,24 @@ export default function RootLayout() {
   return (
     <AppDataProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-        </Stack>
+        <AppEntry />
         <StatusBar style="auto" />
       </ThemeProvider>
     </AppDataProvider>
+  );
+}
+
+function AppEntry() {
+  const { data, isLoading } = useAppData();
+
+  if (isLoading) return <OnboardingLoadingScreen />;
+  if (!data.profile.onboardingCompleted) return <OnboardingFlow />;
+
+  return (
+    <Stack>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+      <Stack.Screen name="dev-data" options={{ headerShown: false }} />
+    </Stack>
   );
 }

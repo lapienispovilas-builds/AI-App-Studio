@@ -13,7 +13,8 @@ export const defaultAppData: AppData = {
     currentWeight: 84.6,
     goalWeight: 72,
     currentMedication: 'Ozempic',
-    onboardingCompleted: true,
+    glp1Status: 'started',
+    onboardingCompleted: false,
   },
   weightEntries: [
     { id: 'weight-2026-08-10', weight: 84.6, date: '2026-08-10T07:30:00.000Z' },

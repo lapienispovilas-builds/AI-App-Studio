@@ -1,5 +1,6 @@
-export type UnitSystem = 'metric' | 'imperial';
+export type UnitSystem = 'metric' | 'imperial_us' | 'imperial_uk';
 export type Sex = 'female' | 'male' | 'intersex' | 'prefer_not_to_say';
+export type Glp1Status = 'not_started' | 'started';
 export type SymptomSeverity = 'mild' | 'moderate' | 'severe';
 export type HabitKind = 'water' | 'protein';
 export type DoseFrequency = 'daily' | 'weekly' | 'custom';
@@ -15,7 +16,22 @@ export interface UserProfile {
   currentWeight: number;
   goalWeight: number;
   currentMedication: string | null;
+  glp1Status: Glp1Status;
   onboardingCompleted: boolean;
+}
+
+export interface OnboardingData {
+  unitSystem: UnitSystem;
+  glp1Status: Glp1Status;
+  startingWeightKg: number;
+  currentWeightKg: number;
+  goalWeightKg: number;
+  heightCm: number;
+  ageRange: string;
+  sex: Sex;
+  medication?: string;
+  doseMg?: number;
+  scheduledDay?: string;
 }
 
 export interface WeightEntry {

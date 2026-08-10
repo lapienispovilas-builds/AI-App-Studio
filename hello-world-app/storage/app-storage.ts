@@ -14,11 +14,13 @@ export async function loadAppData(): Promise<AppData | null> {
   }
 }
 
-export async function saveAppData(data: AppData): Promise<void> {
+export async function saveAppData(data: AppData): Promise<boolean> {
   try {
     await AsyncStorage.setItem(APP_DATA_STORAGE_KEY, JSON.stringify(data));
+    return true;
   } catch (error) {
     if (__DEV__) console.warn('TrackGLP could not save local app data.', error);
+    return false;
   }
 }
 

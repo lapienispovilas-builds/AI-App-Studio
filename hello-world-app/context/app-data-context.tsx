@@ -7,6 +7,7 @@ import type {
   DailyHabitEntry,
   DoseEntry,
   DosePlan,
+  OnboardingData,
   ReminderSettings,
   SymptomEntry,
   UserProfile,
@@ -29,6 +30,7 @@ type AppDataContextValue = {
   updateDailyHabits: (date: string, updates: Partial<Omit<DailyHabitEntry, 'date'>>) => void;
   updateReminderSettings: (updates: Partial<ReminderSettings>) => void;
   resetAppData: () => void;
+  completeOnboarding: (answers: OnboardingData) => Promise<void>;
 };
 
 const AppDataContext = createContext<AppDataContextValue | null>(null);
@@ -147,6 +149,59 @@ export function AppDataProvider({ children }: PropsWithChildren) {
     setData(createDefaultAppData());
   }, []);
 
+  const completeOnboarding = useCallback(async (answers: OnboardingData) => {
+    const now = new Date().toISOString();
+    const nextDoseDate = answers.glp1Status === 'started' && answers.scheduledDay
+      ? getNextScheduledDate(answers.scheduledDay).toISOString()
+      : '';
+    const nextData: AppData = {
+      profile: {
+        id: makeId('user'),
+        name: '',
+        ageRange: answers.ageRange,
+        sex: answers.sex,
+        unitSystem: answers.unitSystem,
+        height: answers.heightCm,
+        startingWeight: answers.startingWeightKg,
+        currentWeight: answers.currentWeightKg,
+        goalWeight: answers.goalWeightKg,
+        currentMedication: answers.glp1Status === 'started' ? answers.medication ?? null : null,
+        glp1Status: answers.glp1Status,
+        onboardingCompleted: true,
+      },
+      weightEntries: [{ id: makeId('weight'), weight: answers.currentWeightKg, date: now }],
+      dosePlan: answers.glp1Status === 'started'
+        ? {
+          medication: answers.medication ?? '',
+          dose: answers.doseMg ?? 0,
+          unit: 'mg',
+          frequency: 'weekly',
+          scheduledDay: answers.scheduledDay ?? null,
+          nextDoseDate,
+        }
+        : {
+          medication: '',
+          dose: 0,
+          unit: 'mg',
+          frequency: 'weekly',
+          scheduledDay: null,
+          nextDoseDate: '',
+        },
+      doseEntries: [],
+      symptomEntries: [],
+      dailyHabits: [{ date: toDateKey(), waterAmount: 0, proteinAmount: 0, waterGoal: 2500, proteinGoal: 100 }],
+      reminders: {
+        doseEnabled: false,
+        waterEnabled: false,
+        proteinEnabled: false,
+      },
+    };
+    const saved = await saveAppData(nextData);
+    if (!saved) throw new Error('Your onboarding information could not be saved. Please try again.');
+    if (__DEV__) console.log('TrackGLP onboarding saved', nextData);
+    setData(nextData);
+  }, []);
+
   const value = useMemo<AppDataContextValue>(() => ({
     data,
     isLoading,
@@ -160,6 +215,7 @@ export function AppDataProvider({ children }: PropsWithChildren) {
     updateDailyHabits,
     updateReminderSettings,
     resetAppData,
+    completeOnboarding,
   }), [
     data,
     isLoading,
@@ -173,9 +229,20 @@ export function AppDataProvider({ children }: PropsWithChildren) {
     updateDailyHabits,
     updateReminderSettings,
     resetAppData,
+    completeOnboarding,
   ]);
 
   return <AppDataContext.Provider value={value}>{children}</AppDataContext.Provider>;
+}
+
+function getNextScheduledDate(dayName: string) {
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const target = days.indexOf(dayName);
+  const next = new Date();
+  const daysAhead = target < 0 ? 0 : (target - next.getDay() + 7) % 7;
+  next.setDate(next.getDate() + daysAhead);
+  next.setHours(8, 0, 0, 0);
+  return next;
 }
 
 export function useAppData() {
