@@ -1,6 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
-import { StyleSheet, Text } from 'react-native';
 
 import { HapticTab } from '@/components/haptic-tab';
 import { TrackGLPColors } from '@/constants/track-glp-theme';
@@ -32,34 +31,9 @@ export default function TabLayout() {
       <Tabs.Screen name="index" options={{ title: 'Home' }} />
       <Tabs.Screen name="progress" options={{ title: 'Progress' }} />
       <Tabs.Screen name="doses" options={{ title: 'Doses' }} />
-      <Tabs.Screen
-        name="side-effects"
-        options={{
-          title: 'Symptom Journal',
-          tabBarLabel: ({ color }) => (
-            <Text
-              style={[styles.symptomJournalLabel, { color }]}
-              numberOfLines={1}
-              adjustsFontSizeToFit
-              minimumFontScale={0.78}
-            >
-              Symptom Journal
-            </Text>
-          ),
-        }}
-      />
+      <Tabs.Screen name="side-effects" options={{ title: 'Symptoms' }} />
       <Tabs.Screen name="habits" options={{ title: 'Habits' }} />
       <Tabs.Screen name="explore" options={{ href: null }} />
     </Tabs>
   );
 }
-
-const styles = StyleSheet.create({
-  symptomJournalLabel: {
-    width: '100%',
-    textAlign: 'center',
-    fontSize: 9,
-    fontWeight: '600',
-    letterSpacing: -0.2,
-  },
-});

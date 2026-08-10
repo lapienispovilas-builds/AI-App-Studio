@@ -230,15 +230,17 @@ function ReminderRow({ setting, last, onOpen, onToggle }: { setting: ReminderSet
           <Text style={styles.reminderTitle}>{setting.title}</Text>
           <Text style={styles.reminderSupport} numberOfLines={2}>{setting.support}</Text>
         </View>
-        <Text style={styles.reminderTime}>{formatTime(setting.time)}</Text>
       </TouchableOpacity>
-      <Switch
-        value={setting.enabled}
-        onValueChange={onToggle}
-        trackColor={{ false: '#D8CFDA', true: '#A681B2' }}
-        thumbColor={setting.enabled ? TrackGLPColors.plum : '#FFFFFF'}
-        accessibilityLabel={`${setting.title} reminder enabled`}
-      />
+      <View style={styles.reminderControls}>
+        <Text style={styles.reminderTime} onPress={onOpen}>{formatTime(setting.time)}</Text>
+        <Switch
+          value={setting.enabled}
+          onValueChange={onToggle}
+          trackColor={{ false: '#D8CFDA', true: '#A681B2' }}
+          thumbColor={setting.enabled ? TrackGLPColors.plum : '#FFFFFF'}
+          accessibilityLabel={`${setting.title} reminder enabled`}
+        />
+      </View>
     </View>
   );
 }
@@ -418,7 +420,8 @@ const styles = StyleSheet.create({
   reminderBody: { flex: 1, minWidth: 0, marginLeft: 10 },
   reminderTitle: { color: TrackGLPColors.text, fontSize: 13, fontWeight: '700' },
   reminderSupport: { color: TrackGLPColors.muted, fontSize: 9, lineHeight: 13, marginTop: 2 },
-  reminderTime: { color: TrackGLPColors.plum, fontSize: 11, fontWeight: '700', marginHorizontal: 8 },
+  reminderControls: { flexDirection: 'row', alignItems: 'center', gap: 8, marginLeft: 8 },
+  reminderTime: { color: TrackGLPColors.plum, fontSize: 11, fontWeight: '700' },
   modalRoot: { flex: 1, justifyContent: 'flex-end' },
   backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(37, 30, 39, 0.42)' },
   sheet: { backgroundColor: TrackGLPColors.background, borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 20, paddingTop: 10, paddingBottom: 12 },
