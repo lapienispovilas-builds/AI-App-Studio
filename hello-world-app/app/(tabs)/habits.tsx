@@ -19,8 +19,9 @@ import { DashboardCard } from '@/components/track-glp/dashboard-card';
 import { DateTimeField } from '@/components/track-glp/date-time-field';
 import { ProgressBar } from '@/components/track-glp/progress-bar';
 import { TrackGLPColors } from '@/constants/track-glp-theme';
-
-type HabitKind = 'water' | 'protein';
+import { useAppData } from '@/context/app-data-context';
+import type { HabitKind } from '@/types/app-data';
+import { getTodayHabits } from '@/utils/app-data-helpers';
 
 type DailyHabitRecord = {
   dateKey: string;
@@ -42,65 +43,57 @@ type ReminderSetting = {
   enabled: boolean;
 };
 
-const initialDailyRecord: DailyHabitRecord = {
-  dateKey: '2026-08-10',
-  water: { intakeMl: 1600, goalMl: 2500 },
-  protein: { intakeG: 72, goalG: 100 },
-};
-
-const initialReminders: Record<HabitKind, ReminderSetting> = {
-  water: {
-    habit: 'water',
-    title: 'Water',
-    support: 'Stay on top of your hydration.',
-    time: new Date(2026, 7, 10, 10, 0),
-    enabled: true,
-  },
-  protein: {
-    habit: 'protein',
-    title: 'Protein',
-    support: 'A small reminder to hit your protein goal.',
-    time: new Date(2026, 7, 10, 13, 0),
-    enabled: true,
-  },
-};
-
 export default function HabitsScreen() {
-  const [dailyRecord, setDailyRecord] = useState(initialDailyRecord);
+  const { data, updateDailyHabits, updateReminderSettings } = useAppData();
   const [editingHabit, setEditingHabit] = useState<HabitKind | null>(null);
-  const [reminders, setReminders] = useState(initialReminders);
   const [editingReminder, setEditingReminder] = useState<HabitKind | null>(null);
+  const todayHabits = getTodayHabits(data);
+  const dailyRecord: DailyHabitRecord = {
+    dateKey: todayHabits.date,
+    water: { intakeMl: todayHabits.waterAmount, goalMl: todayHabits.waterGoal },
+    protein: { intakeG: todayHabits.proteinAmount, goalG: todayHabits.proteinGoal },
+  };
+  const reminders: Record<HabitKind, ReminderSetting> = {
+    water: {
+      habit: 'water',
+      title: 'Water',
+      support: 'Stay on top of your hydration.',
+      time: timeStringToDate(data.reminders.waterTime ?? '10:00'),
+      enabled: data.reminders.waterEnabled,
+    },
+    protein: {
+      habit: 'protein',
+      title: 'Protein',
+      support: 'A small reminder to hit your protein goal.',
+      time: timeStringToDate(data.reminders.proteinTime ?? '13:00'),
+      enabled: data.reminders.proteinEnabled,
+    },
+  };
 
   function addWater() {
-    setDailyRecord((record) => ({
-      ...record,
-      water: { ...record.water, intakeMl: record.water.intakeMl + 250 },
-    }));
+    updateDailyHabits(dailyRecord.dateKey, { waterAmount: dailyRecord.water.intakeMl + 250 });
   }
 
   function addProtein() {
-    setDailyRecord((record) => ({
-      ...record,
-      protein: { ...record.protein, intakeG: record.protein.intakeG + 10 },
-    }));
+    updateDailyHabits(dailyRecord.dateKey, { proteinAmount: dailyRecord.protein.intakeG + 10 });
   }
 
   function saveHabit(kind: HabitKind, intake: number, goal: number) {
-    setDailyRecord((record) => kind === 'water'
-      ? { ...record, water: { intakeMl: intake * 1000, goalMl: goal * 1000 } }
-      : { ...record, protein: { intakeG: intake, goalG: goal } });
+    updateDailyHabits(dailyRecord.dateKey, kind === 'water'
+      ? { waterAmount: intake * 1000, waterGoal: goal * 1000 }
+      : { proteinAmount: intake, proteinGoal: goal });
     setEditingHabit(null);
   }
 
   function toggleReminder(kind: HabitKind, enabled: boolean) {
-    setReminders((current) => ({
-      ...current,
-      [kind]: { ...current[kind], enabled },
-    }));
+    updateReminderSettings(kind === 'water' ? { waterEnabled: enabled } : { proteinEnabled: enabled });
   }
 
   function saveReminder(setting: ReminderSetting) {
-    setReminders((current) => ({ ...current, [setting.habit]: setting }));
+    const time = dateToTimeString(setting.time);
+    updateReminderSettings(setting.habit === 'water'
+      ? { waterEnabled: setting.enabled, waterTime: time }
+      : { proteinEnabled: setting.enabled, proteinTime: time });
     setEditingReminder(null);
   }
 
@@ -321,7 +314,13 @@ type ReminderModalProps = {
 };
 
 function ReminderModal({ setting, onClose, onSave }: ReminderModalProps) {
-  const [draft, setDraft] = useState<ReminderSetting>(initialReminders.water);
+  const [draft, setDraft] = useState<ReminderSetting>(() => ({
+    habit: 'water',
+    title: 'Water',
+    support: 'Stay on top of your hydration.',
+    time: new Date(),
+    enabled: true,
+  }));
 
   function handleShow() {
     if (setting) setDraft({ ...setting, time: new Date(setting.time) });
@@ -388,6 +387,17 @@ function formatGrams(value: number) {
 
 function formatTime(value: Date) {
   return value.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+}
+
+function timeStringToDate(value: string) {
+  const [hours = 0, minutes = 0] = value.split(':').map(Number);
+  const date = new Date();
+  date.setHours(hours, minutes, 0, 0);
+  return date;
+}
+
+function dateToTimeString(value: Date) {
+  return `${String(value.getHours()).padStart(2, '0')}:${String(value.getMinutes()).padStart(2, '0')}`;
 }
 
 const styles = StyleSheet.create({
