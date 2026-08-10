@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Modal,
@@ -48,6 +48,7 @@ export default function HabitsScreen() {
   const [editingHabit, setEditingHabit] = useState<HabitKind | null>(null);
   const [editingReminder, setEditingReminder] = useState<HabitKind | null>(null);
   const todayHabits = getTodayHabits(data);
+  const hasTodayRecord = data.dailyHabits.some((entry) => entry.date === todayHabits.date);
   const dailyRecord: DailyHabitRecord = {
     dateKey: todayHabits.date,
     water: { intakeMl: todayHabits.waterAmount, goalMl: todayHabits.waterGoal },
@@ -69,6 +70,24 @@ export default function HabitsScreen() {
       enabled: data.reminders.proteinEnabled,
     },
   };
+
+  useEffect(() => {
+    if (hasTodayRecord) return;
+    updateDailyHabits(todayHabits.date, {
+      waterAmount: 0,
+      proteinAmount: 0,
+      waterGoal: todayHabits.waterGoal,
+      proteinGoal: todayHabits.proteinGoal,
+    });
+  }, [hasTodayRecord, todayHabits.date, todayHabits.proteinGoal, todayHabits.waterGoal, updateDailyHabits]);
+
+  useEffect(() => {
+    if (data.reminders.waterTime && data.reminders.proteinTime) return;
+    updateReminderSettings({
+      waterTime: data.reminders.waterTime ?? '10:00',
+      proteinTime: data.reminders.proteinTime ?? '13:00',
+    });
+  }, [data.reminders.proteinTime, data.reminders.waterTime, updateReminderSettings]);
 
   function addWater() {
     updateDailyHabits(dailyRecord.dateKey, { waterAmount: dailyRecord.water.intakeMl + 250 });
@@ -253,12 +272,13 @@ function EditHabitModal({ habit, record, onClose, onSave }: EditHabitModalProps)
   const [intake, setIntake] = useState(String(initialIntake));
   const [goal, setGoal] = useState(String(initialGoal));
 
-  function handleShow() {
+  useEffect(() => {
+    if (!habit) return;
     const nextIntake = habit === 'water' ? record.water.intakeMl / 1000 : record.protein.intakeG;
     const nextGoal = habit === 'water' ? record.water.goalMl / 1000 : record.protein.goalG;
     setIntake(String(nextIntake));
     setGoal(String(nextGoal));
-  }
+  }, [habit, record.protein.goalG, record.protein.intakeG, record.water.goalMl, record.water.intakeMl]);
 
   function handleSave() {
     if (!habit) return;
@@ -272,7 +292,7 @@ function EditHabitModal({ habit, record, onClose, onSave }: EditHabitModalProps)
   const unit = habit === 'water' ? 'L' : 'g';
 
   return (
-    <Modal visible={Boolean(habit)} transparent animationType="slide" onShow={handleShow} onRequestClose={onClose}>
+    <Modal visible={Boolean(habit)} transparent animationType="slide" onRequestClose={onClose}>
       <KeyboardAvoidingView style={styles.modalRoot} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <Pressable style={styles.backdrop} onPress={onClose} accessibilityLabel="Close habit editor" />
         <SafeAreaView style={styles.sheet} edges={['bottom']}>
@@ -322,12 +342,12 @@ function ReminderModal({ setting, onClose, onSave }: ReminderModalProps) {
     enabled: true,
   }));
 
-  function handleShow() {
+  useEffect(() => {
     if (setting) setDraft({ ...setting, time: new Date(setting.time) });
-  }
+  }, [setting]);
 
   return (
-    <Modal visible={Boolean(setting)} transparent animationType="slide" onShow={handleShow} onRequestClose={onClose}>
+    <Modal visible={Boolean(setting)} transparent animationType="slide" onRequestClose={onClose}>
       <View style={styles.modalRoot}>
         <Pressable style={styles.backdrop} onPress={onClose} accessibilityLabel="Close reminder editor" />
         <SafeAreaView style={styles.sheet} edges={['bottom']}>
@@ -378,7 +398,11 @@ function SheetHeader({ title, onClose }: { title: string; onClose: () => void })
 }
 
 function formatLiters(valueMl: number) {
-  return (valueMl / 1000).toFixed(2).replace(/0$/, '').replace(/\.0$/, '');
+  if (valueMl === 0) return '0';
+  const liters = valueMl / 1000;
+  return Number.isInteger(liters)
+    ? liters.toFixed(1)
+    : liters.toFixed(2).replace(/0$/, '');
 }
 
 function formatGrams(value: number) {

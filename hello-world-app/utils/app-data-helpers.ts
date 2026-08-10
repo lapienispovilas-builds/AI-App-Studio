@@ -29,12 +29,19 @@ export function getNextDose(data: AppData) {
 
 export function getTodayHabits(data: AppData, date: Date = new Date()): DailyHabitEntry {
   const dateKey = toDateKey(date);
-  return data.dailyHabits.find((entry) => entry.date === dateKey) ?? {
+  const existing = data.dailyHabits.find((entry) => entry.date === dateKey);
+  if (existing) return existing;
+
+  const mostRecentPreviousEntry = [...data.dailyHabits]
+    .filter((entry) => entry.date < dateKey)
+    .sort((a, b) => b.date.localeCompare(a.date))[0];
+
+  return {
     date: dateKey,
     waterAmount: 0,
     proteinAmount: 0,
-    waterGoal: 2500,
-    proteinGoal: 100,
+    waterGoal: mostRecentPreviousEntry?.waterGoal ?? 2500,
+    proteinGoal: mostRecentPreviousEntry?.proteinGoal ?? 100,
   };
 }
 
