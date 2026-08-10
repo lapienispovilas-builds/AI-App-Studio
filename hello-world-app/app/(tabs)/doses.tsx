@@ -19,6 +19,7 @@ import { DateTimeField } from '@/components/track-glp/date-time-field';
 import { TrackGLPColors } from '@/constants/track-glp-theme';
 import { useAppData } from '@/context/app-data-context';
 import type { DoseEntry, DosePlan } from '@/types/app-data';
+import { getDoseTiming, parseStoredDate } from '@/utils/app-data-helpers';
 
 type InjectionSite = 'Abdomen' | 'Thigh' | 'Upper arm';
 
@@ -42,7 +43,7 @@ export default function DosesScreen() {
     () => [...data.doseEntries].filter(isValidDoseEntry).sort((a, b) => Date.parse(b.date) - Date.parse(a.date)),
     [data.doseEntries],
   );
-  const nextDoseDate = parseDate(plan.nextDoseDate);
+  const nextDoseDate = parseStoredDate(plan.nextDoseDate);
   const timing = nextDoseDate ? getDoseTiming(nextDoseDate) : null;
 
   function openLogDose() {
@@ -340,22 +341,6 @@ function isValidDoseEntry(entry: DoseEntry) {
   return Boolean(entry.medication && entry.dose > 0 && Number.isFinite(Date.parse(entry.date)));
 }
 
-function parseDate(value: string) {
-  const date = new Date(value);
-  return Number.isFinite(date.getTime()) ? date : null;
-}
-
-function getDoseTiming(date: Date) {
-  const today = startOfDay(new Date());
-  const due = startOfDay(date);
-  const difference = Math.round((due.getTime() - today.getTime()) / 86400000);
-  if (difference === 0) return { badgeNumber: '0', label: 'Due today' };
-  if (difference === 1) return { badgeNumber: '1', label: 'Due tomorrow' };
-  if (difference > 1) return { badgeNumber: String(difference), label: `${difference} days remaining` };
-  const overdue = Math.abs(difference);
-  return { badgeNumber: String(overdue), label: `${overdue} ${overdue === 1 ? 'day' : 'days'} overdue` };
-}
-
 function getNextScheduledDate(dayName: string, from: Date, strictlyAfter: boolean) {
   const target = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(dayName);
   const result = new Date(from);
@@ -363,12 +348,6 @@ function getNextScheduledDate(dayName: string, from: Date, strictlyAfter: boolea
   result.setDate(result.getDate() + (sameDayOffset === 0 && strictlyAfter ? 7 : sameDayOffset));
   result.setHours(8, 0, 0, 0);
   return result;
-}
-
-function startOfDay(value: Date) {
-  const date = new Date(value);
-  date.setHours(0, 0, 0, 0);
-  return date;
 }
 
 function formatFullDate(date: Date) { return date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }); }

@@ -1,4 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import { useMemo } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -6,10 +8,34 @@ import { DashboardCard } from '@/components/track-glp/dashboard-card';
 import { ProgressBar } from '@/components/track-glp/progress-bar';
 import { WeightTrendChart } from '@/components/track-glp/weight-trend-chart';
 import { TrackGLPColors } from '@/constants/track-glp-theme';
+import { useAppData } from '@/context/app-data-context';
+import type { WeightEntry } from '@/types/app-data';
+import { getCurrentWeight, getDoseTiming, getTodayHabits, parseStoredDate } from '@/utils/app-data-helpers';
 
 const sideEffectOptions = ['None', 'Mild', 'Moderate', 'Severe'];
 
 export default function HomeScreen() {
+  const router = useRouter();
+  const { data } = useAppData();
+  const unit = data.profile.unitSystem === 'metric' ? 'kg' : 'lb';
+  const startWeight = safeWeight(data.profile.startingWeight);
+  const currentWeight = safeWeight(getCurrentWeight(data));
+  const goalWeight = safeWeight(data.profile.goalWeight);
+  const totalChange = startWeight - currentWeight;
+  const goalProgress = calculateGoalProgress(startWeight, currentWeight, goalWeight);
+  const todayHabits = getTodayHabits(data);
+  const dosePlan = data.dosePlan;
+  const nextDoseDate = parseStoredDate(dosePlan.nextDoseDate);
+  const hasDosePlan = Boolean(dosePlan.medication && dosePlan.dose > 0 && dosePlan.scheduledDay && nextDoseDate);
+  const doseTiming = nextDoseDate ? getDoseTiming(nextDoseDate) : null;
+  const latestSymptomToday = useMemo(() => getLatestSymptomToday(data.symptomEntries), [data.symptomEntries]);
+  const selectedSymptomStatus = latestSymptomToday ? capitalize(latestSymptomToday.severity) : 'None';
+  const recentWeights = useMemo(() => getRecentWeightEntries(data.weightEntries, 30), [data.weightEntries]);
+  const periodChange = recentWeights.length > 1
+    ? recentWeights[0].weight - recentWeights[recentWeights.length - 1].weight
+    : 0;
+  const name = data.profile.name.trim();
+
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
       <ScrollView
@@ -18,8 +44,8 @@ export default function HomeScreen() {
       >
         <View style={styles.header}>
           <View>
-            <Text style={styles.greeting}>Good morning, Sarah</Text>
-            <Text style={styles.journey}>Week 6 of your journey</Text>
+            <Text style={styles.greeting}>{name ? `Good morning, ${name}` : 'Good morning'}</Text>
+            <Text style={styles.journey}>Your GLP-1 journey</Text>
           </View>
           <TouchableOpacity style={styles.profileButton} accessibilityLabel="Open profile">
             <Ionicons name="person-outline" size={21} color={TrackGLPColors.plum} />
@@ -30,26 +56,26 @@ export default function HomeScreen() {
           <View style={styles.cardHeadingRow}>
             <View>
               <Text style={styles.eyebrowLight}>TOTAL PROGRESS</Text>
-              <Text style={styles.progressValue}>↓ 7.4 kg</Text>
+              <Text style={styles.progressValue}>{totalChange >= 0 ? '↓' : '↑'} {formatWeight(Math.abs(totalChange), unit)}</Text>
             </View>
             <View style={styles.encouragementBadge}>
               <Ionicons name="sparkles" size={14} color={TrackGLPColors.plum} />
-              <Text style={styles.encouragementText}>Great progress</Text>
+              <Text style={styles.encouragementText}>{totalChange > 0 ? 'Great progress' : 'Keep going'}</Text>
             </View>
           </View>
-          <ProgressBar progress={0.37} light />
+          <ProgressBar progress={goalProgress} light />
           <View style={styles.progressMetaRow}>
             <View>
               <Text style={styles.metaLabelLight}>Current</Text>
-              <Text style={styles.metaValueLight}>84.6 kg</Text>
+              <Text style={styles.metaValueLight}>{formatWeight(currentWeight, unit)}</Text>
             </View>
             <View style={styles.metaCenter}>
               <Text style={styles.metaLabelLight}>Started at</Text>
-              <Text style={styles.metaValueLight}>92 kg</Text>
+              <Text style={styles.metaValueLight}>{formatWeight(startWeight, unit)}</Text>
             </View>
             <View style={styles.metaRight}>
               <Text style={styles.metaLabelLight}>Goal</Text>
-              <Text style={styles.metaValueLight}>72 kg</Text>
+              <Text style={styles.metaValueLight}>{formatWeight(goalWeight, unit)}</Text>
             </View>
           </View>
         </DashboardCard>
@@ -59,19 +85,19 @@ export default function HomeScreen() {
             <Ionicons name="medical-outline" size={25} color={TrackGLPColors.plum} />
           </View>
           <View style={styles.doseBody}>
-            <Text style={styles.cardLabel}>NEXT DOSE</Text>
-            <Text style={styles.cardTitle}>Ozempic · 1.0 mg</Text>
-            <Text style={styles.cardDetail}>Thursday · 3 days remaining</Text>
+            <Text style={styles.cardLabel}>{hasDosePlan ? 'NEXT DOSE' : 'DOSE TRACKING'}</Text>
+            <Text style={styles.cardTitle}>{hasDosePlan ? `${dosePlan.medication} · ${formatDose(dosePlan.dose, dosePlan.unit)}` : 'Medication not set up'}</Text>
+            <Text style={styles.cardDetail}>{hasDosePlan && nextDoseDate ? `${formatDoseDay(nextDoseDate)} · ${doseTiming?.label}` : 'Add your medication and schedule in Doses'}</Text>
           </View>
-          <TouchableOpacity style={styles.primaryButton} accessibilityRole="button">
-            <Text style={styles.primaryButtonText}>Log dose</Text>
+          <TouchableOpacity style={styles.primaryButton} accessibilityRole="button" onPress={() => router.push('/doses')}>
+            <Text style={styles.primaryButtonText}>{hasDosePlan ? 'Log dose' : 'Set up in Doses'}</Text>
           </TouchableOpacity>
         </DashboardCard>
 
         <Text style={styles.sectionTitle}>Today</Text>
         <View style={styles.habitRow}>
-          <HabitCard icon="water-outline" title="Water" value="1.6 / 2.5 L" progress={0.64} />
-          <HabitCard icon="nutrition-outline" title="Protein" value="72 / 100 g" progress={0.72} />
+          <HabitCard icon="water-outline" title="Water" value={`${formatLiters(todayHabits.waterAmount)} / ${formatLiters(todayHabits.waterGoal)} L`} progress={safeRatio(todayHabits.waterAmount, todayHabits.waterGoal)} />
+          <HabitCard icon="nutrition-outline" title="Protein" value={`${formatNumber(todayHabits.proteinAmount)} / ${formatNumber(todayHabits.proteinGoal)} g`} progress={safeRatio(todayHabits.proteinAmount, todayHabits.proteinGoal)} />
         </View>
 
         <DashboardCard>
@@ -81,18 +107,18 @@ export default function HomeScreen() {
             </View>
             <View>
               <Text style={styles.cardTitle}>How are you feeling today?</Text>
-              <Text style={styles.cardDetail}>Any side effects?</Text>
+              <Text style={styles.cardDetail}>{latestSymptomToday ? `${latestSymptomToday.symptom} · ${capitalize(latestSymptomToday.severity)}` : 'No symptoms logged today'}</Text>
             </View>
           </View>
           <View style={styles.optionRow}>
-            {sideEffectOptions.map((option, index) => (
-              <View key={option} style={[styles.option, index === 0 && styles.optionSelected]}>
-                <Text style={[styles.optionText, index === 0 && styles.optionTextSelected]}>{option}</Text>
+            {sideEffectOptions.map((option) => (
+              <View key={option} style={[styles.option, selectedSymptomStatus === option && styles.optionSelected]}>
+                <Text style={[styles.optionText, selectedSymptomStatus === option && styles.optionTextSelected]}>{option}</Text>
               </View>
             ))}
           </View>
-          <TouchableOpacity style={styles.secondaryButton} accessibilityRole="button">
-            <Text style={styles.secondaryButtonText}>Log side effects</Text>
+          <TouchableOpacity style={styles.secondaryButton} accessibilityRole="button" onPress={() => router.push('/side-effects')}>
+            <Text style={styles.secondaryButtonText}>View symptoms</Text>
             <Ionicons name="arrow-forward" size={17} color={TrackGLPColors.plum} />
           </TouchableOpacity>
         </DashboardCard>
@@ -107,12 +133,22 @@ export default function HomeScreen() {
               <Text style={styles.periodText}>30 days</Text>
             </View>
           </View>
-          <WeightTrendChart />
+          {recentWeights.length > 1 ? (
+            <WeightTrendChart
+              values={recentWeights.map((entry) => fromKg(entry.weight, unit))}
+              startLabel={formatWeight(recentWeights[0].weight, unit)}
+              endLabel={formatWeight(recentWeights[recentWeights.length - 1].weight, unit)}
+            />
+          ) : (
+            <View style={styles.emptyTrend}><Text style={styles.emptyTrendText}>{recentWeights.length === 1 ? 'Keep logging to build your trend.' : 'Log your first weight to see your trend.'}</Text></View>
+          )}
           <View style={styles.trendFooter}>
             <Text style={styles.trendValue}>
-              ↓ 3.2 kg <Text style={styles.trendPeriod}>· Last 30 days</Text>
+              {recentWeights.length > 1
+                ? <>{periodChange >= 0 ? '↓' : '↑'} {formatWeight(Math.abs(periodChange), unit)} <Text style={styles.trendPeriod}>· Last 30 days</Text></>
+                : <>{recentWeights.length === 1 ? `Current ${formatWeight(recentWeights[0].weight, unit)}` : 'No weight data'}</>}
             </Text>
-            <TouchableOpacity style={styles.linkButton} accessibilityRole="button">
+            <TouchableOpacity style={styles.linkButton} accessibilityRole="button" onPress={() => router.push('/progress')}>
               <Text style={styles.linkText}>View progress</Text>
               <Ionicons name="chevron-forward" size={16} color={TrackGLPColors.plum} />
             </TouchableOpacity>
@@ -121,6 +157,68 @@ export default function HomeScreen() {
       </ScrollView>
     </SafeAreaView>
   );
+}
+
+function safeWeight(value: number) {
+  return Number.isFinite(value) && value > 0 ? value : 0;
+}
+
+function calculateGoalProgress(start: number, current: number, goal: number) {
+  const distance = start - goal;
+  if (!start || !current || !goal || Math.abs(distance) < 0.001) return 0;
+  return Math.max(0, Math.min((start - current) / distance, 1));
+}
+
+function fromKg(value: number, unit: 'kg' | 'lb') {
+  return unit === 'kg' ? value : value * 2.2046226218;
+}
+
+function formatWeight(valueKg: number, unit: 'kg' | 'lb') {
+  const value = fromKg(valueKg, unit);
+  const decimals = Math.abs(value - Math.round(value)) < 0.05 ? 0 : 1;
+  return `${value.toFixed(decimals)} ${unit}`;
+}
+
+function formatDose(amount: number, unit: string) {
+  return `${Number.isInteger(amount) ? amount.toFixed(1) : amount} ${unit}`;
+}
+
+function formatDoseDay(date: Date) {
+  return date.toLocaleDateString('en-US', { weekday: 'long' });
+}
+
+function formatLiters(valueMl: number) {
+  if (!Number.isFinite(valueMl) || valueMl <= 0) return '0';
+  const liters = valueMl / 1000;
+  return Number.isInteger(liters) ? liters.toFixed(1) : liters.toFixed(2).replace(/0$/, '');
+}
+
+function formatNumber(value: number) {
+  return Number.isFinite(value) ? (Number.isInteger(value) ? String(value) : value.toFixed(1)) : '0';
+}
+
+function safeRatio(value: number, goal: number) {
+  return Number.isFinite(value) && Number.isFinite(goal) && goal > 0 ? value / goal : 0;
+}
+
+function getLatestSymptomToday(entries: { symptom: string; severity: string; date: string }[]) {
+  const today = new Date().toDateString();
+  return entries
+    .filter((entry) => Number.isFinite(Date.parse(entry.date)) && new Date(entry.date).toDateString() === today)
+    .sort((a, b) => Date.parse(b.date) - Date.parse(a.date))[0] ?? null;
+}
+
+function getRecentWeightEntries(entries: WeightEntry[], days: number) {
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - days);
+  return entries
+    .filter((entry) => Number.isFinite(entry.weight) && entry.weight > 0 && Number.isFinite(Date.parse(entry.date)) && new Date(entry.date) >= cutoff)
+    .slice()
+    .sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
+}
+
+function capitalize(value: string) {
+  return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
 type HabitCardProps = {
@@ -191,4 +289,6 @@ const styles = StyleSheet.create({
   trendPeriod: { color: TrackGLPColors.muted, fontSize: 12, fontWeight: '500' },
   linkButton: { flexDirection: 'row', alignItems: 'center' },
   linkText: { color: TrackGLPColors.plum, fontSize: 13, fontWeight: '700' },
+  emptyTrend: { minHeight: 128, alignItems: 'center', justifyContent: 'center', marginTop: 14 },
+  emptyTrendText: { color: TrackGLPColors.muted, fontSize: 12, textAlign: 'center' },
 });

@@ -27,6 +27,28 @@ export function getNextDose(data: AppData) {
   return data.dosePlan;
 }
 
+export function parseStoredDate(value: string): Date | null {
+  const date = new Date(value);
+  return Number.isFinite(date.getTime()) ? date : null;
+}
+
+export function getDoseTiming(date: Date, now: Date = new Date()) {
+  const today = startOfLocalDay(now);
+  const due = startOfLocalDay(date);
+  const difference = Math.round((due.getTime() - today.getTime()) / 86400000);
+  if (difference === 0) return { badgeNumber: '0', label: 'Due today' };
+  if (difference === 1) return { badgeNumber: '1', label: 'Due tomorrow' };
+  if (difference > 1) return { badgeNumber: String(difference), label: `${difference} days remaining` };
+  const overdue = Math.abs(difference);
+  return { badgeNumber: String(overdue), label: `${overdue} ${overdue === 1 ? 'day' : 'days'} overdue` };
+}
+
+function startOfLocalDay(value: Date) {
+  const date = new Date(value);
+  date.setHours(0, 0, 0, 0);
+  return date;
+}
+
 export function getTodayHabits(data: AppData, date: Date = new Date()): DailyHabitEntry {
   const dateKey = toDateKey(date);
   const existing = data.dailyHabits.find((entry) => entry.date === dateKey);
