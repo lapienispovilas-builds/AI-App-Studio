@@ -7,7 +7,7 @@ import { ProgressBar } from '@/components/track-glp/progress-bar';
 import { WeightTrendChart } from '@/components/track-glp/weight-trend-chart';
 import { TrackGLPColors } from '@/constants/track-glp-theme';
 
-const sideEffectOptions = ['None', 'Mild', 'Moderate'];
+const sideEffectOptions = ['None', 'Mild', 'Moderate', 'Severe'];
 
 export default function HomeScreen() {
   return (
@@ -29,7 +29,7 @@ export default function HomeScreen() {
         <DashboardCard style={styles.progressCard}>
           <View style={styles.cardHeadingRow}>
             <View>
-              <Text style={styles.eyebrowLight}>YOUR PROGRESS</Text>
+              <Text style={styles.eyebrowLight}>TOTAL PROGRESS</Text>
               <Text style={styles.progressValue}>↓ 7.4 kg</Text>
             </View>
             <View style={styles.encouragementBadge}>
@@ -109,10 +109,9 @@ export default function HomeScreen() {
           </View>
           <WeightTrendChart />
           <View style={styles.trendFooter}>
-            <View>
-              <Text style={styles.trendValue}>↓ 3.2 kg</Text>
-              <Text style={styles.cardDetail}>Last 30 days</Text>
-            </View>
+            <Text style={styles.trendValue}>
+              ↓ 3.2 kg <Text style={styles.trendPeriod}>· Last 30 days</Text>
+            </Text>
             <TouchableOpacity style={styles.linkButton} accessibilityRole="button">
               <Text style={styles.linkText}>View progress</Text>
               <Ionicons name="chevron-forward" size={16} color={TrackGLPColors.plum} />
@@ -178,8 +177,8 @@ const styles = StyleSheet.create({
   habitValue: { color: TrackGLPColors.text, fontSize: 16, fontWeight: '700', marginTop: 4, marginBottom: 12 },
   feelingHeading: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   feelingIcon: { width: 42, height: 42, borderRadius: 14, backgroundColor: TrackGLPColors.lavender, alignItems: 'center', justifyContent: 'center' },
-  optionRow: { flexDirection: 'row', gap: 8, marginTop: 17 },
-  option: { flex: 1, alignItems: 'center', paddingVertical: 10, borderRadius: 12, borderWidth: 1, borderColor: TrackGLPColors.border, backgroundColor: '#FFFFFF' },
+  optionRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 17 },
+  option: { flexBasis: '47%', flexGrow: 1, alignItems: 'center', paddingVertical: 10, borderRadius: 12, borderWidth: 1, borderColor: TrackGLPColors.border, backgroundColor: '#FFFFFF' },
   optionSelected: { backgroundColor: TrackGLPColors.plum, borderColor: TrackGLPColors.plum },
   optionText: { color: TrackGLPColors.muted, fontSize: 12, fontWeight: '600' },
   optionTextSelected: { color: '#FFFFFF' },
@@ -189,6 +188,7 @@ const styles = StyleSheet.create({
   periodText: { color: TrackGLPColors.plum, fontSize: 11, fontWeight: '700' },
   trendFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 },
   trendValue: { color: TrackGLPColors.plum, fontSize: 19, fontWeight: '800' },
+  trendPeriod: { color: TrackGLPColors.muted, fontSize: 12, fontWeight: '500' },
   linkButton: { flexDirection: 'row', alignItems: 'center' },
   linkText: { color: TrackGLPColors.plum, fontSize: 13, fontWeight: '700' },
 });

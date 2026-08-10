@@ -1,12 +1,23 @@
+import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { TrackGLPColors } from '@/constants/track-glp-theme';
 
-const points = [83, 72, 67, 55, 51, 39, 34, 25];
+// React Native's vertical coordinates increase from top to bottom, so these
+// values intentionally increase to show weight moving down over time.
+const points = [25, 34, 39, 51, 55, 67, 72, 83];
 
 export function WeightTrendChart() {
+  const [chartWidth, setChartWidth] = useState(252);
+  const horizontalPadding = 14;
+  const lineWidth = Math.max(chartWidth - horizontalPadding * 2, 1);
+  const stepWidth = lineWidth / (points.length - 1);
+
   return (
-    <View style={styles.wrap}>
+    <View
+      style={styles.wrap}
+      onLayout={(event) => setChartWidth(event.nativeEvent.layout.width)}
+    >
       <Text style={styles.startLabel}>92</Text>
       <Text style={styles.endLabel}>84.6</Text>
       <View style={styles.gridTop} />
@@ -15,7 +26,7 @@ export function WeightTrendChart() {
       <View style={styles.lineWrap}>
         {points.slice(0, -1).map((point, index) => {
           const next = points[index + 1];
-          const dx = 36;
+          const dx = stepWidth;
           const dy = next - point;
           const length = Math.sqrt(dx * dx + dy * dy);
           const angle = Math.atan2(dy, dx) * (180 / Math.PI);
@@ -27,7 +38,7 @@ export function WeightTrendChart() {
           );
         })}
         {points.map((point, index) => (
-          <View key={`dot-${index}`} style={[styles.dot, { left: index * 36 - 3, top: point - 3 }]} />
+          <View key={`dot-${index}`} style={[styles.dot, { left: index * stepWidth - 3, top: point - 3 }]} />
         ))}
       </View>
     </View>
@@ -36,7 +47,7 @@ export function WeightTrendChart() {
 
 const styles = StyleSheet.create({
   wrap: { height: 128, marginTop: 14, position: 'relative', overflow: 'hidden' },
-  lineWrap: { position: 'absolute', left: 14, right: 10, top: 7, height: 96 },
+  lineWrap: { position: 'absolute', left: 14, right: 14, top: 7, height: 96 },
   segment: { position: 'absolute', height: 3, borderRadius: 2, backgroundColor: TrackGLPColors.purple, transformOrigin: 'left center' },
   dot: { position: 'absolute', width: 8, height: 8, borderRadius: 4, backgroundColor: TrackGLPColors.purple, borderWidth: 2, borderColor: '#FFFFFF' },
   gridTop: { position: 'absolute', left: 0, right: 0, top: 20, height: 1, backgroundColor: '#EEE8EF' },
