@@ -61,22 +61,6 @@ export function ChapterrLandingPage({ config }: { config: ChapterrLandingPageCon
         </div>
       </section>
 
-      <section className="chapterr-concept">
-        <div className="chapterr-concept__visual" aria-hidden="true">
-          <ul>
-            <li>Building a business or personal project</li>
-            <li>Changing career direction</li>
-            <li>Improving myself and my lifestyle</li>
-            <li>Moving to a new place</li>
-          </ul>
-        </div>
-        <div className="chapterr-concept__copy">
-          <p className="chapterr-kicker">Meet people where you are now</p>
-          <h2>A circle shaped around your current chapter.</h2>
-          <p>{config.concept}</p>
-        </div>
-      </section>
-
       <section className="chapterr-how">
         <div className="chapterr-section-heading">
           <p className="chapterr-kicker">How it works</p>

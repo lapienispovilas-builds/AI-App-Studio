@@ -6,7 +6,6 @@ export type ChapterrLandingPageConfig = {
   heroCta: string
   recognitionTitle: string
   recognitionCards: string[]
-  concept: string
   steps: string[]
   finalHeadline: string
   finalCta: string
@@ -28,7 +27,6 @@ export const chapterrLandingPage: ChapterrLandingPageConfig = {
     'Moving to a new place',
     'Figuring out my next direction',
   ],
-  concept: 'Chapterr is for people going through transitions. Find others who understand your current chapter — people with similar goals, mindset, and experiences.',
   steps: ['Share your chapter', 'Discover similar people', 'Start a conversation'],
   finalHeadline: "Your next chapter shouldn't be written alone.",
   finalCta: 'Join the waitlist',
