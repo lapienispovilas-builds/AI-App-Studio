@@ -1,6 +1,8 @@
 import { HomePage } from './components/HomePage'
 import { LandingPage } from './components/LandingPage'
 import { Phase2LandingPage } from './components/Phase2LandingPage'
+import { ChapterrLandingPage } from './components/ChapterrLandingPage'
+import { chapterrLandingPage } from './chapterrLandingPageConfig'
 import { landingPagesByPath } from './landingPageConfig'
 import { phase2LandingPagesByPath } from './phase2LandingPageConfig'
 
@@ -10,6 +12,7 @@ export function App() {
   const phase2Config = phase2LandingPagesByPath[path]
 
   if (path === '/') return <HomePage />
+  if (path === `/${chapterrLandingPage.slug}`) return <ChapterrLandingPage config={chapterrLandingPage} />
   if (config) return <LandingPage config={config} />
   if (phase2Config) return <Phase2LandingPage config={phase2Config} />
 

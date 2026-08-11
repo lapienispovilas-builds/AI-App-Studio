@@ -1,12 +1,13 @@
 import { landingPages } from '../landingPageConfig'
 import { phase2LandingPages } from '../phase2LandingPageConfig'
+import { chapterrLandingPage } from '../chapterrLandingPageConfig'
 
 export function HomePage() {
   return (
     <main className="home">
       <div className="home__intro">
         <p className="eyebrow"><span />Internal testing</p>
-        <h1>Ten experiments.<br />One simple goal.</h1>
+        <h1>Eleven experiments.<br />One simple goal.</h1>
         <p>Choose a validation landing page to preview.</p>
       </div>
 
@@ -24,6 +25,21 @@ export function HomePage() {
               <span className="idea-card__link">View page →</span>
             </a>
           ))}
+        </div>
+      </section>
+
+      <section className="testing-section">
+        <div className="testing-section__heading">
+          <p>New idea</p>
+          <h2>Community Validation</h2>
+        </div>
+        <div className="idea-grid">
+          <a className="idea-card" href={`/${chapterrLandingPage.slug}`} style={{ '--card-accent': '#8b5e4b', '--card-soft': '#f3e8df' } as React.CSSProperties}>
+            <span className="idea-card__number">01</span>
+            <h2>{chapterrLandingPage.brand}</h2>
+            <p>{chapterrLandingPage.subtitle}</p>
+            <span className="idea-card__link">View page →</span>
+          </a>
         </div>
       </section>
 
