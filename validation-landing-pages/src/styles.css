@@ -611,3 +611,45 @@ fieldset { padding: 0; margin: 25px 0; border: 0; }
   .chapterr-steps article { min-height: 175px; }.chapterr-steps h3 { margin-top: 30px; }.chapterr-final { padding-top: 86px; padding-bottom: 94px; }.chapterr-final .chapterr-button { width: min(100%, 330px); }
   .chapterr-footer { flex-direction: column; justify-content: center; text-align: center; }
 }
+
+/* Chapterr visual refinement */
+.chapterr-page { --chapterr-ink: #171715; --chapterr-brown: #8d7a62; --chapterr-rust: #b59b79; --chapterr-cream: #f6f1e8; --chapterr-sand: #ded3c2; }
+.chapterr-wordmark img { width: 39px; height: 39px; display: block; object-fit: cover; border-radius: 50%; box-shadow: 0 5px 14px rgba(25,23,19,.16); }
+.chapterr-hero { grid-template-columns: minmax(0, 1.12fr) minmax(390px, .88fr); gap: 62px; }
+.chapterr-hero h1 { max-width: 720px; font-size: clamp(57px, 6.5vw, 88px); font-weight: 650; line-height: .97; letter-spacing: -4.8px; }
+.chapterr-highlight { color: var(--chapterr-brown); }
+.chapterr-highlight--new { color: #a5674d; }
+.chapterr-hero__subtitle strong, .chapterr-concept__copy strong { color: var(--chapterr-brown); }
+.chapterr-people { min-height: 540px; overflow: visible; border-radius: 44px; background: #ded3c2; box-shadow: 0 32px 75px rgba(45,37,29,.18); }
+.chapterr-lifestyle { position: absolute; display: block; object-fit: cover; border: 5px solid rgba(255,253,248,.94); box-shadow: 0 18px 34px rgba(39,31,25,.2); }
+.chapterr-lifestyle--main { inset: 0; width: 100%; height: 100%; border: 0; border-radius: 44px; object-position: 54% center; filter: saturate(.8) sepia(.06); }
+.chapterr-people::after { content: ''; position: absolute; inset: 0; border-radius: 44px; background: linear-gradient(180deg, transparent 38%, rgba(21,19,17,.52)); pointer-events: none; }
+.chapterr-lifestyle--one, .chapterr-lifestyle--two { z-index: 3; width: 88px; height: 88px; border-radius: 50%; }
+.chapterr-lifestyle--one { left: -34px; top: 62px; }.chapterr-lifestyle--two { right: -29px; top: 112px; }
+.chapterr-chapter-card { position: absolute; z-index: 4; min-width: 215px; padding: 13px 15px; display: flex; align-items: center; gap: 11px; border: 1px solid rgba(255,255,255,.65); border-radius: 15px; color: #24211e; background: rgba(255,253,249,.93); box-shadow: 0 14px 28px rgba(29,24,20,.16); backdrop-filter: blur(9px); }
+.chapterr-chapter-card svg { flex: 0 0 auto; color: #9d6b53; }.chapterr-chapter-card span { display: flex; flex-direction: column; gap: 2px; }.chapterr-chapter-card small { color: #81756d; font-size: 9px; font-weight: 750; letter-spacing: .65px; text-transform: uppercase; }.chapterr-chapter-card strong { font-size: 11px; }
+.chapterr-chapter-card--one { left: -29px; top: 167px; }.chapterr-chapter-card--two { right: -24px; top: 221px; }
+.chapterr-connection { left: 22px; right: 22px; bottom: 22px; width: auto; grid-template-columns: auto 1fr; color: #24211e; }
+.chapterr-connection > span { display: flex; flex-direction: column; gap: 3px; }.chapterr-connection strong { font-size: 12px; line-height: 1.35; }.chapterr-connection small { font-size: 10px; }
+.chapterr-recognition__grid { grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid #dcd0c1; }
+.chapterr-recognition__grid article { position: relative; min-height: 145px; padding: 27px 24px 26px 0; gap: 15px; border: 0; border-bottom: 1px solid #dcd0c1; border-radius: 0; background: transparent; box-shadow: none; }
+.chapterr-recognition__grid article:nth-child(3n+2) { padding-left: 24px; }.chapterr-recognition__grid article:nth-child(3n+3) { padding-left: 24px; }
+.chapterr-recognition__grid article::before { content: ''; position: absolute; left: 0; top: 28px; bottom: 28px; width: 2px; border-radius: 2px; background: #b59b79; opacity: .7; }
+.chapterr-recognition__grid article:nth-child(2)::before, .chapterr-recognition__grid article:nth-child(5)::before { background: #a5674d; }.chapterr-recognition__grid article:nth-child(3)::before, .chapterr-recognition__grid article:nth-child(6)::before { background: #7c8067; }
+.chapterr-recognition__grid article > span { width: 34px; height: 34px; border-radius: 10px; color: #8d7a62; background: rgba(255,255,255,.54); }
+.chapterr-recognition__grid article:nth-child(2) > span, .chapterr-recognition__grid article:nth-child(5) > span { color: #a5674d; }.chapterr-recognition__grid article:nth-child(3) > span, .chapterr-recognition__grid article:nth-child(6) > span { color: #69705b; }
+.chapterr-recognition__grid p { margin-top: 2px; font-size: 16px; }
+.chapterr-step-icon { width: 48px; height: 48px; margin-top: 28px; display: grid; place-items: center; border: 1px solid rgba(231,211,192,.28); border-radius: 14px; color: #e1bba5; background: rgba(255,255,255,.06); }
+.chapterr-steps h3 { margin-top: 22px; }.chapterr-steps .chapterr-step-arrow { width: 38px; height: 38px; margin-top: auto; display: grid; place-items: center; border-radius: 50%; color: #2d2723; background: #e1bba5; }
+.chapterr-footer { min-height: 126px; align-items: center; }.chapterr-footer__legal { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px 22px; color: #817a72; font-size: 12px; }
+
+@media (max-width: 800px) {
+  .chapterr-hero { grid-template-columns: 1fr; }.chapterr-recognition__grid { grid-template-columns: repeat(2, 1fr); }.chapterr-recognition__grid article:nth-child(n) { padding-left: 20px; padding-right: 20px; }
+}
+
+@media (max-width: 560px) {
+  .chapterr-wordmark img { width: 35px; height: 35px; }.chapterr-hero h1 { font-size: 49px; font-weight: 650; line-height: .99; letter-spacing: -3px; }
+  .chapterr-people { min-height: 440px; border-radius: 30px; }.chapterr-lifestyle--main, .chapterr-people::after { border-radius: 30px; }.chapterr-lifestyle--one, .chapterr-lifestyle--two { width: 68px; height: 68px; border-width: 4px; }.chapterr-lifestyle--one { left: 12px; top: 16px; }.chapterr-lifestyle--two { right: 12px; top: 16px; }.chapterr-chapter-card { min-width: 0; width: calc(100% - 32px); left: 16px; right: 16px; }.chapterr-chapter-card--one { top: 102px; }.chapterr-chapter-card--two { top: 166px; }.chapterr-connection { left: 14px; right: 14px; bottom: 14px; }
+  .chapterr-recognition__grid { grid-template-columns: 1fr; }.chapterr-recognition__grid article:nth-child(n) { min-height: 0; padding: 21px 10px 21px 18px; }.chapterr-recognition__grid article::before { top: 19px; bottom: 19px; }
+  .chapterr-footer { padding-top: 31px; padding-bottom: 31px; }.chapterr-footer__legal { justify-content: center; }
+}

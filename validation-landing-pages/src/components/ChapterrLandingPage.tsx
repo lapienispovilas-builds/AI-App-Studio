@@ -1,7 +1,19 @@
-import { ArrowRight, Compass, MessageCircle, Sparkles, UsersRound } from 'lucide-react'
+import { ArrowRight, Compass, Map, MessageCircle, Route, Send, Sparkles, UserRoundSearch, UsersRound } from 'lucide-react'
 import type { ChapterrLandingPageConfig } from '../chapterrLandingPageConfig'
 
-const recognitionIcons = [Sparkles, Compass, UsersRound, MessageCircle]
+const recognitionIcons = [Sparkles, Compass, UsersRound, Route, Map, UserRoundSearch]
+const stepIcons = [Route, UserRoundSearch, MessageCircle]
+
+function highlightHeroHeadline(headline: string) {
+  const oldCircle = 'your old circle'
+  const newCircle = 'your new one yet'
+  const oldIndex = headline.indexOf(oldCircle)
+  const newIndex = headline.indexOf(newCircle)
+
+  if (oldIndex === -1 || newIndex === -1) return headline
+
+  return <>{headline.slice(0, oldIndex)}<span className="chapterr-highlight chapterr-highlight--old">{oldCircle}</span>{headline.slice(oldIndex + oldCircle.length, newIndex)}<span className="chapterr-highlight chapterr-highlight--new">{newCircle}</span>{headline.slice(newIndex + newCircle.length)}</>
+}
 
 function typeformHref(typeformUrl: string) {
   const query = window.location.search.replace(/^\?/, '')
@@ -15,25 +27,25 @@ export function ChapterrLandingPage({ config }: { config: ChapterrLandingPageCon
     <main className="chapterr-page">
       <header className="chapterr-header">
         <a className="chapterr-wordmark" href={`/${config.slug}`} aria-label={`${config.brand} home`}>
-          <span aria-hidden="true">C</span>{config.brand}
+          <img src="/chapterr/chapterr-logo.png" alt="" />{config.brand}
         </a>
       </header>
 
       <section className="chapterr-hero">
         <div className="chapterr-hero__copy">
           <p className="chapterr-kicker">For the chapter between who you were and who you're becoming</p>
-          <h1>{config.headline}</h1>
+          <h1>{highlightHeroHeadline(config.headline)}</h1>
           <p className="chapterr-hero__subtitle">{config.subtitle}</p>
           <a className="chapterr-button" href={waitlistUrl}>{config.heroCta}<ArrowRight size={19} /></a>
         </div>
 
-        <div className="chapterr-people" aria-label="A warm community of people in new chapters of life">
-          <div className="chapterr-orbit chapterr-orbit--one" />
-          <div className="chapterr-orbit chapterr-orbit--two" />
-          <div className="chapterr-person chapterr-person--one"><span /></div>
-          <div className="chapterr-person chapterr-person--two"><span /></div>
-          <div className="chapterr-person chapterr-person--three"><span /></div>
-          <div className="chapterr-connection"><UsersRound size={22} /><strong>Similar chapter</strong><small>A conversation worth starting</small></div>
+        <div className="chapterr-people" aria-label="People finding connection during different chapters of life">
+          <img className="chapterr-lifestyle chapterr-lifestyle--main" src="/scenario-images/together-busy-day.jpg" alt="Two people talking openly over coffee" />
+          <img className="chapterr-lifestyle chapterr-lifestyle--one" src="/testimonial-avatars/jonathan.jpg" alt="A founder beginning a new chapter" />
+          <img className="chapterr-lifestyle chapterr-lifestyle--two" src="/testimonial-avatars/jemima.jpg" alt="A person changing direction in life" />
+          <div className="chapterr-chapter-card chapterr-chapter-card--one"><Route size={17} /><span><small>Current chapter</small><strong>Building something new</strong></span></div>
+          <div className="chapterr-chapter-card chapterr-chapter-card--two"><Send size={17} /><span><small>New connection</small><strong>Someone who gets it</strong></span></div>
+          <div className="chapterr-connection"><UsersRound size={22} /><span><strong>Quit his job to build his own company.</strong><small>A conversation worth starting</small></span></div>
         </div>
       </section>
 
@@ -68,9 +80,10 @@ export function ChapterrLandingPage({ config }: { config: ChapterrLandingPageCon
           <h2>Less networking. More recognition.</h2>
         </div>
         <div className="chapterr-steps">
-          {config.steps.map((step, index) => (
-            <article key={step}><span>0{index + 1}</span><h3>{step}</h3><div aria-hidden="true"><ArrowRight size={18} /></div></article>
-          ))}
+          {config.steps.map((step, index) => {
+            const Icon = stepIcons[index]
+            return <article key={step}><span>0{index + 1}</span><div className="chapterr-step-icon"><Icon size={25} /></div><h3>{step}</h3><div className="chapterr-step-arrow" aria-hidden="true"><ArrowRight size={18} /></div></article>
+          })}
         </div>
       </section>
 
@@ -80,7 +93,10 @@ export function ChapterrLandingPage({ config }: { config: ChapterrLandingPageCon
         <a className="chapterr-button chapterr-button--light" href={waitlistUrl}>{config.finalCta}<ArrowRight size={19} /></a>
       </section>
 
-      <footer className="chapterr-footer"><span className="chapterr-wordmark"><i aria-hidden="true">C</i>{config.brand}</span><small>Made for life's in-between chapters.</small></footer>
+      <footer className="chapterr-footer">
+        <span className="chapterr-wordmark"><img src="/chapterr/chapterr-logo.png" alt="" />{config.brand}</span>
+        <div className="chapterr-footer__legal" aria-label="Legal information"><span>Privacy Statement</span><span>Terms and Conditions</span><span>DMCA Policy</span><span>Do Not Sell My Info</span></div>
+      </footer>
     </main>
   )
 }
