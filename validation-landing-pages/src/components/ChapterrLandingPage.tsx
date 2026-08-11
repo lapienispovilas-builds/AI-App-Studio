@@ -2,7 +2,6 @@ import { ArrowRight, Compass, Map, MessageCircle, Route, Send, Sparkles, UserRou
 import type { ChapterrLandingPageConfig } from '../chapterrLandingPageConfig'
 
 const recognitionIcons = [Sparkles, Compass, UsersRound, Route, Map, UserRoundSearch]
-const stepIcons = [Route, UserRoundSearch, MessageCircle]
 
 function highlightHeroHeadline(headline: string) {
   const oldCircle = 'your old circle'
@@ -40,7 +39,7 @@ export function ChapterrLandingPage({ config }: { config: ChapterrLandingPageCon
         </div>
 
         <div className="chapterr-people" aria-label="People finding connection during different chapters of life">
-          <img className="chapterr-lifestyle chapterr-lifestyle--main" src="/scenario-images/together-busy-day.jpg" alt="Two people talking openly over coffee" />
+          <img className="chapterr-lifestyle chapterr-lifestyle--main" src="/chapterr/chapterr-community-hero.png" alt="Three new peers sharing ideas around a table" />
           <img className="chapterr-lifestyle chapterr-lifestyle--one" src="/testimonial-avatars/jonathan.jpg" alt="A founder beginning a new chapter" />
           <img className="chapterr-lifestyle chapterr-lifestyle--two" src="/testimonial-avatars/jemima.jpg" alt="A person changing direction in life" />
           <div className="chapterr-chapter-card chapterr-chapter-card--one"><Route size={17} /><span><small>Current chapter</small><strong>Building something new</strong></span></div>
@@ -80,10 +79,9 @@ export function ChapterrLandingPage({ config }: { config: ChapterrLandingPageCon
           <h2>Less networking. More recognition.</h2>
         </div>
         <div className="chapterr-steps">
-          {config.steps.map((step, index) => {
-            const Icon = stepIcons[index]
-            return <article key={step}><span>0{index + 1}</span><div className="chapterr-step-icon"><Icon size={25} /></div><h3>{step}</h3><div className="chapterr-step-arrow" aria-hidden="true"><ArrowRight size={18} /></div></article>
-          })}
+          {config.steps.map((step, index) => (
+            <article key={step}><span className="chapterr-step-number">{index + 1}</span><h3>{step}</h3><div className="chapterr-step-arrow" aria-hidden="true"><ArrowRight size={18} /></div></article>
+          ))}
         </div>
       </section>
 
