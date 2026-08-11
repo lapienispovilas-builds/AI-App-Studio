@@ -1,4 +1,4 @@
-import { ArrowRight, Compass, Map, MessageCircle, Route, Send, Sparkles, UserRoundSearch, UsersRound } from 'lucide-react'
+import { ArrowRight, Compass, Map, Route, Send, Sparkles, UserRoundSearch, UsersRound } from 'lucide-react'
 import type { ChapterrLandingPageConfig } from '../chapterrLandingPageConfig'
 
 const recognitionIcons = [Sparkles, Compass, UsersRound, Route, Map, UserRoundSearch]
@@ -63,8 +63,12 @@ export function ChapterrLandingPage({ config }: { config: ChapterrLandingPageCon
 
       <section className="chapterr-concept">
         <div className="chapterr-concept__visual" aria-hidden="true">
-          <span>Building</span><span>Changing direction</span><span>Starting again</span>
-          <div><MessageCircle size={25} /></div>
+          <ul>
+            <li>Building a business or personal project</li>
+            <li>Changing career direction</li>
+            <li>Improving myself and my lifestyle</li>
+            <li>Moving to a new place</li>
+          </ul>
         </div>
         <div className="chapterr-concept__copy">
           <p className="chapterr-kicker">Meet people where you are now</p>
