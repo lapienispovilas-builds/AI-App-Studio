@@ -27,15 +27,12 @@ import {
 } from '@/services/local-notifications';
 import type { DoseEntry, DosePlan } from '@/types/app-data';
 import { getDoseTiming, parseStoredDate } from '@/utils/app-data-helpers';
+import { formatDose, parseDoseInput } from '@/utils/dose';
 
 type InjectionSite = 'Abdomen' | 'Thigh' | 'Upper arm';
 
 const medications = ['Ozempic', 'Wegovy', 'Mounjaro', 'Zepbound', 'Other'];
 const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
-function formatDose(amount: number, unit: string) {
-  return `${amount.toFixed(1)} ${unit}`;
-}
 
 export default function DosesScreen() {
   const { data, addDoseEntry, updateDosePlan, updateProfile, updateReminderSettings } = useAppData();
@@ -444,8 +441,8 @@ function ScheduleModal({ visible, plan, onClose, onSave }: { visible: boolean; p
     setScheduledDay(plan?.scheduledDay ?? '');
   }
 
-  const parsedDose = Number.parseFloat(dose.replace(',', '.'));
-  const valid = Boolean(medication && scheduledDay && Number.isFinite(parsedDose) && parsedDose > 0);
+  const parsedDose = parseDoseInput(dose);
+  const valid = Boolean(medication && scheduledDay && parsedDose !== null);
 
   return (
     <Modal visible={visible} transparent animationType="slide" onShow={prepare} onRequestClose={onClose}>
@@ -474,7 +471,7 @@ function ScheduleModal({ visible, plan, onClose, onSave }: { visible: boolean; p
               </View>
             </View>
 
-            <TouchableOpacity style={[styles.saveButton, !valid && styles.disabledButton]} disabled={!valid} onPress={() => onSave({ medication, dose: parsedDose, scheduledDay })} accessibilityRole="button">
+            <TouchableOpacity style={[styles.saveButton, !valid && styles.disabledButton]} disabled={!valid} onPress={() => parsedDose !== null && onSave({ medication, dose: parsedDose, scheduledDay })} accessibilityRole="button">
               <Text style={styles.saveButtonText}>Save schedule</Text>
             </TouchableOpacity>
           </ScrollView>

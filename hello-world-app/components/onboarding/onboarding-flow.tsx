@@ -16,6 +16,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { TrackGLPColors } from '@/constants/track-glp-theme';
 import { useAppData } from '@/context/app-data-context';
 import type { Glp1Status, OnboardingData, Sex, UnitSystem } from '@/types/app-data';
+import { parseDoseInput } from '@/utils/dose';
 
 type Step = 'welcome' | 'units' | 'treatment' | 'medication' | 'dose' | 'schedule' |
   'startingWeight' | 'currentWeight' | 'goalWeight' | 'height' | 'age' | 'sex' | 'disclaimer';
@@ -319,7 +320,7 @@ function isStepValid(step: Step, answers: Answers) {
     case 'units': return Boolean(answers.unitSystem);
     case 'treatment': return Boolean(answers.glp1Status);
     case 'medication': return Boolean(answers.medication);
-    case 'dose': return positive(answers.dose);
+    case 'dose': return parseDoseInput(answers.dose) !== null;
     case 'schedule': return Boolean(answers.scheduledDay);
     case 'startingWeight': return validMeasurement('weight', 'startingWeight', answers);
     case 'currentWeight': return validMeasurement('weight', 'currentWeight', answers);
@@ -353,7 +354,7 @@ function buildOnboardingData(answers: Answers): OnboardingData | null {
     ageRange: answers.ageRange,
     sex: answers.sex,
     medication: answers.glp1Status === 'started' ? answers.medication ?? undefined : undefined,
-    doseMg: answers.glp1Status === 'started' ? Number(answers.dose) : undefined,
+    doseMg: answers.glp1Status === 'started' ? parseDoseInput(answers.dose) ?? undefined : undefined,
     scheduledDay: answers.glp1Status === 'started' ? answers.scheduledDay ?? undefined : undefined,
   };
 }

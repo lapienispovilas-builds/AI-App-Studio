@@ -11,6 +11,7 @@ import { TrackGLPColors } from '@/constants/track-glp-theme';
 import { useAppData } from '@/context/app-data-context';
 import type { WeightEntry } from '@/types/app-data';
 import { getCurrentWeight, getDoseTiming, getTodayHabits, parseStoredDate } from '@/utils/app-data-helpers';
+import { formatDose } from '@/utils/dose';
 
 const sideEffectOptions = ['None', 'Mild', 'Moderate', 'Severe'];
 
@@ -177,10 +178,6 @@ function formatWeight(valueKg: number, unit: 'kg' | 'lb') {
   const value = fromKg(valueKg, unit);
   const decimals = Math.abs(value - Math.round(value)) < 0.05 ? 0 : 1;
   return `${value.toFixed(decimals)} ${unit}`;
-}
-
-function formatDose(amount: number, unit: string) {
-  return `${Number.isInteger(amount) ? amount.toFixed(1) : amount} ${unit}`;
 }
 
 function formatDoseDay(date: Date) {
