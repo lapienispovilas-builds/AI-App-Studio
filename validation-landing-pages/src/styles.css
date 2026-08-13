@@ -190,6 +190,12 @@ fieldset { padding: 0; margin: 25px 0; border: 0; }
 .phase2-benefits article > span { width: 43px; height: 43px; display: grid; place-items: center; border-radius: 13px; color: white; background: var(--accent); box-shadow: 0 8px 18px color-mix(in srgb, var(--accent), transparent 70%); }
 .phase2-benefits h2 { margin: 18px 0 7px; color: #222329; font-size: 16px; letter-spacing: -.35px; }
 .phase2-benefits p { margin: 0; color: #62636b; font-size: 13px; line-height: 1.5; }
+.phase2-upcoming { padding: 96px max(18px, calc((100% - 1040px)/2)) 104px; background: color-mix(in srgb, var(--accent-soft), white 36%); }
+.phase2-upcoming__grid { margin-top: 44px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.phase2-upcoming__grid article { min-height: 218px; padding: 27px; border: 1px solid color-mix(in srgb, var(--accent), transparent 72%); border-radius: 20px; background: rgba(255,255,255,.9); box-shadow: 0 15px 34px rgba(28,29,36,.07); }
+.phase2-upcoming__grid article > span { width: fit-content; padding: 6px 9px; display: block; border-radius: 999px; color: var(--accent-deep); background: var(--accent-soft); font-size: 10px; font-weight: 850; letter-spacing: .7px; text-transform: uppercase; }
+.phase2-upcoming__grid h3 { margin: 24px 0 9px; font-size: 20px; line-height: 1.2; letter-spacing: -.5px; }
+.phase2-upcoming__grid p { margin: 0; color: #62636b; font-size: 14px; line-height: 1.65; }
 .phase2-section-heading { max-width: 710px; }
 .phase2-section-heading h2, .phase2-difference h2, .phase2-final-cta h2 { margin: 0; font-size: clamp(34px, 4.6vw, 56px); line-height: 1.04; letter-spacing: -2.5px; }
 .phase2-section-heading > p:last-child, .phase2-difference__copy > p:last-child { margin: 21px 0 0; color: #5d5e66; font-size: 17px; line-height: 1.7; }
@@ -476,6 +482,8 @@ fieldset { padding: 0; margin: 25px 0; border: 0; }
   .phase2-hero__copy .phase2-kicker { margin-inline: auto; }
   .phase2-hero__copy > p:not(.phase2-kicker) { margin-inline: auto; }
   .phase2-benefits { padding-top: 66px; padding-bottom: 74px; }
+  .phase2-upcoming__grid { grid-template-columns: 1fr; }
+  .phase2-upcoming__grid article { min-height: 0; }
   .phase2-situations, .phase2-steps { max-width: 440px; grid-template-columns: 1fr; margin-inline: auto; }
   .phase2-situations { margin-top: 42px; }
   .phase2-steps { margin-top: 48px; }
@@ -501,7 +509,7 @@ fieldset { padding: 0; margin: 25px 0; border: 0; }
   .outcome-phone::before { width: 350px; height: 350px; }
   .phase2-benefits { grid-template-columns: 1fr; }
   .phase2-benefits article { min-height: 0; padding: 21px; }
-  .phase2-problem, .phase2-how, .phase2-difference, .phase2-testimonials, .phase2-final-cta { padding-top: 74px; padding-bottom: 78px; }
+  .phase2-problem, .phase2-how, .phase2-upcoming, .phase2-difference, .phase2-testimonials, .phase2-final-cta { padding-top: 74px; padding-bottom: 78px; }
   .phase2-section-heading h2, .phase2-difference h2, .phase2-final-cta h2 { font-size: 35px; letter-spacing: -1.8px; }
   .phase2-section-heading > p:last-child, .phase2-difference__copy > p:last-child, .phase2-final-cta p { font-size: 15px; }
   .phase2-situations, .phase2-steps, .phase2-testimonial-grid { grid-template-columns: 1fr; }

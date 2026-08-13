@@ -7,6 +7,14 @@ const PHASE_2_SHEETS = {
     sheetName: 'TrackGLP Leads',
     questions: ["What's your biggest challenge?", 'What would help you most?'],
   },
+  '/glp1-tracker-maintenance': {
+    sheetName: 'TrackGLP Positioning Leads',
+    questions: ['Where are you in your GLP-1 journey?', "What's your biggest challenge?", 'What would help you most?', 'landingVariant'],
+  },
+  '/glp1-tracker-journey': {
+    sheetName: 'TrackGLP Positioning Leads',
+    questions: ['Where are you in your GLP-1 journey?', "What's your biggest challenge?", 'What would help you most?', 'landingVariant'],
+  },
   '/dating-again': {
     sheetName: 'NextDate Leads',
     questions: ["What's hardest right now?", 'How long have you been single?'],

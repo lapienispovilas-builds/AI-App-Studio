@@ -80,7 +80,10 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
         page: `/${config.slug}`,
         email: email.trim(),
         answers: Object.fromEntries(
-          config.questions.map((question) => [question.label, answers[question.id]]),
+          [
+            ...config.questions.map((question) => [question.label, answers[question.id]]),
+            ...(config.landingVariant ? [['landingVariant', config.landingVariant]] : []),
+          ],
         ),
       })
       if (!hasTrackedLead.current) {
@@ -160,6 +163,24 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
         })}
       </section>
 
+      {config.upcomingFeatures && (
+        <section className="phase2-upcoming">
+          <div className="phase2-section-heading phase2-section-heading--center">
+            <p className="phase2-kicker">Upcoming features</p>
+            <h2>{config.upcomingFeatures.headline}</h2>
+          </div>
+          <div className="phase2-upcoming__grid">
+            {config.upcomingFeatures.cards.map((feature) => (
+              <article key={feature.title}>
+                <span>Coming soon</span>
+                <h3>{feature.title}</h3>
+                <p>{feature.description}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
       {config.difference && (
         <section className="phase2-difference">
           <div className="phase2-difference__copy">
@@ -183,7 +204,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
       <section className="phase2-signup" id="early-access">
         <div className="phase2-signup__intro">
           <p className="phase2-kicker">Early access</p>
-          <h2>{config.headline}</h2>
+          <h2>{config.signupHeadline ?? config.headline}</h2>
           <div className="phase2-proof-badge"><UsersRound size={16} /> Built with early users</div>
           <p>{config.socialProof}</p>
           {config.trustNote && <p className="phase2-trust-note"><LockKeyhole size={16} /> <span>{config.trustNote}</span></p>}

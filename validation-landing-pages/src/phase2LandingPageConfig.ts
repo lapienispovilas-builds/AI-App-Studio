@@ -112,6 +112,12 @@ export type Phase2LandingPageConfig = {
     description: string
     comparisons: Array<{ current: string; better: string }>
   }
+  upcomingFeatures?: {
+    headline: string
+    cards: Array<{ title: string; description: string }>
+  }
+  landingVariant?: 'maintenance' | 'whole-journey'
+  signupHeadline?: string
   trustNote?: string
   testimonials?: LandingTestimonial[]
   finalCta?: { headline: string; headlineHighlight: string; description: string }
@@ -503,6 +509,122 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
   },
 ]
 
+const trackGlpBase = phase2LandingPages.find((page) => page.slug === 'glp1-tracker')!
+
+const journeyStageQuestion: Phase2Question = {
+  id: 'journey_stage',
+  label: 'Where are you in your GLP-1 journey?',
+  options: [
+    'Just starting a GLP-1',
+    'Currently on a GLP-1',
+    'Recently stopped or tapering off',
+    'Considering stopping',
+    'Not currently using a GLP-1',
+  ],
+}
+
+const positioningQuestions = [
+  journeyStageQuestion,
+  ...trackGlpBase.questions.map((question) => question.id === 'most_helpful'
+    ? { ...question, options: [...question.options, 'Keeping my results after stopping'] }
+    : { ...question, options: [...question.options] }),
+]
+
+const positioningFaqs = [
+  ...trackGlpBase.faqs,
+  {
+    question: 'What if I eventually stop my medication?',
+    answer: "TrackGLP is being designed to remain useful whether you're actively on treatment, tapering, or maintaining afterward. Your history, progress and habits shouldn't disappear just because your treatment changes.",
+  },
+  {
+    question: 'Is the movement guidance a workout plan?',
+    answer: 'No. It will provide general educational context around movement and activity, not personalized medical or exercise prescriptions. Always follow guidance from your healthcare provider.',
+  },
+]
+
+export const trackGlpPositioningPages: Phase2LandingPageConfig[] = [
+  {
+    ...trackGlpBase,
+    slug: 'glp1-tracker-maintenance',
+    landingVariant: 'maintenance',
+    headline: "Your GLP-1 journey doesn't end when the prescription does.",
+    heroHighlight: "doesn't end when the prescription does",
+    subheadline: 'Track your progress today. Build the habits that help you keep it tomorrow.',
+    subheadlineHighlight: 'keep it tomorrow',
+    signupHeadline: 'Help shape TrackGLP',
+    problem: {
+      ...trackGlpBase.problem!,
+      description: 'Your dose matters, but so do weight, symptoms, hydration, protein, movement and the habits you build around treatment. TrackGLP is designed to keep those pieces connected so your progress still makes sense when your treatment changes.',
+    },
+    howItWorks: [
+      trackGlpBase.howItWorks![0],
+      trackGlpBase.howItWorks![1],
+      {
+        ...trackGlpBase.howItWorks![2],
+        title: 'Prepare for what comes next',
+        description: 'See your progress over time and build a clearer picture of the habits supporting your results — whether you stay on treatment or eventually move on from it.',
+      },
+    ],
+    upcomingFeatures: {
+      headline: 'Built for life beyond the prescription',
+      cards: [
+        { title: 'Keep moving', description: 'Passive step tracking helps you understand your activity during treatment and after — without another thing to manually log.' },
+        { title: 'Your journey can change', description: 'On treatment, tapering, or maintaining after stopping? Tell TrackGLP where you are and switch stages whenever your journey changes.' },
+        { title: 'Understand why movement matters', description: 'Simple educational guidance around staying active throughout your GLP-1 journey — without complicated workout plans.' },
+      ],
+    },
+    difference: {
+      ...trackGlpBase.difference!,
+      headline: 'Most GLP-1 trackers stop at tracking.',
+      headlineHighlight: 'stop at tracking',
+      description: 'TrackGLP is being built around a bigger question: what happens to your progress when treatment changes? Track your journey while you’re on medication and keep using the same system if you eventually taper or stop.',
+    },
+    questions: positioningQuestions,
+    faqs: positioningFaqs,
+    socialProof: 'Help shape TrackGLP into a companion that stays useful as treatment changes.',
+    finalCta: { headline: 'Help shape TrackGLP for life beyond treatment.', headlineHighlight: 'life beyond treatment', description: 'Join early access and help influence how TrackGLP supports every stage of the journey.' },
+  },
+  {
+    ...trackGlpBase,
+    slug: 'glp1-tracker-journey',
+    landingVariant: 'whole-journey',
+    headline: 'One place for your whole GLP-1 journey.',
+    heroHighlight: 'whole GLP-1 journey',
+    subheadline: 'Track doses, weight, symptoms and daily habits — from your first injection to whatever comes next.',
+    subheadlineHighlight: 'whatever comes next',
+    signupHeadline: 'Help shape TrackGLP',
+    problem: {
+      ...trackGlpBase.problem!,
+      headline: 'Your dose is only one part of your whole story.',
+      headlineHighlight: 'whole story',
+      description: 'Doses, weight, symptoms, hydration, protein and progress all belong to the same journey. TrackGLP connects those pieces in one simple place so changes are easier to understand over time.',
+    },
+    howItWorks: [
+      { ...trackGlpBase.howItWorks![0], title: 'Track what matters', description: 'Log your doses, weight, symptoms and everyday habits in one place.' },
+      { ...trackGlpBase.howItWorks![1], title: 'See your progress', description: 'Understand how your journey changes over weeks and months instead of looking at isolated numbers.' },
+      { ...trackGlpBase.howItWorks![2], title: 'Stay with it through every stage', description: 'Keep the same history and habits whether you’re actively on treatment, tapering, or maintaining afterward.' },
+    ],
+    upcomingFeatures: {
+      headline: 'TrackGLP grows with your journey',
+      cards: [
+        { title: 'Automatic movement tracking', description: 'See your daily movement alongside the rest of your GLP-1 journey without manually entering every walk.' },
+        { title: 'One app, different stages', description: 'Switch between active treatment, tapering, and maintaining so TrackGLP stays relevant as your journey changes.' },
+        { title: 'Simple movement guidance', description: 'General educational context around movement throughout your GLP-1 journey — without turning TrackGLP into a complicated fitness app.' },
+      ],
+    },
+    difference: {
+      ...trackGlpBase.difference!,
+      headline: 'More than an injection log.',
+      headlineHighlight: 'More than',
+      description: 'TrackGLP brings your doses, weight, symptoms, habits and progress together — and is being built to stay useful even as your treatment changes.',
+    },
+    questions: positioningQuestions,
+    faqs: positioningFaqs,
+    socialProof: 'Help shape TrackGLP into one simple companion for the whole journey.',
+    finalCta: { headline: 'Help shape one place for your whole journey.', headlineHighlight: 'whole journey', description: 'Join early access and help influence the first version of TrackGLP.' },
+  },
+]
+
 export const phase2LandingPagesByPath = Object.fromEntries(
-  phase2LandingPages.map((page) => [`/${page.slug}`, page]),
+  [...phase2LandingPages, ...trackGlpPositioningPages].map((page) => [`/${page.slug}`, page]),
 ) as Record<string, Phase2LandingPageConfig>
