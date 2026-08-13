@@ -182,7 +182,7 @@ export const phase2LandingPages: Phase2LandingPageConfig[] = [
     },
     trustNote: 'TrackGLP is a progress companion, not a medical device or source of treatment advice. Medication decisions should always be made with a qualified healthcare professional.',
     testimonials: [
-      { quote: 'I wanted one place where I can see my injections, symptoms and habits without piecing the week together from different apps. A clear summary from TrackGLP made appointments feel much less stressful.', name: 'Jemima - early TrackGLP user', descriptor: 'Used to track across notes and reminders', avatar: '/testimonial-avatars/jemima.jpg' },
+      { quote: 'I was afraid to regain weight when I stopped using Ozempic, but TrackGLP guidance and support helped me keep the results!', name: 'Jemima - early TrackGLP user', descriptor: 'Maintained the progress after', avatar: '/testimonial-avatars/jemima.jpg' },
       { quote: 'The number on the scale never told the whole story as I still felt bad. TrackGLP helped me notice how my routine and how I feel changed between doses.', name: 'Lisa - early TrackGLP user', descriptor: 'Struggled with tracking side effects and habits', avatar: '/testimonial-avatars/lisa.jpg' },
     ],
     finalCta: { headline: 'Make your GLP-1 journey easier to understand.', headlineHighlight: 'easier to understand', description: 'Join early access, answer two quick questions and help shape the first version of TrackGLP.' },
