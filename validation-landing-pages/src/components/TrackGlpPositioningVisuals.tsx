@@ -48,6 +48,15 @@ function WeightContinuity({ maintenance = false }: { maintenance?: boolean }) {
 }
 
 export function PositioningHero({ variant }: { variant: Variant }) {
+  if (variant === 'maintenance') {
+    return <div className="positioning-hero-visual maintenance-research-hero" aria-label="Research about weight regain after treatment">
+      <div className="maintenance-research-hero__label">Research after treatment</div>
+      <strong className="maintenance-research-hero__stat">60%</strong>
+      <p>Research found people regained around 60% of the weight they had lost after stopping treatment.</p>
+      <div className="maintenance-research-hero__value">TrackGLP is being built to help you maintain your progress after treatment.</div>
+    </div>
+  }
+
   const journeyStages = [
     ['Starting', 'Baseline · Goals'],
     ['Active treatment', 'Dose · Symptoms · Reminders'],
@@ -55,7 +64,7 @@ export function PositioningHero({ variant }: { variant: Variant }) {
     ['Treatment changes', 'History stays with you'],
     ['Maintaining', 'Movement · Habits · Progress'],
   ]
-  const highlightedStage = variant === 'maintenance' ? 4 : 2
+  const highlightedStage = 2
   return <div className="positioning-hero-visual positioning-longitudinal-hero" aria-label="TrackGLP whole journey timeline">
     <div className="positioning-dashboard-top"><span>Your journey</span><strong>One connected history</strong></div>
     <div className="longitudinal-journey">{journeyStages.map(([stage, details], index) => <article className={index === highlightedStage ? 'is-current' : ''} key={stage}><i /><div><strong>{stage}</strong><small>{details}</small></div></article>)}</div>
@@ -81,6 +90,17 @@ export function PositioningStoryGrid({ variant }: { variant: Variant }) {
   </div>
 }
 
+export function MaintenanceFeatureGrid({ features }: { features: Array<{ title: string; description: string }> }) {
+  return <div className="maintenance-feature-grid">
+    {features.map((feature, index) => <article key={feature.title}>
+      <span className="maintenance-coming-soon">Coming soon</span>
+      <h3>{feature.title}</h3>
+      <p>{feature.description}</p>
+      <PositioningUpcomingVisual variant="maintenance" index={index} />
+    </article>)}
+  </div>
+}
+
 function ConnectedDetails({ variant }: { variant: Variant }) {
   const labels = variant === 'maintenance' ? ['Weight', 'Protein', 'Water', 'Movement', 'Symptoms'] : ['Weight trend', 'Habit consistency', 'Symptoms', 'Treatment']
   return <div className="positioning-connected"><div>{labels.map((label) => <span key={label}>{label}</span>)}</div><i><ArrowRight size={19} /></i><strong>{variant === 'maintenance' ? 'Your progress' : 'One clear timeline'}</strong></div>
@@ -95,6 +115,7 @@ function JourneyMap({ variant, detailed = false }: { variant: Variant; detailed?
 }
 
 export function PositioningHowVisual({ variant, index, screen }: { variant: Variant; index: number; screen: Parameters<typeof ProductScreen>[0]['screen'] }) {
+  if (variant === 'maintenance') return <ProductScreen screen={screen} />
   if (index === 0) return <ProductScreen screen={screen} />
   if (index === 1) return <ConnectedDetails variant={variant} />
   return <JourneyMap variant={variant} detailed />
@@ -102,7 +123,18 @@ export function PositioningHowVisual({ variant, index, screen }: { variant: Vari
 
 export function PositioningDifferenceVisual({ variant }: { variant: Variant }) {
   if (variant === 'whole-journey') return <div className="positioning-aggregation"><div>{['Dose history', 'Weight', 'Symptoms', 'Habits', 'Movement'].map((item) => <span key={item}>{item}</span>)}</div><i><ArrowRight /></i><strong>Your GLP-1 journey<small>One timeline</small></strong></div>
-  return <div className="positioning-continuity-compare"><span>Most trackers</span><JourneyMap variant={variant} /><div className="positioning-stop">stop here</div><strong>TrackGLP keeps tracking →</strong></div>
+  const maintenanceStages = [
+    { title: 'On treatment', description: 'Track doses, weight, symptoms and daily habits.', features: ['Dose', 'Weight', 'Symptoms', 'Reminders'] },
+    { title: 'Transition', description: 'Keep your history while priorities shift toward habits and movement.', features: ['History', 'Weight trend', 'Movement', 'Habits'], soon: true },
+    { title: 'Maintaining', description: 'Keep movement, habits and long-term progress visible after treatment.', features: ['Movement', 'Protein', 'Hydration', 'Consistency'], soon: true },
+  ]
+  return <div className="maintenance-stage-journey">
+    {maintenanceStages.map((stage, index) => <article key={stage.title}>
+      <div className="maintenance-stage-journey__heading"><i>{index + 1}</i><strong>{stage.title}</strong>{stage.soon && <span>Coming soon</span>}</div>
+      <p>{stage.description}</p>
+      <div className="maintenance-stage-journey__features">{stage.features.map((feature) => <small key={feature}>{feature}</small>)}</div>
+    </article>)}
+  </div>
 }
 
 export function PositioningUpcomingVisual({ variant, index }: { variant: Variant; index: number }) {

@@ -9,6 +9,7 @@ import {
   PositioningDifferenceVisual,
   PositioningHero,
   PositioningHowVisual,
+  MaintenanceFeatureGrid,
   PositioningStoryGrid,
   PositioningUpcomingVisual,
 } from './TrackGlpPositioningVisuals'
@@ -34,6 +35,7 @@ function highlightPhrase(text: string, phrase?: string) {
 }
 
 export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig }) {
+  const isMaintenance = config.landingVariant === 'maintenance'
   const [email, setEmail] = useState('')
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [error, setError] = useState('')
@@ -105,7 +107,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
   }
 
   return (
-    <main className="phase2-page" style={{
+    <main className={config.landingVariant ? `phase2-page phase2-page--positioning${isMaintenance ? ' phase2-page--maintenance' : ''}` : 'phase2-page'} style={{
       '--accent': config.accent,
       '--accent-soft': config.accentSoft,
       '--accent-deep': config.accentDeep ?? config.accent,
@@ -136,8 +138,10 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
             <h2>{highlightPhrase(config.problem.headline, config.problem.headlineHighlight)}</h2>
             <p>{config.problem.description}</p>
           </div>
-          {config.landingVariant
-            ? <PositioningStoryGrid variant={config.landingVariant} />
+          {isMaintenance && config.upcomingFeatures
+            ? <MaintenanceFeatureGrid features={config.upcomingFeatures.cards} />
+            : config.landingVariant
+              ? <PositioningStoryGrid variant={config.landingVariant} />
             : <div className="phase2-situations">{config.problem.situations.map((situation) => <ScenarioStory key={situation.title} scenario={situation} />)}</div>}
         </section>
       )}
@@ -165,14 +169,16 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
         </section>
       )}
 
-      <section className="phase2-benefits" aria-label="Benefits">
-        {config.benefits.map((benefit) => {
-          const Icon = benefitIcons[benefit.icon]
-          return <article key={benefit.title}><span><Icon size={21} strokeWidth={2.3} /></span><h2>{benefit.title}</h2><p>{benefit.description}</p></article>
-        })}
-      </section>
+      {!isMaintenance && (
+        <section className="phase2-benefits" aria-label="Benefits">
+          {config.benefits.map((benefit) => {
+            const Icon = benefitIcons[benefit.icon]
+            return <article key={benefit.title}><span><Icon size={21} strokeWidth={2.3} /></span><h2>{benefit.title}</h2><p>{benefit.description}</p></article>
+          })}
+        </section>
+      )}
 
-      {config.upcomingFeatures && (
+      {config.upcomingFeatures && !isMaintenance && (
         <section className="phase2-upcoming">
           <div className="phase2-section-heading phase2-section-heading--center">
             <p className="phase2-kicker">Upcoming features</p>
@@ -198,7 +204,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
             <h2>{highlightPhrase(config.difference.headline, config.difference.headlineHighlight)}</h2>
             <p>{config.difference.description}</p>
           </div>
-          <div className="phase2-comparisons">
+          {!isMaintenance && <div className="phase2-comparisons">
             {config.difference.comparisons.map((comparison) => (
               <article key={comparison.current}>
                 <span>{comparison.current}</span>
@@ -206,7 +212,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
                 <strong>{comparison.better}</strong>
               </article>
             ))}
-          </div>
+          </div>}
           {config.landingVariant
             ? <div className="phase2-difference__visual"><PositioningDifferenceVisual variant={config.landingVariant} /></div>
             : config.howItWorks?.[2] && <div className="phase2-difference__phone"><ProductScreen screen={config.howItWorks[2].screen} /></div>}
