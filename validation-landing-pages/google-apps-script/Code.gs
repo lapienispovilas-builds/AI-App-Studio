@@ -8,11 +8,11 @@ const PHASE_2_SHEETS = {
     questions: ["What's your biggest challenge?", 'What would help you most?'],
   },
   '/glp1-tracker-maintenance': {
-    sheetName: 'TrackGLP Positioning Leads',
+    sheetName: 'TrackGLP Maintenance Leads',
     questions: ['Where are you in your GLP-1 journey?', "What's your biggest challenge?", 'What would help you most?', 'landingVariant'],
   },
   '/glp1-tracker-journey': {
-    sheetName: 'TrackGLP Positioning Leads',
+    sheetName: 'TrackGLP Whole Journey Leads',
     questions: ['Where are you in your GLP-1 journey?', "What's your biggest challenge?", 'What would help you most?', 'landingVariant'],
   },
   '/dating-again': {

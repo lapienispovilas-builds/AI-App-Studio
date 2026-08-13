@@ -56,6 +56,8 @@ Restart `npm run dev` after creating or changing `.env.local`. For Vercel, add t
 Phase 2 submissions are separated into five sheet tabs with columns matching each page's questions:
 
 - `TrackGLP Leads`
+- `TrackGLP Maintenance Leads`
+- `TrackGLP Whole Journey Leads`
 - `NextDate Leads`
 - `Together Leads`
 - `RESET Leads`
