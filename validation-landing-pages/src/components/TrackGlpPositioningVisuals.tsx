@@ -68,8 +68,6 @@ export function PositioningHero({ variant }: { variant: Variant }) {
   return <div className="positioning-hero-visual positioning-longitudinal-hero" aria-label="TrackGLP whole journey timeline">
     <div className="positioning-dashboard-top"><span>Your journey</span><strong>One connected history</strong></div>
     <div className="longitudinal-journey">{journeyStages.map(([stage, details], index) => <article className={index === highlightedStage ? 'is-current' : ''} key={stage}><i /><div><strong>{stage}</strong><small>{details}</small></div></article>)}</div>
-    <div className="journey-evidence"><small>Why the later stages matter</small><strong>~⅔ of prior weight loss was regained one year after semaglutide withdrawal in the STEP 1 extension.</strong><span>Population-level research finding</span></div>
-    <p className="journey-product-note">TrackGLP is being designed for the full timeline—not only the medication phase.</p>
   </div>
 }
 
@@ -90,13 +88,13 @@ export function PositioningStoryGrid({ variant }: { variant: Variant }) {
   </div>
 }
 
-export function MaintenanceFeatureGrid({ features }: { features: Array<{ title: string; description: string }> }) {
+export function PositioningFeatureGrid({ variant, features }: { variant: Variant; features: Array<{ title: string; description: string }> }) {
   return <div className="maintenance-feature-grid">
     {features.map((feature, index) => <article key={feature.title}>
       <span className="maintenance-coming-soon">Coming soon</span>
       <h3>{feature.title}</h3>
       <p>{feature.description}</p>
-      <PositioningUpcomingVisual variant="maintenance" index={index} />
+      <PositioningUpcomingVisual variant={variant} index={index} />
     </article>)}
   </div>
 }
@@ -115,21 +113,23 @@ function JourneyMap({ variant, detailed = false }: { variant: Variant; detailed?
 }
 
 export function PositioningHowVisual({ variant, index, screen }: { variant: Variant; index: number; screen: Parameters<typeof ProductScreen>[0]['screen'] }) {
-  if (variant === 'maintenance') return <ProductScreen screen={screen} />
-  if (index === 0) return <ProductScreen screen={screen} />
-  if (index === 1) return <ConnectedDetails variant={variant} />
-  return <JourneyMap variant={variant} detailed />
+  return <ProductScreen screen={screen} />
 }
 
 export function PositioningDifferenceVisual({ variant }: { variant: Variant }) {
-  if (variant === 'whole-journey') return <div className="positioning-aggregation"><div>{['Dose history', 'Weight', 'Symptoms', 'Habits', 'Movement'].map((item) => <span key={item}>{item}</span>)}</div><i><ArrowRight /></i><strong>Your GLP-1 journey<small>One timeline</small></strong></div>
-  const maintenanceStages = [
+  const journeyStages = variant === 'maintenance' ? [
     { title: 'On treatment', description: 'Track doses, weight, symptoms and daily habits.', features: ['Dose', 'Weight', 'Symptoms', 'Reminders'] },
     { title: 'Transition', description: 'Keep your history while priorities shift toward habits and movement.', features: ['History', 'Weight trend', 'Movement', 'Habits'], soon: true },
     { title: 'Maintaining', description: 'Keep movement, habits and long-term progress visible after treatment.', features: ['Movement', 'Protein', 'Hydration', 'Consistency'], soon: true },
+  ] : [
+    { title: 'Starting', description: 'Begin with one clear view of where you are and where you want to go.', features: ['Baseline', 'Goals'] },
+    { title: 'Active treatment', description: 'Keep treatment details and everyday signals connected.', features: ['Doses', 'Symptoms', 'Reminders'] },
+    { title: 'Progress', description: 'See treatment, habits and results as one continuous story.', features: ['Weight', 'Protein', 'Water', 'Movement'] },
+    { title: 'Treatment changes', description: 'Keep the same history as your treatment and priorities change.', features: ['History stays connected'], soon: true },
+    { title: 'Maintaining', description: 'Continue seeing the habits and progress that matter over time.', features: ['Movement', 'Habits', 'Long-term progress'], soon: true },
   ]
   return <div className="maintenance-stage-journey">
-    {maintenanceStages.map((stage, index) => <article key={stage.title}>
+    {journeyStages.map((stage, index) => <article key={stage.title}>
       <div className="maintenance-stage-journey__heading"><i>{index + 1}</i><strong>{stage.title}</strong>{stage.soon && <span>Coming soon</span>}</div>
       <p>{stage.description}</p>
       <div className="maintenance-stage-journey__features">{stage.features.map((feature) => <small key={feature}>{feature}</small>)}</div>
@@ -139,6 +139,6 @@ export function PositioningDifferenceVisual({ variant }: { variant: Variant }) {
 
 export function PositioningUpcomingVisual({ variant, index }: { variant: Variant; index: number }) {
   if (index === 0) return <div className="positioning-steps-bars">{[6.2, 8.1, 7.4, 9.0, 7.8, 8.5, 6.9].map((value, day) => <div key={day}><i style={{ height: `${value * 7}px` }} /><small>{['M','T','W','T','F','S','S'][day]}</small><span>{value}k</span></div>)}</div>
-  if (index === 1) return <div className="positioning-mode"><div>{(variant === 'maintenance' ? ['On treatment', 'Maintaining'] : ['Starting', 'Active', 'Maintaining']).map((item, itemIndex, list) => <span className={itemIndex === list.length - 1 ? 'is-selected' : ''} key={item}>{item}</span>)}</div><HabitTiles journey={variant === 'whole-journey'} /></div>
+  if (index === 1) return <div className="positioning-mode"><div>{(variant === 'maintenance' ? ['On treatment', 'Maintaining'] : ['Starting', 'Active', 'Transition', 'Maintaining']).map((item, itemIndex, list) => <span className={itemIndex === list.length - 1 ? 'is-selected' : ''} key={item}>{item}</span>)}</div><HabitTiles journey={variant === 'whole-journey'} /></div>
   return <div className="positioning-guidance"><Footprints size={28} /><div><strong>{variant === 'maintenance' ? 'Why movement matters now' : 'Movement through every stage'}</strong><span>{variant === 'maintenance' ? 'Walking and strength support an active routine.' : 'During treatment · Build consistency'}</span><span>{variant === 'maintenance' ? 'Educational guidance, not a workout plan.' : 'Maintaining · Keep movement in your routine'}</span></div></div>
 }

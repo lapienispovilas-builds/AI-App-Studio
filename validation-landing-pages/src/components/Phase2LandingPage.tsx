@@ -9,7 +9,7 @@ import {
   PositioningDifferenceVisual,
   PositioningHero,
   PositioningHowVisual,
-  MaintenanceFeatureGrid,
+  PositioningFeatureGrid,
   PositioningStoryGrid,
   PositioningUpcomingVisual,
 } from './TrackGlpPositioningVisuals'
@@ -36,6 +36,7 @@ function highlightPhrase(text: string, phrase?: string) {
 
 export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig }) {
   const isMaintenance = config.landingVariant === 'maintenance'
+  const isPositioning = Boolean(config.landingVariant)
   const [email, setEmail] = useState('')
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [error, setError] = useState('')
@@ -107,7 +108,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
   }
 
   return (
-    <main className={config.landingVariant ? `phase2-page phase2-page--positioning${isMaintenance ? ' phase2-page--maintenance' : ''}` : 'phase2-page'} style={{
+    <main className={config.landingVariant ? `phase2-page phase2-page--positioning phase2-page--${config.landingVariant}` : 'phase2-page'} style={{
       '--accent': config.accent,
       '--accent-soft': config.accentSoft,
       '--accent-deep': config.accentDeep ?? config.accent,
@@ -138,8 +139,8 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
             <h2>{highlightPhrase(config.problem.headline, config.problem.headlineHighlight)}</h2>
             <p>{config.problem.description}</p>
           </div>
-          {isMaintenance && config.upcomingFeatures
-            ? <MaintenanceFeatureGrid features={config.upcomingFeatures.cards} />
+          {config.landingVariant && config.upcomingFeatures
+            ? <PositioningFeatureGrid variant={config.landingVariant} features={config.upcomingFeatures.cards} />
             : config.landingVariant
               ? <PositioningStoryGrid variant={config.landingVariant} />
             : <div className="phase2-situations">{config.problem.situations.map((situation) => <ScenarioStory key={situation.title} scenario={situation} />)}</div>}
@@ -169,7 +170,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
         </section>
       )}
 
-      {!isMaintenance && (
+      {!isPositioning && (
         <section className="phase2-benefits" aria-label="Benefits">
           {config.benefits.map((benefit) => {
             const Icon = benefitIcons[benefit.icon]
@@ -178,7 +179,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
         </section>
       )}
 
-      {config.upcomingFeatures && !isMaintenance && (
+      {config.upcomingFeatures && !isPositioning && (
         <section className="phase2-upcoming">
           <div className="phase2-section-heading phase2-section-heading--center">
             <p className="phase2-kicker">Upcoming features</p>
@@ -204,7 +205,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
             <h2>{highlightPhrase(config.difference.headline, config.difference.headlineHighlight)}</h2>
             <p>{config.difference.description}</p>
           </div>
-          {!isMaintenance && <div className="phase2-comparisons">
+          {!isPositioning && <div className="phase2-comparisons">
             {config.difference.comparisons.map((comparison) => (
               <article key={comparison.current}>
                 <span>{comparison.current}</span>
