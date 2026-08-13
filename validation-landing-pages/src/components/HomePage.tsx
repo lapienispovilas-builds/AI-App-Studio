@@ -1,5 +1,5 @@
 import { landingPages } from '../landingPageConfig'
-import { phase2LandingPages } from '../phase2LandingPageConfig'
+import { phase2LandingPages, trackGlpPositioningPages } from '../phase2LandingPageConfig'
 import { chapterrLandingPage } from '../chapterrLandingPageConfig'
 
 export function HomePage() {
@@ -7,7 +7,7 @@ export function HomePage() {
     <main className="home">
       <div className="home__intro">
         <p className="eyebrow"><span />Internal testing</p>
-        <h1>Eleven experiments.<br />One simple goal.</h1>
+        <h1>Thirteen experiments.<br />One simple goal.</h1>
         <p>Choose a validation landing page to preview.</p>
       </div>
 
@@ -53,6 +53,23 @@ export function HomePage() {
             <a className="idea-card" href={`/${page.slug}`} key={page.slug} style={{ '--card-accent': page.accent, '--card-soft': page.accentSoft } as React.CSSProperties}>
               <span className="idea-card__number">0{index + 1}</span>
               <h2>{page.brand}</h2>
+              <p>{page.subheadline}</p>
+              <span className="idea-card__link">View page →</span>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section className="testing-section">
+        <div className="testing-section__heading">
+          <p>Round 3</p>
+          <h2>TrackGLP Positioning Test</h2>
+        </div>
+        <div className="idea-grid idea-grid--assessments">
+          {trackGlpPositioningPages.map((page, index) => (
+            <a className="idea-card" href={`/${page.slug}`} key={page.slug} style={{ '--card-accent': page.accent, '--card-soft': page.accentSoft } as React.CSSProperties}>
+              <span className="idea-card__number">0{index + 1}</span>
+              <h2>{page.landingVariant === 'maintenance' ? 'TrackGLP — Maintenance-first' : 'TrackGLP — Whole journey'}</h2>
               <p>{page.subheadline}</p>
               <span className="idea-card__link">View page →</span>
             </a>
