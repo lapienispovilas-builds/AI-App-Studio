@@ -2,12 +2,10 @@ import {
   Activity,
   ArrowRight,
   Check,
-  CircleDot,
   Droplets,
   Footprints,
   HeartPulse,
   Scale,
-  Sparkles,
   Syringe,
   Utensils,
 } from 'lucide-react'
@@ -22,7 +20,7 @@ const stages = {
 } satisfies Record<Variant, string[]>
 
 function StageLine({ variant, compact = false }: { variant: Variant; compact?: boolean }) {
-  return <div className={compact ? 'positioning-stage-line is-compact' : 'positioning-stage-line'}>
+  return <div className={compact ? 'positioning-stage-line is-compact' : 'positioning-stage-line'} style={{ gridTemplateColumns: `repeat(${stages[variant].length}, minmax(0, 1fr))` }}>
     {stages[variant].map((stage, index) => <div className={index === stages[variant].length - 1 ? 'is-current' : ''} key={stage}><i><Check size={10} /></i><span>{stage}</span></div>)}
   </div>
 }
@@ -50,12 +48,30 @@ function WeightContinuity({ maintenance = false }: { maintenance?: boolean }) {
 }
 
 export function PositioningHero({ variant }: { variant: Variant }) {
-  return <div className="positioning-hero-visual" aria-label={variant === 'maintenance' ? 'Maintenance journey dashboard preview' : 'Whole journey dashboard preview'}>
-    <div className="positioning-dashboard-top"><span>Your Journey</span><strong>{variant === 'maintenance' ? 'Maintaining' : 'Week 18'}</strong></div>
-    <StageLine variant={variant} compact />
-    <div className="positioning-main-metric"><small>{variant === 'maintenance' ? 'Progress since starting' : 'Weight progress'}</small><strong>-18.4 kg</strong><span><Sparkles size={12} /> Your progress stays with you</span></div>
-    <HabitTiles journey={variant === 'whole-journey'} />
-    <div className="positioning-history-note"><CircleDot size={13} /><span><strong>{variant === 'maintenance' ? 'Medication history saved' : 'Next dose Thursday'}</strong><small>{variant === 'maintenance' ? 'One chapter in your full timeline' : 'Alongside the rest of your journey'}</small></span></div>
+  if (variant === 'maintenance') {
+    return <div className="positioning-hero-visual positioning-research-hero" aria-label="Population-level research findings after GLP-1 treatment">
+      <div className="positioning-dashboard-top"><span>What happens after GLP-1 treatment</span></div>
+      <div className="research-journey">
+        <article><small>1 year after stopping</small><strong>~⅔</strong><span>of prior weight loss regained</span><em>STEP 1 extension</em></article>
+        <article><small>Average regain</small><strong>~0.8 kg/mo</strong><span>after stopping newer incretin-based weight-loss medications</span><em>2026 BMJ meta-analysis</em></article>
+        <article><small>Projected</small><strong>~1.5 years</strong><span>average return toward baseline weight</span><em>2026 BMJ meta-analysis</em></article>
+      </div>
+      <div className="research-context">Population-level research findings — not a prediction of any individual result.</div>
+    </div>
+  }
+
+  const journeyStages = [
+    ['Starting', 'Baseline · Goals'],
+    ['Active treatment', 'Dose · Symptoms · Reminders'],
+    ['Progress', 'Weight · Protein · Water · Movement'],
+    ['Treatment changes', 'History stays with you'],
+    ['Maintaining', 'Movement · Habits · Progress'],
+  ]
+  return <div className="positioning-hero-visual positioning-longitudinal-hero" aria-label="TrackGLP whole journey timeline">
+    <div className="positioning-dashboard-top"><span>Your journey</span><strong>One connected history</strong></div>
+    <div className="longitudinal-journey">{journeyStages.map(([stage, details], index) => <article className={index === 2 ? 'is-current' : ''} key={stage}><i /><div><strong>{stage}</strong><small>{details}</small></div></article>)}</div>
+    <div className="journey-evidence"><small>Why the later stages matter</small><strong>~⅔ of prior weight loss was regained one year after semaglutide withdrawal in the STEP 1 extension.</strong><span>Population-level research finding</span></div>
+    <p className="journey-product-note">TrackGLP is being designed for the full timeline—not only the medication phase.</p>
   </div>
 }
 
