@@ -50,7 +50,7 @@ function WeightContinuity({ maintenance = false }: { maintenance?: boolean }) {
 export function PositioningHero({ variant }: { variant: Variant }) {
   if (variant === 'maintenance') {
     return <div className="positioning-hero-visual maintenance-research-hero" aria-label="Research about weight regain after treatment">
-      <div className="maintenance-research-hero__label">Research after treatment</div>
+      <div className="maintenance-research-hero__label">Interesting fact</div>
       <strong className="maintenance-research-hero__stat">60%</strong>
       <p>Research found people regained around 60% of the weight they had lost after stopping treatment.</p>
       <div className="maintenance-research-hero__value">TrackGLP is being built to help you maintain your progress after treatment.</div>
