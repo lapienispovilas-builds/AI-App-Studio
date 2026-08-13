@@ -5,6 +5,13 @@ import { trackMetaLead } from '../lib/metaPixel'
 import { submitLead } from '../lib/submitLead'
 import { OutcomeMockup } from './OutcomeMockup'
 import { ProductScreen, ScenarioStory } from './ProductStoryMockups'
+import {
+  PositioningDifferenceVisual,
+  PositioningHero,
+  PositioningHowVisual,
+  PositioningStoryGrid,
+  PositioningUpcomingVisual,
+} from './TrackGlpPositioningVisuals'
 
 const benefitIcons: Record<LandingBenefitIcon, LucideIcon> = {
   bell: Bell,
@@ -119,7 +126,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
           <small>{config.ctaSubtitle ?? config.ctaReassurance}</small>
         </div>
 
-        <OutcomeMockup config={config.mockup} logo={config.logo} />
+        {config.landingVariant ? <PositioningHero variant={config.landingVariant} /> : <OutcomeMockup config={config.mockup} logo={config.logo} />}
       </section>
 
       {config.problem && (
@@ -129,9 +136,9 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
             <h2>{highlightPhrase(config.problem.headline, config.problem.headlineHighlight)}</h2>
             <p>{config.problem.description}</p>
           </div>
-          <div className="phase2-situations">
-            {config.problem.situations.map((situation) => <ScenarioStory key={situation.title} scenario={situation} />)}
-          </div>
+          {config.landingVariant
+            ? <PositioningStoryGrid variant={config.landingVariant} />
+            : <div className="phase2-situations">{config.problem.situations.map((situation) => <ScenarioStory key={situation.title} scenario={situation} />)}</div>}
         </section>
       )}
 
@@ -149,7 +156,9 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
                   <h3>{step.title}</h3>
                   <p>{step.description}</p>
                 </div>
-                <ProductScreen screen={step.screen} />
+                {config.landingVariant
+                  ? <PositioningHowVisual variant={config.landingVariant} index={index} screen={step.screen} />
+                  : <ProductScreen screen={step.screen} />}
               </article>
             ))}
           </div>
@@ -170,11 +179,12 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
             <h2>{config.upcomingFeatures.headline}</h2>
           </div>
           <div className="phase2-upcoming__grid">
-            {config.upcomingFeatures.cards.map((feature) => (
+            {config.upcomingFeatures.cards.map((feature, index) => (
               <article key={feature.title}>
                 <span>Coming soon</span>
                 <h3>{feature.title}</h3>
                 <p>{feature.description}</p>
+                {config.landingVariant && <PositioningUpcomingVisual variant={config.landingVariant} index={index} />}
               </article>
             ))}
           </div>
@@ -197,7 +207,9 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
               </article>
             ))}
           </div>
-          {config.howItWorks?.[2] && <div className="phase2-difference__phone"><ProductScreen screen={config.howItWorks[2].screen} /></div>}
+          {config.landingVariant
+            ? <div className="phase2-difference__visual"><PositioningDifferenceVisual variant={config.landingVariant} /></div>
+            : config.howItWorks?.[2] && <div className="phase2-difference__phone"><ProductScreen screen={config.howItWorks[2].screen} /></div>}
         </section>
       )}
 
