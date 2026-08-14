@@ -810,6 +810,7 @@ fieldset { padding: 0; margin: 25px 0; border: 0; }
 
 /* Chapterr students — Lithuanian university launch */
 .chapterr-student-page { --chapterr-brown: #8d7a62; --chapterr-rust: #8d7a62; }
+.chapterr-student-wordmark img { width: 120px; height: 72px; object-fit: contain; border-radius: 0; box-shadow: none; }
 .chapterr-student-hero__lead { max-width: 590px; margin: 27px 0 0; color: var(--chapterr-ink); font-size: 21px; font-weight: 780; line-height: 1.45; }
 .chapterr-student-hero .chapterr-hero__subtitle { margin-top: 12px; }
 .chapterr-student-visual { overflow: hidden; }
@@ -838,6 +839,7 @@ fieldset { padding: 0; margin: 25px 0; border: 0; }
 }
 
 @media (max-width: 560px) {
+  .chapterr-student-wordmark img { width: 100px; height: 60px; }
   .chapterr-student-hero__lead { margin-top: 22px; font-size: 18px; }
   .chapterr-student-visual { min-height: 470px; }
   .chapterr-student-visual .chapterr-lifestyle--main { object-position: 51% center; }

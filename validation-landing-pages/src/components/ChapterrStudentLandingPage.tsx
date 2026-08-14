@@ -26,8 +26,8 @@ export function ChapterrStudentLandingPage({ config }: { config: ChapterrStudent
   return (
     <main className="chapterr-page chapterr-student-page">
       <header className="chapterr-header">
-        <a className="chapterr-wordmark" href={`/${config.slug}`} aria-label={`${config.brand} pradžia`}>
-          <img src="/chapterr/chapterr-logo.png" alt="" />{config.brand}
+        <a className="chapterr-wordmark chapterr-student-wordmark" href={`/${config.slug}`} aria-label={`${config.brand} pradžia`}>
+          <img src="/chapterr/chapterr-student-logo.png" alt="Chapterr" />
         </a>
       </header>
 
@@ -101,7 +101,7 @@ export function ChapterrStudentLandingPage({ config }: { config: ChapterrStudent
       </section>
 
       <footer className="chapterr-footer">
-        <span className="chapterr-wordmark"><img src="/chapterr/chapterr-logo.png" alt="" />{config.brand}</span>
+        <span className="chapterr-wordmark chapterr-student-wordmark"><img src="/chapterr/chapterr-student-logo.png" alt="Chapterr" /></span>
         <div className="chapterr-footer__legal" aria-label="Teisinė informacija"><span>Privacy Statement</span><span>Terms and Conditions</span><span>DMCA Policy</span><span>Do Not Sell My Info</span></div>
       </footer>
     </main>

@@ -25,8 +25,8 @@ export const chapterrStudentLandingPage: ChapterrStudentLandingPageConfig = {
   slug: 'chapterr-students',
   brand: 'Chapterr',
   headline: 'Naujas miestas. Naujas etapas. Nauji žmonės.',
-  subheadline: 'Atvyksti studijuoti ir nenori pradėti nuo nulio?',
-  body: 'Chapterr padeda susipažinti su žmonėmis, kurie yra panašiame gyvenimo etape, turi panašių interesų ir taip pat ieško savo rato naujame mieste.',
+  subheadline: 'Tai ne dar viena Facebook ar Messenger grupė.',
+  body: 'Mūsų matching sistema padeda atrasti žmones, kurie turi panašius interesus, gyvenimo būdą ir pradeda panašų etapą kaip tu.',
   heroCta: 'Prisijungti prie laukiančiųjų sąrašo',
   recognitionTitle: 'Nesvarbu, ar jautiesi taip...',
   recognitionCards: [
