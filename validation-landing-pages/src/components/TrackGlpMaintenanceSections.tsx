@@ -54,8 +54,8 @@ function MiniTrend({ compact = false }: { compact?: boolean }) {
 
 function DashboardScreen() {
   return (
-    <PhoneFrame label="TrackGLP maintenance dashboard">
-      <div className="maintenance-app-header"><div><small>GOOD MORNING</small><strong>Your progress</strong></div><span>MP</span></div>
+    <PhoneFrame label="Evera maintenance dashboard" className="maintenance-phone--home">
+      <div className="maintenance-app-header"><div><small>GOOD MORNING</small><strong>Your maintenance</strong></div><span>EV</span></div>
       <div className="maintenance-app-stage"><span>MAINTAINING</span><strong>Day 205 off GLP-1s</strong><p>Hold the line. Protect the win you worked for.</p></div>
       <div className="maintenance-app-weight">
         <div><small>CURRENT WEIGHT</small><strong>74.8 <em>kg</em></strong></div><span><Check size={13} /> Stable</span>
@@ -63,13 +63,15 @@ function DashboardScreen() {
         <footer><small>Maintenance zone</small><strong>74–76 kg</strong></footer>
       </div>
       <div className="maintenance-app-timeline"><small>PROGRESS TIMELINE</small><div><i /><i /><i className="is-current" /></div><footer><span>Treatment</span><span>Transition</span><span>Maintaining</span></footer></div>
+      <div className="maintenance-daily-overview"><header><small>DAILY OVERVIEW</small><strong>3 of 4 complete</strong></header><div><span><Target size={12} /><small>Protein</small></span><span><Dumbbell size={12} /><small>Strength</small></span><span><Moon size={12} /><small>Sleep</small></span><span><Check size={12} /><small>Habits</small></span></div></div>
+      <nav className="maintenance-app-nav" aria-label="App preview navigation"><span className="is-active">Home</span><span>Progress</span><span>Routine</span><span>Learn</span></nav>
     </PhoneFrame>
   )
 }
 
 function WeightTrendScreen() {
   return (
-    <PhoneFrame label="TrackGLP weight maintenance trend screen">
+    <PhoneFrame label="Evera progress screen">
       <div className="maintenance-app-header"><div><small>PROGRESS</small><strong>Weight trend</strong></div><span><Scale size={16} /></span></div>
       <div className="maintenance-app-summary"><small>LAST 30 DAYS</small><strong>74.8 kg</strong><span>Within your maintenance zone</span></div>
       <div className="maintenance-app-chart"><div className="maintenance-zone-label">Maintenance zone</div><MiniTrend /><footer><span>30 days ago</span><span>Today</span></footer></div>
@@ -87,7 +89,7 @@ function RoutineScreen() {
     { icon: Moon, label: 'Sleep', value: '7 h 35 min', progress: 76 },
   ]
   return (
-    <PhoneFrame label="TrackGLP daily maintenance routine screen">
+    <PhoneFrame label="Evera daily maintenance routine screen">
       <div className="maintenance-app-header"><div><small>TODAY</small><strong>My routine</strong></div><span><Check size={16} /></span></div>
       <div className="maintenance-routine-score"><span>3 of 4</span><div><strong>Strong day</strong><small>Keep your maintenance routine visible.</small></div></div>
       <div className="maintenance-habit-list">
@@ -100,7 +102,7 @@ function RoutineScreen() {
 
 function JourneyScreen() {
   return (
-    <PhoneFrame label="TrackGLP post-treatment journey timeline">
+    <PhoneFrame label="Evera post-treatment journey timeline">
       <div className="maintenance-app-header"><div><small>MY JOURNEY</small><strong>205 days maintaining</strong></div><span><ShieldCheck size={16} /></span></div>
       <div className="maintenance-journey-stat"><small>SINCE STARTING</small><strong>17.2 kg</strong><span>progress maintained</span></div>
       <div className="maintenance-milestones">
@@ -120,7 +122,7 @@ function LearnScreen() {
     { tag: '3 MIN READ', title: 'Why strength and protein matter', color: 'sand' },
   ]
   return (
-    <PhoneFrame label="TrackGLP maintenance learning resources screen">
+    <PhoneFrame label="Evera maintenance learning resources screen">
       <div className="maintenance-app-header"><div><small>LEARN</small><strong>Maintenance library</strong></div><span><BookOpen size={16} /></span></div>
       <div className="maintenance-learn-feature"><small>FEATURED</small><strong>Your next chapter starts with a plan</strong><p>Understand the maintenance phase, one clear topic at a time.</p><span>Read guide <ChevronRight size={13} /></span></div>
       <div className="maintenance-resource-list">
@@ -135,10 +137,12 @@ export function MaintenanceHeroVisual() {
   return (
     <div className="maintenance-hero-showcase">
       <div className="maintenance-hero-glow" />
+      <div className="maintenance-hero-secondary" aria-label="Evera app screen previews">
+        <WeightTrendScreen />
+        <RoutineScreen />
+        <LearnScreen />
+      </div>
       <DashboardScreen />
-      <div className="maintenance-float-card maintenance-float-card--weight"><TrendingUp size={16} /><span><small>WEIGHT</small><strong>Stable <Check size={12} /></strong></span></div>
-      <div className="maintenance-float-card maintenance-float-card--streak"><CalendarCheck size={16} /><span><small>CONSISTENCY</small><strong>30 day streak</strong></span></div>
-      <div className="maintenance-float-card maintenance-float-card--phase"><ShieldCheck size={16} /><span><small>CURRENT STAGE</small><strong>Maintenance phase</strong></span></div>
     </div>
   )
 }

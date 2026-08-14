@@ -13,7 +13,7 @@ export const trackGlpMaintenanceContent = {
     kicker: 'Interesting fact',
     statistic: '60%',
     description: 'Research found people regained around 60% of the weight they had lost after stopping treatment.',
-    value: 'TrackGLP is being built to help you maintain your progress after treatment.',
+    value: 'Evera is being built to help you maintain your progress after treatment.',
   },
   help: {
     kicker: 'Built for maintenance',
@@ -37,6 +37,6 @@ export const trackGlpMaintenanceContent = {
   emotional: {
     kicker: 'Protect the work you put in',
     headline: "Your transformation shouldn't end when treatment does.",
-    description: 'You invested time, effort, and commitment into changing your health. TrackGLP helps you protect that progress.',
+    description: 'You invested time, effort, and commitment into changing your health. Evera helps you protect that progress.',
   },
 }
