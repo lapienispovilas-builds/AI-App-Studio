@@ -56,11 +56,11 @@ Restart `npm run dev` after creating or changing `.env.local`. For Vercel, add t
 Phase 2 submissions are separated into five sheet tabs with columns matching each page's questions:
 
 - `TrackGLP Leads`
-- `TrackGLP Maintenance Leads`
+- `Evera Maintenance Leads`
 - `TrackGLP Whole Journey Leads`
 - `NextDate Leads`
 - `Together Leads`
 - `RESET Leads`
 - `Arrived Leads`
 
-Round 1 submissions continue going to `Early Access Leads`. Copy the latest `google-apps-script/Code.gs` into the spreadsheet's Apps Script editor and run `setupPhase2Sheets` once to create the five tabs. Then update the existing web-app deployment with a new version. The existing `/exec` URL remains the same.
+Round 1 submissions continue going to `Early Access Leads`. Copy the latest `google-apps-script/Code.gs` into the spreadsheet's Apps Script editor and run `setupPhase2Sheets` once to create the routed tabs. For the updated Evera form only, you can run `setupEveraMaintenanceSheet` instead. Then update the existing web-app deployment with a new version. The existing `/exec` URL remains the same. Do not run `doPost` manually because it expects a real browser submission.

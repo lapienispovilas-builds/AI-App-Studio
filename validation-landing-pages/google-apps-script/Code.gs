@@ -8,8 +8,15 @@ const PHASE_2_SHEETS = {
     questions: ["What's your biggest challenge?", 'What would help you most?'],
   },
   '/glp1-tracker-maintenance': {
-    sheetName: 'TrackGLP Maintenance Leads',
-    questions: ['Where are you in your GLP-1 journey?', "What's your biggest challenge?", 'What would help you most?', 'landingVariant'],
+    sheetName: 'Evera Maintenance Leads',
+    questions: [
+      'Where are you in your GLP-1 journey?',
+      'What is your biggest concern after GLP-1?',
+      'What feels hardest about maintaining your results?',
+      'What would help you most?',
+      'Would you pay for a tool that helps you maintain your weight after GLP-1 treatment?',
+      'landingVariant',
+    ],
   },
   '/glp1-tracker-journey': {
     sheetName: 'TrackGLP Whole Journey Leads',
@@ -78,9 +85,8 @@ function doPost(e) {
   }
 }
 
-// Run this function once from the Apps Script editor to create all five Phase 2
-// sheet tabs before receiving leads. doPost also creates a tab automatically if
-// this setup function has not been run yet.
+// Run this function once from the Apps Script editor to create/update all routed
+// sheet tabs before receiving leads. doPost also creates a missing tab automatically.
 function setupPhase2Sheets() {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
 
@@ -90,6 +96,17 @@ function setupPhase2Sheets() {
     const sheet = getOrCreateSheet(spreadsheet, config.sheetName, headers);
     sheet.autoResizeColumns(1, headers.length);
   });
+}
+
+// Run this after changing the Evera questionnaire if you only want to prepare
+// the Evera tab. Do not run doPost manually: it requires a real form request.
+function setupEveraMaintenanceSheet() {
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  const config = PHASE_2_SHEETS['/glp1-tracker-maintenance'];
+  const headers = phase2Headers(config.questions);
+  const sheet = getOrCreateSheet(spreadsheet, config.sheetName, headers);
+
+  formatLeadSheet(sheet, headers);
 }
 
 function appendPhase2Lead(spreadsheet, config, data, pagePath) {
@@ -185,6 +202,31 @@ function getOrCreateSheet(spreadsheet, sheetName, headers) {
   }
 
   return sheet;
+}
+
+function formatLeadSheet(sheet, headers) {
+  sheet.setFrozenRows(1);
+  sheet.getRange(1, 1, 1, headers.length)
+    .setFontWeight('bold')
+    .setBackground('#205846')
+    .setFontColor('#ffffff')
+    .setWrap(true)
+    .setVerticalAlignment('middle');
+
+  sheet.setRowHeight(1, 44);
+  sheet.setColumnWidth(1, 150); // Received at
+  sheet.setColumnWidth(2, 110); // App
+  sheet.setColumnWidth(3, 210); // Page
+  sheet.setColumnWidth(4, 240); // Email
+
+  for (let column = 5; column <= 4 + PHASE_2_SHEETS['/glp1-tracker-maintenance'].questions.length; column += 1) {
+    sheet.setColumnWidth(column, 260);
+  }
+
+  const lastRow = Math.max(sheet.getLastRow(), 2);
+  sheet.getRange(2, 1, lastRow - 1, headers.length)
+    .setWrap(true)
+    .setVerticalAlignment('top');
 }
 
 function validateHeaders(sheet, expectedHeaders) {
