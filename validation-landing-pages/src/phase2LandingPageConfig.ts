@@ -599,6 +599,10 @@ export const trackGlpPositioningPages: Phase2LandingPageConfig[] = [
     trustNote: 'TrackGLP is a tracking and accountability companion. It does not provide medical advice or replace support from a qualified healthcare professional.',
     socialProof: 'We are building a simple maintenance companion for people transitioning off GLP-1 treatments.',
     finalCta: undefined,
+    accent: '#2F7D63',
+    accentSoft: '#EEF8F3',
+    accentDeep: '#205846',
+    pageBackground: '#FAFCFB',
   },
   {
     ...trackGlpBase,
