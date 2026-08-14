@@ -852,6 +852,7 @@ fieldset { padding: 0; margin: 25px 0; border: 0; }
 .chapterr-legal__content h2 { margin: 0 0 14px; color: var(--chapterr-ink); font-size: 23px; line-height: 1.25; }
 .chapterr-legal__content p, .chapterr-legal__content li { color: #625b55; font-size: 16px; line-height: 1.75; }
 .chapterr-legal__content p { margin: 0; }
+.chapterr-legal__content p a { color: var(--chapterr-brown); font-weight: 750; text-underline-offset: 3px; }
 .chapterr-legal__content p + p { margin-top: 12px; }
 .chapterr-legal__content ul { margin: 0; padding-left: 22px; }
 .chapterr-legal__content li + li { margin-top: 6px; }

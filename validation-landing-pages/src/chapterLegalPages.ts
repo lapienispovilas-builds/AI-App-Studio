@@ -47,7 +47,7 @@ export const chapterLegalPages: ChapterLegalPageConfig[] = [
       },
       {
         title: 'Kontaktai dėl duomenų pašalinimo',
-        paragraphs: ['Norėdami pasinaudoti savo teisėmis arba paprašyti pašalinti duomenis, rašykite: [El. paštas]. Prieš įvykdydami prašymą galime paprašyti patvirtinti jūsų tapatybę.'],
+        paragraphs: ['Norėdami pasinaudoti savo teisėmis arba paprašyti pašalinti duomenis, rašykite: info@chapter.lt. Prieš įvykdydami prašymą galime paprašyti patvirtinti jūsų tapatybę.'],
       },
     ],
   },
@@ -63,7 +63,7 @@ export const chapterLegalPages: ChapterLegalPageConfig[] = [
       { title: 'Bendravimas su kitais vartotojais', paragraphs: ['Bendraukite pagarbiai ir atsargiai. Patys sprendžiate, ar tęsti pokalbį ir susitikti gyvai. Pirmus susitikimus rekomenduojame planuoti viešoje vietoje ir apie juos informuoti patikimą žmogų.'] },
       { title: 'Draudžiamas elgesys', items: ['Priekabiavimas, grasinimai ar diskriminacija', 'Melagingos tapatybės ir apgaulinga informacija', 'Šlamštas, neteisėta reklama ar kitų vartotojų duomenų rinkimas', 'Neteisėtas, žalingas ar kitų teises pažeidžiantis turinys'] },
       { title: 'Paslaugos keitimas ar nutraukimas', paragraphs: ['Kadangi Chapter yra ankstyvos stadijos produktas, galime keisti, laikinai sustabdyti arba nutraukti jo dalis. Apie esminius pokyčius, kai praktiškai įmanoma, informuosime naudodami jūsų pateiktus kontaktinius duomenis.'] },
-      { title: 'Kontaktai', paragraphs: ['Klausimus apie šias sąlygas siųskite adresu: [El. paštas].'] },
+      { title: 'Kontaktai', paragraphs: ['Klausimus apie šias sąlygas siųskite adresu: info@chapter.lt'] },
     ],
   },
   {
@@ -83,7 +83,7 @@ export const chapterLegalPages: ChapterLegalPageConfig[] = [
     title: 'Susisiek su mumis',
     intro: 'Jeigu turi klausimų, pasiūlymų ar nori bendradarbiauti — parašyk mums.',
     sections: [
-      { title: 'El. paštas', paragraphs: ['[Įrašyti el. paštą]'] },
+      { title: 'El. paštas', paragraphs: ['info@chapter.lt'] },
     ],
   },
 ]
