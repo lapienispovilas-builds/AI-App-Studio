@@ -542,6 +542,58 @@ const positioningFaqs = [
   },
 ]
 
+const everaMaintenanceQuestions: Phase2Question[] = [
+  {
+    id: 'glp1_journey_stage',
+    label: 'Where are you in your GLP-1 journey?',
+    options: [
+      'Currently losing weight with GLP-1',
+      'Nearing my goal weight',
+      'Recently stopped GLP-1 treatment',
+      'Planning to stop GLP-1 soon',
+      'I stopped GLP-1 and want to maintain my results',
+    ],
+  },
+  {
+    id: 'biggest_post_glp1_concern',
+    label: 'What is your biggest concern after GLP-1?',
+    options: [
+      'Regaining the weight I lost',
+      'Losing the habits that helped me succeed',
+      'Not knowing what to do after stopping treatment',
+      'Staying consistent without medication',
+      'Understanding if my progress is on track',
+    ],
+  },
+  {
+    id: 'hardest_maintenance_challenge',
+    label: 'What feels hardest about maintaining your results?',
+    options: [
+      'Keeping my weight stable',
+      'Staying motivated long-term',
+      'Building sustainable routines',
+      'Knowing which habits matter most',
+      'Tracking progress without obsessing',
+    ],
+  },
+  {
+    id: 'most_helpful_maintenance_support',
+    label: 'What would help you most?',
+    options: [
+      'A simple way to monitor my maintenance',
+      'Knowing if my weight is staying on track',
+      'Daily habits and accountability',
+      'Guidance after stopping GLP-1',
+      'A clear plan for keeping my results',
+    ],
+  },
+  {
+    id: 'maintenance_willingness_to_pay',
+    label: 'Would you pay for a tool that helps you maintain your weight after GLP-1 treatment?',
+    options: ['Yes, if it works', 'Maybe, I would need to learn more', 'No'],
+  },
+]
+
 export const trackGlpPositioningPages: Phase2LandingPageConfig[] = [
   {
     ...trackGlpBase,
@@ -553,9 +605,9 @@ export const trackGlpPositioningPages: Phase2LandingPageConfig[] = [
     heroHighlight: 'become temporary',
     subheadline: 'Evera helps you maintain your progress after GLP-1 treatment with simple tracking, accountability, and habits designed for the maintenance phase.',
     subheadlineHighlight: 'maintain your progress',
-    cta: 'Join the waitlist',
+    cta: 'Keep your progress',
     ctaSubtitle: 'Built for people transitioning off GLP-1 treatments.',
-    stickyCta: 'Join the waitlist',
+    stickyCta: 'Keep your progress',
     signupHeadline: 'Be among the first to try Evera.',
     problem: {
       ...trackGlpBase.problem!,
@@ -595,7 +647,7 @@ export const trackGlpPositioningPages: Phase2LandingPageConfig[] = [
       headlineHighlight: 'stop at tracking',
       description: 'Evera is being built around a bigger question: what happens to your progress when treatment changes? Track your journey while you’re on medication and keep using the same system if you eventually taper or stop.',
     },
-    questions: positioningQuestions,
+    questions: everaMaintenanceQuestions,
     trustNote: 'Evera is a tracking and accountability companion. It does not provide medical advice or replace support from a qualified healthcare professional.',
     socialProof: 'We are building Evera as a simple maintenance companion for people transitioning off GLP-1 treatments.',
     finalCta: undefined,
