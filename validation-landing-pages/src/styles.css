@@ -807,3 +807,47 @@ fieldset { padding: 0; margin: 25px 0; border: 0; }
   .chapterr-step-number { width: 66px; height: 66px; font-size: 29px !important; }
   .chapterr-steps article { min-height: 220px; }
 }
+
+/* Chapterr students — Lithuanian university launch */
+.chapterr-student-page { --chapterr-brown: #8d7a62; --chapterr-rust: #8d7a62; }
+.chapterr-student-hero__lead { max-width: 590px; margin: 27px 0 0; color: var(--chapterr-ink); font-size: 21px; font-weight: 780; line-height: 1.45; }
+.chapterr-student-hero .chapterr-hero__subtitle { margin-top: 12px; }
+.chapterr-student-visual { overflow: hidden; }
+.chapterr-student-visual .chapterr-lifestyle--main { object-position: center 42%; filter: saturate(.76) contrast(.98); }
+.chapterr-student-visual .chapterr-chapter-card--one { left: 18px; top: 24px; }
+.chapterr-student-visual .chapterr-chapter-card--two { right: 18px; top: 94px; }
+.chapterr-student-visual .chapterr-connection { left: 18px; right: 18px; bottom: 18px; }
+.chapterr-student-recognition .chapterr-recognition__grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+.chapterr-student-recognition .chapterr-recognition__grid article:nth-child(n) { padding-left: 24px; padding-right: 24px; }
+.chapterr-student-concept .chapterr-concept__visual { border-radius: 42px; }
+.chapterr-student-concept .chapterr-concept__visual > ul { width: min(410px,calc(100% - 52px)); }
+.chapterr-student-concept .chapterr-concept__visual > ul li { padding: 14px 18px; display: flex; align-items: center; gap: 13px; }
+.chapterr-student-concept .chapterr-concept__visual > ul li::before { display: none; }
+.chapterr-student-concept .chapterr-concept__visual > ul li svg { flex: 0 0 auto; color: var(--chapterr-brown); }
+.chapterr-student-concept__statement { margin-top: 25px; padding: 20px 22px; display: flex; flex-direction: column; gap: 7px; border-left: 3px solid var(--chapterr-brown); border-radius: 0 14px 14px 0; background: var(--chapterr-cream); }
+.chapterr-student-concept__statement strong { color: var(--chapterr-ink); font-size: 16px; line-height: 1.45; }
+.chapterr-student-concept__statement span { color: #68605a; font-size: 15px; line-height: 1.55; }
+.chapterr-student-how .chapterr-steps { grid-template-columns: repeat(4,minmax(0,1fr)); }
+.chapterr-student-how .chapterr-steps article { min-height: 320px; }
+.chapterr-student-how .chapterr-steps h3 { margin-top: 27px; font-size: 21px; }
+.chapterr-student-how .chapterr-steps article > p { margin: 14px 0 24px; color: rgba(255,255,255,.68); font-size: 14px; line-height: 1.6; }
+.chapterr-student-final > p:not(.chapterr-kicker) { max-width: 600px; margin: 22px 0 0; color: rgba(255,255,255,.78); font-size: 18px; line-height: 1.6; }
+
+@media (max-width: 980px) {
+  .chapterr-student-how .chapterr-steps { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+
+@media (max-width: 560px) {
+  .chapterr-student-hero__lead { margin-top: 22px; font-size: 18px; }
+  .chapterr-student-visual { min-height: 470px; }
+  .chapterr-student-visual .chapterr-lifestyle--main { object-position: 51% center; }
+  .chapterr-student-visual .chapterr-chapter-card--one { left: 14px; right: 14px; top: 14px; }
+  .chapterr-student-visual .chapterr-chapter-card--two { left: 14px; right: 14px; top: 77px; }
+  .chapterr-student-recognition .chapterr-recognition__grid { grid-template-columns: 1fr; }
+  .chapterr-student-recognition .chapterr-recognition__grid article:nth-child(n) { padding: 21px 10px 21px 18px; }
+  .chapterr-student-concept .chapterr-concept__visual { min-height: 390px; border-radius: 30px; }
+  .chapterr-student-concept .chapterr-concept__visual > ul { width: calc(100% - 32px); }
+  .chapterr-student-how .chapterr-steps { grid-template-columns: 1fr; }
+  .chapterr-student-how .chapterr-steps article { min-height: 275px; }
+  .chapterr-student-final > p:not(.chapterr-kicker) { font-size: 16px; }
+}
