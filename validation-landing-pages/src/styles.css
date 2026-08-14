@@ -735,6 +735,8 @@ fieldset { padding: 0; margin: 25px 0; border: 0; }
   .chapterr-hero__copy { margin: auto; }.chapterr-hero__subtitle { margin-inline: auto; }.chapterr-hero .chapterr-button { margin-inline: auto; }
   .chapterr-people { width: min(500px, 100%); min-height: 470px; margin: auto; }
   .chapterr-concept { grid-template-columns: 1fr; gap: 58px; }.chapterr-concept__visual { width: min(500px, 100%); margin: auto; }.chapterr-concept__copy { max-width: 680px; text-align: center; margin: auto; }
+  .chapterr-student-concept .chapterr-concept__copy { order: 1; }
+  .chapterr-student-concept .chapterr-concept__visual { order: 2; }
 }
 
 @media (max-width: 560px) {
