@@ -27,7 +27,7 @@ export function ChapterrStudentLandingPage({ config }: { config: ChapterrStudent
     <main className="chapterr-page chapterr-student-page">
       <header className="chapterr-header">
         <a className="chapterr-wordmark chapterr-student-wordmark" href={`/${config.slug}`} aria-label={`${config.brand} pradžia`}>
-          <img src="/chapterr/chapterr-student-logo.png" alt="Chapterr" />
+          <img src="/chapterr/chapterr-student-logo.png" alt="Chapter" />
         </a>
       </header>
 
@@ -56,13 +56,13 @@ export function ChapterrStudentLandingPage({ config }: { config: ChapterrStudent
         <div className="chapterr-recognition__grid">
           {config.recognitionCards.map((card, index) => {
             const Icon = recognitionIcons[index]
-            return <article key={card}><span><Icon size={21} /></span><p>{card}</p></article>
+            return <article key={card}><span><Icon size={21} /></span><p>“{card}”</p></article>
           })}
         </div>
       </section>
 
       <section className="chapterr-concept chapterr-student-concept">
-        <div className="chapterr-concept__visual" aria-label="Kaip Chapterr sujungia panašius studentus">
+        <div className="chapterr-concept__visual" aria-label="Kaip Chapter sujungia panašius studentus">
           <ul>{config.conceptItems.map((item, index) => {
             const Icon = conceptIcons[index]
             return <li key={item}><Icon size={18} /><span>{item}</span></li>
@@ -71,9 +71,15 @@ export function ChapterrStudentLandingPage({ config }: { config: ChapterrStudent
         <div className="chapterr-concept__copy">
           <p className="chapterr-kicker">Panašus etapas. Natūralesnė pažintis.</p>
           <h2>{config.conceptHeadline}</h2>
-          <p>Chapterr sujungia studentus pagal tai, kas iš tikrųjų svarbu naujoje pradžioje.</p>
+          <p>Chapter sujungia studentus pagal tai, kas iš tikrųjų svarbu naujoje pradžioje.</p>
           <div className="chapterr-student-concept__statement"><strong>Ne dar viena grupė su šimtais atsitiktinių žmonių.</strong><span>Žmonės, su kuriais gali iškart turėti apie ką kalbėti.</span></div>
         </div>
+      </section>
+
+      <section className="chapterr-student-goal">
+        <p className="chapterr-kicker">Tikslas</p>
+        <h2>Tinkami žmonės naujam gyvenimo etapui.</h2>
+        <p>{config.goalText}</p>
       </section>
 
       <section className="chapterr-how chapterr-student-how">
@@ -101,7 +107,7 @@ export function ChapterrStudentLandingPage({ config }: { config: ChapterrStudent
       </section>
 
       <footer className="chapterr-footer">
-        <span className="chapterr-wordmark chapterr-student-wordmark"><img src="/chapterr/chapterr-student-logo.png" alt="Chapterr" /></span>
+        <span className="chapterr-wordmark chapterr-student-wordmark"><img src="/chapterr/chapterr-student-logo.png" alt="Chapter" /></span>
         <div className="chapterr-footer__legal" aria-label="Teisinė informacija"><span>Privacy Statement</span><span>Terms and Conditions</span><span>DMCA Policy</span><span>Do Not Sell My Info</span></div>
       </footer>
     </main>
