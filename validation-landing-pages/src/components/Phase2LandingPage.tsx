@@ -13,6 +13,7 @@ import {
   PositioningStoryGrid,
   PositioningUpcomingVisual,
 } from './TrackGlpPositioningVisuals'
+import { MaintenanceHeroVisual, TrackGlpMaintenanceSections } from './TrackGlpMaintenanceSections'
 
 const benefitIcons: Record<LandingBenefitIcon, LucideIcon> = {
   bell: Bell,
@@ -129,10 +130,16 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
           <small>{config.ctaSubtitle ?? config.ctaReassurance}</small>
         </div>
 
-        {config.landingVariant ? <PositioningHero variant={config.landingVariant} /> : <OutcomeMockup config={config.mockup} logo={config.logo} />}
+        {isMaintenance
+          ? <MaintenanceHeroVisual />
+          : config.landingVariant
+            ? <PositioningHero variant={config.landingVariant} />
+            : <OutcomeMockup config={config.mockup} logo={config.logo} />}
       </section>
 
-      {config.problem && (
+      {isMaintenance && <TrackGlpMaintenanceSections />}
+
+      {!isMaintenance && config.problem && (
         <section className="phase2-problem">
           <div className="phase2-section-heading">
             <p className="phase2-kicker">{config.problem.kicker}</p>
@@ -147,7 +154,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
         </section>
       )}
 
-      {config.howItWorks && (
+      {!isMaintenance && config.howItWorks && (
         <section className="phase2-how">
           <div className="phase2-section-heading phase2-section-heading--center">
             <p className="phase2-kicker">How it works</p>
@@ -198,7 +205,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
         </section>
       )}
 
-      {config.difference && (
+      {!isMaintenance && config.difference && (
         <section className="phase2-difference">
           <div className="phase2-difference__copy">
             <p className="phase2-kicker">Why this is different</p>
@@ -277,7 +284,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
         </div>
       </section>
 
-      {config.testimonials && (
+      {!isMaintenance && config.testimonials && (
         <section className="phase2-testimonials">
           <div className="phase2-section-heading phase2-section-heading--center">
             <p className="phase2-kicker">Early-access perspectives</p>
@@ -299,7 +306,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
         </section>
       )}
 
-      <section className="phase2-faq">
+      {!isMaintenance && <section className="phase2-faq">
         <p className="phase2-kicker">FAQ</p>
         <h2>Questions, answered.</h2>
         <div className="phase2-faq__list">
@@ -310,9 +317,9 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
             </details>
           ))}
         </div>
-      </section>
+      </section>}
 
-      {config.finalCta && (
+      {!isMaintenance && config.finalCta && (
         <section className="phase2-final-cta">
           <img src={config.logo} alt="" />
           <h2>{highlightPhrase(config.finalCta.headline, config.finalCta.headlineHighlight)}</h2>
