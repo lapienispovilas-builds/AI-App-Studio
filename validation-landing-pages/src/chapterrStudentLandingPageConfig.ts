@@ -48,5 +48,5 @@ export const chapterrStudentLandingPage: ChapterrStudentLandingPageConfig = {
   finalHeadline: 'Pirmi studentų ratai formuojami dabar.',
   finalText: 'Nelik sau vienas su knygomis - registruokis dabar',
   finalCta: 'Rask savo žmones',
-  typeformUrl: 'https://form.typeform.com/to/rFSquZQv',
+  typeformUrl: 'https://form.typeform.com/to/h1yDeKZ6',
 }
