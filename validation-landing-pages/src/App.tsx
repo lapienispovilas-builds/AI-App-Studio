@@ -5,6 +5,8 @@ import { ChapterrLandingPage } from './components/ChapterrLandingPage'
 import { chapterrLandingPage } from './chapterrLandingPageConfig'
 import { ChapterrStudentLandingPage } from './components/ChapterrStudentLandingPage'
 import { chapterrStudentLandingPage } from './chapterrStudentLandingPageConfig'
+import { ChapterLegalPage } from './components/ChapterLegalPage'
+import { chapterLegalPagesByPath } from './chapterLegalPages'
 import { landingPagesByPath } from './landingPageConfig'
 import { phase2LandingPagesByPath } from './phase2LandingPageConfig'
 
@@ -12,10 +14,12 @@ export function App() {
   const path = window.location.pathname.replace(/\/$/, '') || '/'
   const config = landingPagesByPath[path]
   const phase2Config = phase2LandingPagesByPath[path]
+  const chapterLegalConfig = chapterLegalPagesByPath[path]
 
   if (path === '/') return <HomePage />
   if (path === `/${chapterrLandingPage.slug}`) return <ChapterrLandingPage config={chapterrLandingPage} />
   if (path === `/${chapterrStudentLandingPage.slug}`) return <ChapterrStudentLandingPage config={chapterrStudentLandingPage} />
+  if (chapterLegalConfig) return <ChapterLegalPage config={chapterLegalConfig} />
   if (config) return <LandingPage config={config} />
   if (phase2Config) return <Phase2LandingPage config={phase2Config} />
 

@@ -1,5 +1,6 @@
 import { ArrowRight, BookOpen, GraduationCap, HeartHandshake, MapPin, MessageCircle, Sparkles, Sprout, UsersRound } from 'lucide-react'
 import type { ChapterrStudentLandingPageConfig } from '../chapterrStudentLandingPageConfig'
+import { ChapterFooter } from './ChapterFooter'
 
 const recognitionIcons = [UsersRound, MapPin, MessageCircle, HeartHandshake]
 const conceptIcons = [MapPin, GraduationCap, Sparkles, Sprout, MessageCircle]
@@ -106,10 +107,7 @@ export function ChapterrStudentLandingPage({ config }: { config: ChapterrStudent
         <a className="chapterr-button chapterr-button--light" href={waitlistUrl}>{config.finalCta}<ArrowRight size={19} /></a>
       </section>
 
-      <footer className="chapterr-footer">
-        <span className="chapterr-wordmark chapterr-student-wordmark"><img src="/chapterr/chapterr-student-logo.png" alt="Chapter" /></span>
-        <div className="chapterr-footer__legal" aria-label="Teisinė informacija"><span>Privacy Statement</span><span>Terms and Conditions</span><span>DMCA Policy</span><span>Do Not Sell My Info</span></div>
-      </footer>
+      <ChapterFooter />
     </main>
   )
 }
