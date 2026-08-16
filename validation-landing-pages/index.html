@@ -3,8 +3,34 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Join early access for a simple app designed around a real everyday problem." />
+    <meta id="site-description" name="description" content="Join early access for a simple app designed around a real everyday problem." />
     <title>Early Access</title>
+    <script>
+      (function () {
+        var chapterDomain = window.location.hostname === 'trychapter.lt' || window.location.hostname === 'www.trychapter.lt';
+        var chapterRoute = window.location.pathname === '/chapterr-students' || window.location.pathname === '/chapterr-students/';
+
+        if (!chapterDomain && !chapterRoute) return;
+
+        document.title = 'Chapter';
+        document.documentElement.lang = 'lt';
+        document.getElementById('site-description').setAttribute(
+          'content',
+          'Chapter padeda naujiems studentams atrasti panašius žmones ir pradėti naują gyvenimo etapą kartu.'
+        );
+
+        var favicon = document.createElement('link');
+        favicon.rel = 'icon';
+        favicon.type = 'image/png';
+        favicon.href = '/chapterr/chapter-favicon.png';
+        document.head.appendChild(favicon);
+
+        var appleIcon = document.createElement('link');
+        appleIcon.rel = 'apple-touch-icon';
+        appleIcon.href = '/chapterr/chapter-favicon.png';
+        document.head.appendChild(appleIcon);
+      }());
+    </script>
     <!-- Meta Pixel Code -->
     <script>
       !function(f,b,e,v,n,t,s)
