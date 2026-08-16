@@ -113,7 +113,7 @@ function setupEveraMaintenanceSheet() {
   const headers = phase2Headers(config.questions);
   const sheet = getOrCreateSheet(spreadsheet, config.sheetName, headers);
 
-  formatLeadSheet(sheet, headers);
+  formatLeadSheet(sheet, headers, config.questions.length);
 }
 
 // Run this once after deploying the updated script to prepare the Variant A tab.
@@ -123,7 +123,14 @@ function setupEveraWholeJourneySheet() {
   const headers = phase2Headers(config.questions);
   const sheet = getOrCreateSheet(spreadsheet, config.sheetName, headers);
 
-  formatLeadSheet(sheet, headers);
+  formatLeadSheet(sheet, headers, config.questions.length);
+}
+
+// Recommended setup function for the Evera A/B test. Run this once after
+// deploying a new script version. It keeps each variant in its own formatted tab.
+function setupEveraLeadSheets() {
+  setupEveraMaintenanceSheet();
+  setupEveraWholeJourneySheet();
 }
 
 function appendPhase2Lead(spreadsheet, config, data, pagePath) {
@@ -221,8 +228,9 @@ function getOrCreateSheet(spreadsheet, sheetName, headers) {
   return sheet;
 }
 
-function formatLeadSheet(sheet, headers) {
+function formatLeadSheet(sheet, headers, questionCount) {
   sheet.setFrozenRows(1);
+  sheet.setFrozenColumns(4);
   sheet.getRange(1, 1, 1, headers.length)
     .setFontWeight('bold')
     .setBackground('#205846')
@@ -236,14 +244,51 @@ function formatLeadSheet(sheet, headers) {
   sheet.setColumnWidth(3, 210); // Page
   sheet.setColumnWidth(4, 240); // Email
 
-  for (let column = 5; column <= 4 + PHASE_2_SHEETS['/glp1-tracker-maintenance'].questions.length; column += 1) {
+  for (let column = 5; column <= 4 + questionCount; column += 1) {
     sheet.setColumnWidth(column, 260);
   }
+
+  const trackingStartColumn = 5 + questionCount;
+  sheet.setColumnWidth(trackingStartColumn, 170); // Browser submitted at
+  sheet.setColumnWidth(trackingStartColumn + 1, 260); // Source URL
+  sheet.setColumnWidth(trackingStartColumn + 2, 130); // UTM source
+  sheet.setColumnWidth(trackingStartColumn + 3, 130); // UTM medium
+  sheet.setColumnWidth(trackingStartColumn + 4, 170); // UTM campaign
+  sheet.setColumnWidth(trackingStartColumn + 5, 170); // UTM content
+  sheet.setColumnWidth(trackingStartColumn + 6, 320); // Raw form answers
 
   const lastRow = Math.max(sheet.getLastRow(), 2);
   sheet.getRange(2, 1, lastRow - 1, headers.length)
     .setWrap(true)
     .setVerticalAlignment('top');
+
+  sheet.getRange(2, 1, lastRow - 1, 1).setNumberFormat('yyyy-mm-dd hh:mm');
+
+  sheet.getBandings().forEach(function (banding) {
+    banding.remove();
+  });
+  sheet.getRange(1, 1, lastRow, headers.length)
+    .applyRowBanding(SpreadsheetApp.BandingTheme.LIGHT_GREY, true, false)
+    .setHeaderRowColor('#205846')
+    .setFirstRowColor('#f7fbf9')
+    .setSecondRowColor('#edf6f1');
+
+  if (sheet.getFilter()) {
+    sheet.getFilter().remove();
+  }
+  sheet.getRange(1, 1, lastRow, headers.length).createFilter();
+
+  const paymentHeader = 'Would you pay for a tool that helps you maintain your weight after GLP-1 treatment?';
+  const paymentColumn = headers.indexOf(paymentHeader) + 1;
+  if (paymentColumn > 0) {
+    const paymentRange = sheet.getRange(2, paymentColumn, Math.max(lastRow - 1, 1), 1);
+    const rules = [
+      SpreadsheetApp.newConditionalFormatRule().whenTextEqualTo('Yes, if it works').setBackground('#d9ead3').setRanges([paymentRange]).build(),
+      SpreadsheetApp.newConditionalFormatRule().whenTextEqualTo('Maybe, I would need to learn more').setBackground('#fff2cc').setRanges([paymentRange]).build(),
+      SpreadsheetApp.newConditionalFormatRule().whenTextEqualTo('No').setBackground('#f4cccc').setRanges([paymentRange]).build(),
+    ];
+    sheet.setConditionalFormatRules(rules);
+  }
 }
 
 function validateHeaders(sheet, expectedHeaders) {

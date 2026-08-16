@@ -58,6 +58,11 @@ Phase 2 submissions are separated into five sheet tabs with columns matching eac
 - `TrackGLP Leads`
 - `Evera Maintenance Leads`
 - `Evera Whole Journey Leads`
+
+For the Evera A/B test, deploy the latest `google-apps-script/Code.gs` and run
+`setupEveraLeadSheets()` once in Apps Script. This creates/formats separate
+Maintenance and Whole Journey tabs with one column per quiz answer, filters,
+frozen lead details, UTM columns, and payment-intent highlighting.
 - `NextDate Leads`
 - `Together Leads`
 - `RESET Leads`
