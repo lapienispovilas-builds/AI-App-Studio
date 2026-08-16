@@ -57,7 +57,7 @@ Phase 2 submissions are separated into five sheet tabs with columns matching eac
 
 - `TrackGLP Leads`
 - `Evera Maintenance Leads`
-- `TrackGLP Whole Journey Leads`
+- `Evera Whole Journey Leads`
 - `NextDate Leads`
 - `Together Leads`
 - `RESET Leads`

@@ -1,10 +1,13 @@
 import {
   Activity,
   ArrowRight,
+  BookOpen,
   Check,
   Droplets,
+  Dumbbell,
   Footprints,
   HeartPulse,
+  Moon,
   Scale,
   Syringe,
   Utensils,
@@ -61,13 +64,13 @@ export function PositioningHero({ variant }: { variant: Variant }) {
     ['Starting', 'Baseline · Goals'],
     ['Active treatment', 'Dose · Symptoms · Reminders'],
     ['Progress', 'Weight · Protein · Water · Movement'],
-    ['Treatment changes', 'History stays with you'],
+    ['Transition', 'History stays with you'],
     ['Maintaining', 'Movement · Habits · Progress'],
   ]
-  const highlightedStage = 2
-  return <div className="positioning-hero-visual positioning-longitudinal-hero" aria-label="TrackGLP whole journey timeline">
+  const highlightedStage = journeyStages.length - 1
+  return <div className="positioning-hero-visual positioning-longitudinal-hero" aria-label="Evera whole journey timeline">
     <div className="positioning-dashboard-top"><span>Your journey</span><strong>One connected history</strong></div>
-    <div className="longitudinal-journey">{journeyStages.map(([stage, details], index) => <article className={index === highlightedStage ? 'is-current' : ''} key={stage}><i /><div><strong>{stage}</strong><small>{details}</small></div></article>)}</div>
+    <div className="longitudinal-journey">{journeyStages.map(([stage, details], index) => <article className={index === highlightedStage ? 'is-current is-destination' : ''} key={stage}><i /><div><strong>{stage}</strong><small>{details}</small>{index === highlightedStage && <em>Destination</em>}</div></article>)}</div>
   </div>
 }
 
@@ -89,6 +92,18 @@ export function PositioningStoryGrid({ variant }: { variant: Variant }) {
 }
 
 export function PositioningFeatureGrid({ variant, features }: { variant: Variant; features: Array<{ title: string; description: string }> }) {
+  if (variant === 'whole-journey') {
+    const labels = ['During treatment', 'As you approach your goal', 'After treatment']
+    const modes: JourneyScreen[] = ['progress', 'routine', 'home']
+    return <div className="maintenance-feature-grid journey-feature-grid">
+      {features.map((feature, index) => <article key={feature.title}>
+        <span className="journey-phase-label">{labels[index]}</span>
+        <h3>{feature.title}</h3>
+        <p>{feature.description}</p>
+        <EveraJourneyPhone screen={modes[index]} />
+      </article>)}
+    </div>
+  }
   return <div className="maintenance-feature-grid">
     {features.map((feature, index) => <article key={feature.title}>
       <span className="maintenance-coming-soon">Coming soon</span>
@@ -113,6 +128,10 @@ function JourneyMap({ variant, detailed = false }: { variant: Variant; detailed?
 }
 
 export function PositioningHowVisual({ variant, index, screen }: { variant: Variant; index: number; screen: Parameters<typeof ProductScreen>[0]['screen'] }) {
+  if (variant === 'whole-journey') {
+    const modes: JourneyScreen[] = ['home', 'routine', 'learn']
+    return <EveraJourneyPhone screen={modes[index]} />
+  }
   return <ProductScreen screen={screen} />
 }
 
@@ -129,12 +148,75 @@ export function PositioningDifferenceVisual({ variant }: { variant: Variant }) {
     { title: 'Maintaining', description: 'Continue seeing the habits and progress that matter over time.', features: ['Movement', 'Habits', 'Long-term progress'], soon: true },
   ]
   return <div className="maintenance-stage-journey">
-    {journeyStages.map((stage, index) => <article key={stage.title}>
+    {journeyStages.map((stage, index) => <article className={variant === 'whole-journey' && index === journeyStages.length - 1 ? 'is-destination' : ''} key={stage.title}>
       <div className="maintenance-stage-journey__heading"><i>{index + 1}</i><strong>{stage.title}</strong>{stage.soon && <span>Coming soon</span>}</div>
       <p>{stage.description}</p>
       <div className="maintenance-stage-journey__features">{stage.features.map((feature) => <small key={feature}>{feature}</small>)}</div>
     </article>)}
   </div>
+}
+
+type JourneyScreen = 'home' | 'progress' | 'routine' | 'learn'
+
+const journeyNavigation: Array<{ label: string; icon: typeof Activity }> = [
+  { label: 'Home', icon: HeartPulse },
+  { label: 'Progress', icon: Activity },
+  { label: 'Routine', icon: Check },
+  { label: 'Learn', icon: BookOpen },
+]
+
+function MiniTrend() {
+  return <svg className="evera-mini-trend" viewBox="0 0 180 62" preserveAspectRatio="none" aria-label="Weight trend">
+    <path d="M3 12 C30 16 35 30 61 28 S96 42 119 40 S150 43 177 38 L177 60 L3 60 Z" />
+    <path d="M3 12 C30 16 35 30 61 28 S96 42 119 40 S150 43 177 38" />
+  </svg>
+}
+
+function JourneyNav({ active }: { active: JourneyScreen }) {
+  return <nav className="evera-app-nav" aria-label="Evera app preview navigation">{journeyNavigation.map(({ label, icon: Icon }) => <span className={label.toLowerCase() === active ? 'is-active' : ''} key={label}><Icon size={11} /><small>{label}</small></span>)}</nav>
+}
+
+function EveraJourneyPhone({ screen }: { screen: JourneyScreen }) {
+  return <div className="story-phone evera-journey-phone" aria-label={`Evera ${screen} screen preview`}>
+    <div className="story-phone__screen">
+      <div className="story-phone__status"><span>9:41</span><span className="story-phone__island" /><span>● ᴡɪ</span></div>
+      <header className="evera-screen-header"><span>Evera</span><i>EV</i></header>
+      {screen === 'home' && <div className="evera-screen-content">
+        <small className="evera-eyebrow">Good morning</small>
+        <h4>Your journey</h4>
+        <section className="evera-stage-card"><div><small>Current phase</small><strong>Progress</strong></div><span>Next</span><div><small>Preparing for</small><strong>Maintenance</strong></div></section>
+        <div className="evera-phone-stages"><span>Starting</span><span>Active</span><span className="is-current">Progress</span><span>Transition</span><span className="is-destination">Maintaining</span></div>
+        <section className="evera-weight-card"><div><small>Current weight</small><strong>74.8 kg</strong><em>Maintenance range 74–76 kg</em></div><MiniTrend /></section>
+        <p className="evera-block-label">Daily overview</p>
+        <div className="evera-overview-grid"><span><Utensils size={12}/>Protein<strong>92g</strong></span><span><Dumbbell size={12}/>Strength<strong>2×</strong></span><span><Moon size={12}/>Sleep<strong>7.6h</strong></span><span><Check size={12}/>Habits<strong>4/5</strong></span></div>
+        <div className="evera-next-milestone"><Check size={13}/><span><small>Next milestone</small><strong>Ready for maintenance planning</strong></span></div>
+      </div>}
+      {screen === 'progress' && <div className="evera-screen-content">
+        <small className="evera-eyebrow">Your progress</small><h4>Built to last</h4>
+        <section className="evera-weight-card is-large"><div><small>Weight trend</small><strong>74.8 kg</strong><em>Within maintenance range</em></div><MiniTrend /></section>
+        <div className="evera-metric-row"><span><small>Starting</small><strong>82 kg</strong></span><span><small>Current</small><strong>74.8 kg</strong></span><span><small>Journey</small><strong>205 days</strong></span></div>
+        <p className="evera-block-label">Milestones</p>
+        <div className="evera-milestones"><span><Check size={11}/>Goal reached</span><span><Check size={11}/>Routines established</span><span><i/>Maintenance ahead</span></div>
+      </div>}
+      {screen === 'routine' && <div className="evera-screen-content">
+        <small className="evera-eyebrow">Today</small><h4>Your routine</h4><p className="evera-screen-note">Simple behaviors that support your progress.</p>
+        <div className="evera-routine-list"><span><Utensils size={15}/><div>Protein<small>Build consistency</small></div><strong>92 / 115g</strong></span><span><Dumbbell size={15}/><div>Strength<small>This week</small></div><strong>2×</strong></span><span><Footprints size={15}/><div>Movement<small>Daily rhythm</small></div><strong>7,800</strong></span><span><Moon size={15}/><div>Sleep<small>Last night</small></div><strong>7.6h</strong></span><span><Check size={15}/><div>Habits<small>Completed</small></div><strong>4 / 5</strong></span></div>
+        <button type="button">Complete check-in</button>
+      </div>}
+      {screen === 'learn' && <div className="evera-screen-content">
+        <small className="evera-eyebrow">Learn</small><h4>Prepare with confidence</h4><p className="evera-screen-note">Clear educational guidance for every stage.</p>
+        <div className="evera-learn-list"><span><BookOpen size={15}/><div><strong>What happens when GLP-1 treatment ends?</strong><small>6 min read</small></div></span><span><Scale size={15}/><div><strong>Why weight can return after GLP-1</strong><small>5 min read</small></div></span><span><HeartPulse size={15}/><div><strong>How to prepare for maintenance</strong><small>7 min read</small></div></span><span><Dumbbell size={15}/><div><strong>Protein and muscle retention</strong><small>4 min read</small></div></span><span><Check size={15}/><div><strong>Building habits that last</strong><small>5 min read</small></div></span></div>
+      </div>}
+      <JourneyNav active={screen} />
+    </div>
+  </div>
+}
+
+export function WholeJourneyResearch() {
+  return <section className="whole-journey-research">
+    <div><p className="phase2-kicker">Why preparation matters</p><strong>60%</strong></div>
+    <div><h2>Start preparing before treatment ends.</h2><p>Research found people regained around 60% of the weight they had lost after stopping treatment.</p><span>Evera helps you start preparing for maintenance before treatment ends.</span></div>
+  </section>
 }
 
 export function PositioningUpcomingVisual({ variant, index }: { variant: Variant; index: number }) {

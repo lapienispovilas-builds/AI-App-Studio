@@ -12,6 +12,7 @@ import {
   PositioningFeatureGrid,
   PositioningStoryGrid,
   PositioningUpcomingVisual,
+  WholeJourneyResearch,
 } from './TrackGlpPositioningVisuals'
 import { MaintenanceHeroVisual, TrackGlpMaintenanceSections } from './TrackGlpMaintenanceSections'
 
@@ -177,6 +178,8 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
         </section>
       )}
 
+      {config.landingVariant === 'whole-journey' && <WholeJourneyResearch />}
+
       {!isPositioning && (
         <section className="phase2-benefits" aria-label="Benefits">
           {config.benefits.map((benefit) => {
@@ -324,7 +327,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
           <img src={config.logo} alt="" />
           <h2>{highlightPhrase(config.finalCta.headline, config.finalCta.headlineHighlight)}</h2>
           <p>{config.finalCta.description}</p>
-          <a className="phase2-button" href="#early-access">{config.cta} <span>→</span></a>
+          <a className="phase2-button" href="#early-access">{config.finalCta.cta ?? config.cta} <span>→</span></a>
           <small>{config.ctaReassurance}</small>
         </section>
       )}

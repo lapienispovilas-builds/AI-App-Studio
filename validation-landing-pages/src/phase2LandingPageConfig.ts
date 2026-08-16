@@ -120,7 +120,7 @@ export type Phase2LandingPageConfig = {
   signupHeadline?: string
   trustNote?: string
   testimonials?: LandingTestimonial[]
-  finalCta?: { headline: string; headlineHighlight: string; description: string }
+  finalCta?: { headline: string; headlineHighlight: string; description: string; cta?: string }
   questions: Phase2Question[]
   mockup: OutcomeMockupConfig
   faqs: Array<{ question: string; answer: string }>
@@ -667,55 +667,73 @@ export const trackGlpPositioningPages: Phase2LandingPageConfig[] = [
     ...trackGlpBase,
     slug: 'glp1-tracker-journey',
     landingVariant: 'whole-journey',
-    headline: 'One place for your whole GLP-1 journey.',
-    heroHighlight: 'whole GLP-1 journey',
-    subheadline: 'Track doses, weight, symptoms and daily habits — from your first injection to whatever comes next.',
-    subheadlineHighlight: 'connected in one place',
-    signupHeadline: 'Help shape TrackGLP',
+    brand: 'Evera',
+    headline: 'One place for your GLP-1 journey — built to make your progress last.',
+    heroHighlight: 'make your progress last',
+    subheadline: 'Track your progress during treatment, prepare for what comes next, and build the habits that help you maintain your results long-term.',
+    subheadlineHighlight: 'maintain your results long-term',
+    cta: 'Make my progress last',
+    ctaSubtitle: 'Join early access and help shape Evera.',
+    stickyCta: 'Make my progress last',
+    signupHeadline: 'Make your progress last with Evera.',
     problem: {
       ...trackGlpBase.problem!,
-      headline: 'Your dose is only one part of your whole story.',
-      headlineHighlight: 'whole story',
-      description: 'Doses, weight, symptoms, hydration, protein and progress all belong to the same journey. TrackGLP connects those pieces in one simple place so changes are easier to understand over time.',
+      kicker: 'From progress to maintenance',
+      headline: "Your goal isn't just losing weight. It's making the progress last.",
+      headlineHighlight: 'making the progress last',
+      description: 'Evera keeps your progress, routines and milestones connected while you are on treatment, as you approach your goal, and when maintenance becomes the priority.',
     },
+    howHeadline: 'Build for what comes after the weight loss.',
+    howHighlight: 'what comes after',
     howItWorks: [
       {
         ...trackGlpBase.howItWorks![0],
-        title: 'Track what matters',
-        description: 'Log your doses, weight and symptoms in one place.',
+        title: 'See your journey clearly',
+        description: 'Keep progress, milestones and the treatment details that still matter in one place.',
         screen: { mode: 'form', eyebrow: 'Today', title: 'Your treatment', primary: '1.7 mg', rows: [{ label: 'Medication', value: 'Semaglutide' }, { label: 'Weight', value: '84.6 kg' }, { label: 'Symptoms', value: 'Mild' }], action: 'Save today' },
       },
       {
         ...trackGlpBase.howItWorks![1],
-        title: 'See your progress',
-        description: 'Keep habits, movement and progress visible alongside your treatment history.',
+        title: 'Build before your last dose',
+        description: 'Start preparing for maintenance with sustainable routines before treatment ends.',
         screen: { mode: 'chart', eyebrow: 'Progress', title: 'Your whole picture', primary: '-8.2 kg', secondary: 'One connected timeline', rows: [{ label: 'Protein', value: '95 / 100 g' }, { label: 'Water', value: '2.1 / 2.5 L' }, { label: 'Movement', value: '8,432 steps · Coming soon' }, { label: 'Symptoms', value: 'Improving' }], chart: [78, 72, 68, 61, 57, 51, 46], action: 'View progress' },
       },
       {
         ...trackGlpBase.howItWorks![2],
-        title: 'Stay with it through every stage',
-        description: 'Keep the same history as your journey changes from active treatment to transition and maintenance.',
+        title: 'Move into maintenance prepared',
+        description: 'Keep the same history, habits and progress as your journey moves into maintenance.',
         screen: { mode: 'journey', eyebrow: 'Journey Mode · Coming soon', title: 'One connected history', rows: [{ label: 'Journey stage', value: 'Starting · Active · Transition · Maintaining' }, { label: 'Weight', value: 'History connected' }, { label: 'Habits', value: 'Visible' }, { label: 'Movement', value: 'Coming soon' }], action: 'View my journey' },
       },
     ],
     upcomingFeatures: {
-      headline: 'Your dose is only one part of your whole story.',
+      headline: 'Support that evolves with your journey.',
       cards: [
-        { title: 'Movement tracking', description: 'Automatically follow your daily movement so staying active becomes part of your progress, not another thing to remember.' },
-        { title: 'Journey Mode', description: 'Switch between Starting, Active treatment, Transition, and Maintaining so TrackGLP stays useful as your journey changes.' },
-        { title: 'Movement guidance', description: 'Simple educational guidance on staying active throughout your GLP-1 journey — without turning TrackGLP into a complicated fitness app.' },
+        { title: "See the progress you're making", description: 'Keep your progress in one place and understand how your journey is evolving.' },
+        { title: 'Prepare before treatment ends', description: 'Start building the routines that can support your results before your last dose.' },
+        { title: 'Protect the progress you worked for', description: 'Stay aware of your progress and build consistency as you move into maintenance.' },
       ],
     },
     difference: {
       ...trackGlpBase.difference!,
-      headline: 'More than an injection log.',
-      headlineHighlight: 'More than',
-      description: 'TrackGLP keeps doses, weight, symptoms, habits and progress connected as your treatment changes.',
+      headline: 'One journey. One history. Maintenance as the destination.',
+      headlineHighlight: 'Maintenance as the destination',
+      description: 'Evera keeps progress, routines and the relevant parts of treatment connected as your priorities change — so preparation for maintenance starts before your last dose.',
     },
-    questions: positioningQuestions,
-    faqs: positioningFaqs,
-    socialProof: 'Help shape TrackGLP into one simple companion for the whole journey.',
-    finalCta: { headline: 'Help shape one place for your whole journey.', headlineHighlight: 'whole journey', description: 'Join early access and help influence the first version of TrackGLP.' },
+    questions: everaMaintenanceQuestions,
+    faqs: positioningFaqs.map((faq) => ({ ...faq, answer: faq.answer.replaceAll('TrackGLP', 'Evera') })),
+    trustNote: 'Evera is a tracking and accountability companion. It does not provide medical advice or replace support from a qualified healthcare professional.',
+    socialProof: 'Join early access and help shape one connected companion for treatment, transition and maintenance.',
+    finalCta: { headline: 'Make your GLP-1 progress last.', headlineHighlight: 'progress last', description: 'Evera stays with you through treatment, transition, and maintenance.', cta: 'Join Evera early access' },
+    mockup: { ...trackGlpBase.mockup, appName: 'Evera' },
+    testimonials: trackGlpBase.testimonials?.map((testimonial) => ({
+      ...testimonial,
+      quote: testimonial.quote.replaceAll('TrackGLP', 'Evera'),
+      name: testimonial.name.replaceAll('TrackGLP', 'Evera'),
+    })),
+    accent: '#2F7D63',
+    accentSoft: '#EEF8F3',
+    accentDeep: '#205846',
+    pageBackground: '#FAFCFB',
   },
 ]
 

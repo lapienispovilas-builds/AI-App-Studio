@@ -19,8 +19,15 @@ const PHASE_2_SHEETS = {
     ],
   },
   '/glp1-tracker-journey': {
-    sheetName: 'TrackGLP Whole Journey Leads',
-    questions: ['Where are you in your GLP-1 journey?', "What's your biggest challenge?", 'What would help you most?', 'landingVariant'],
+    sheetName: 'Evera Whole Journey Leads',
+    questions: [
+      'Where are you in your GLP-1 journey?',
+      'What is your biggest concern after GLP-1?',
+      'What feels hardest about maintaining your results?',
+      'What would help you most?',
+      'Would you pay for a tool that helps you maintain your weight after GLP-1 treatment?',
+      'landingVariant',
+    ],
   },
   '/dating-again': {
     sheetName: 'NextDate Leads',
@@ -103,6 +110,16 @@ function setupPhase2Sheets() {
 function setupEveraMaintenanceSheet() {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   const config = PHASE_2_SHEETS['/glp1-tracker-maintenance'];
+  const headers = phase2Headers(config.questions);
+  const sheet = getOrCreateSheet(spreadsheet, config.sheetName, headers);
+
+  formatLeadSheet(sheet, headers);
+}
+
+// Run this once after deploying the updated script to prepare the Variant A tab.
+function setupEveraWholeJourneySheet() {
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  const config = PHASE_2_SHEETS['/glp1-tracker-journey'];
   const headers = phase2Headers(config.questions);
   const sheet = getOrCreateSheet(spreadsheet, config.sheetName, headers);
 
