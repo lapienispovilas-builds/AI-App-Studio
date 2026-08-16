@@ -10,12 +10,20 @@ import { chapterLegalPagesByPath } from './chapterLegalPages'
 import { landingPagesByPath } from './landingPageConfig'
 import { phase2LandingPagesByPath } from './phase2LandingPageConfig'
 
+const chapterStudentDomains = new Set(['trychapter.lt', 'www.trychapter.lt'])
+
+export function shouldShowChapterStudentHome(hostname: string, path: string) {
+  return path === '/' && chapterStudentDomains.has(hostname.toLowerCase())
+}
+
 export function App() {
   const path = window.location.pathname.replace(/\/$/, '') || '/'
+  const showChapterStudentHome = shouldShowChapterStudentHome(window.location.hostname, path)
   const config = landingPagesByPath[path]
   const phase2Config = phase2LandingPagesByPath[path]
   const chapterLegalConfig = chapterLegalPagesByPath[path]
 
+  if (showChapterStudentHome) return <ChapterrStudentLandingPage config={chapterrStudentLandingPage} />
   if (path === '/') return <HomePage />
   if (path === `/${chapterrLandingPage.slug}`) return <ChapterrLandingPage config={chapterrLandingPage} />
   if (path === `/${chapterrStudentLandingPage.slug}`) return <ChapterrStudentLandingPage config={chapterrStudentLandingPage} />
