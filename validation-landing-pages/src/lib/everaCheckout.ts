@@ -67,11 +67,11 @@ export const hasAnyStripeCheckout = isStripeCheckoutConfigured || Object.values(
 export async function beginEveraCheckout(plan: EveraPlan, draft: EveraQuizDraft) {
   const endpoint = import.meta.env.VITE_STRIPE_CHECKOUT_ENDPOINT?.trim() || defaultCheckoutEndpoint
   const paymentLink = stripeLinks[plan.id]
-  if (isRealStripeLink(paymentLink)) {
+  if (!endpoint && isRealStripeLink(paymentLink)) {
     window.location.assign(paymentLink!)
     return { testSuccess: false as const }
   }
-  if (!endpoint) return { testSuccess: true as const }
+  if (!endpoint) throw new Error('Secure checkout is not configured in this environment.')
 
   const response = await fetch(endpoint, {
     method: 'POST',
@@ -82,7 +82,7 @@ export async function beginEveraCheckout(plan: EveraPlan, draft: EveraQuizDraft)
       quizAnswers: draft.answers,
       primaryFocus: draft.primaryFocus,
       secondaryFocuses: draft.secondaryFocuses,
-      successUrl: `${window.location.origin}/create-account?payment=success&session_id={CHECKOUT_SESSION_ID}`,
+      successUrl: `${window.location.origin}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
       cancelUrl: `${window.location.origin}/pricing?payment=cancelled`,
     }),
   })

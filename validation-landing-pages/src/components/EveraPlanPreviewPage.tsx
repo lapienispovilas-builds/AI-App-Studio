@@ -19,11 +19,7 @@ export function EveraPlanPreviewPage() {
     setError('')
     try {
       const updatedDraft = updateEveraQuizDraft({ selectedPlan: plan.id }) ?? { ...draft, selectedPlan: plan.id }
-      const result = await beginEveraCheckout(plan, updatedDraft)
-      if (result.testSuccess) {
-        updateEveraQuizDraft({ selectedPlan: plan.id, checkoutComplete: true })
-        window.location.assign('/create-account?checkout=success')
-      }
+      await beginEveraCheckout(plan, updatedDraft)
     } catch (checkoutError) {
       setError(checkoutError instanceof Error ? checkoutError.message : 'Checkout could not be started.')
     } finally {

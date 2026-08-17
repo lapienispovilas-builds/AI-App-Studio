@@ -22,9 +22,7 @@ import {
   createEveraAccount,
   getEveraAccount,
   isEveraTestMode,
-  markEveraPaid,
   requestEveraPasswordReset,
-  saveEveraPlanSelection,
   signInToEvera,
   signOutOfEvera,
   type EveraAccountData,
@@ -384,20 +382,13 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { on
     setSaving(true)
     setError('')
     try {
-      const accountWithPlan = await saveEveraPlanSelection(account, plan.id)
-      setAccount(accountWithPlan)
-      const checkout = await beginEveraCheckout(plan, {
-        answers: accountWithPlan.answers,
-        primaryFocus: accountWithPlan.primaryFocus,
+      await beginEveraCheckout(plan, {
+        answers: account.answers,
+        primaryFocus: account.primaryFocus,
         secondaryFocuses: [],
         selectedPlan: plan.id,
         createdAt: new Date().toISOString(),
       })
-      if (checkout.testSuccess) {
-        const paidAccount = await markEveraPaid(accountWithPlan, plan.id)
-        setAccount(paidAccount)
-        window.location.assign('/dashboard')
-      }
     } catch (checkoutError) {
       setError(checkoutError instanceof Error ? checkoutError.message : 'Checkout could not be started.')
     } finally {
@@ -509,7 +500,7 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { on
             {plan.badge && <em>{plan.badge}</em>}
             <small>{plan.name}</small><strong>{plan.price}</strong><span className="evera-paywall__positioning">{plan.positioning}</span><p>{plan.description}</p>
             <ul>{plan.includes.map((item) => <li key={item}><Check size={14} /> {item}</li>)}</ul>
-            <button className={plan.id === 'complete-30' ? 'phase2-button' : 'evera-paywall__secondary'} type="button" disabled={saving} onClick={(event) => { event.stopPropagation(); startCheckout(plan) }}>{saving && selectedPlan.id === plan.id ? 'Opening checkout…' : plan.cta} <ArrowRight size={16} /></button>
+            <button className={selectedPlan.id === plan.id ? 'evera-paywall__primary' : 'evera-paywall__secondary'} type="button" disabled={saving} onClick={(event) => { event.stopPropagation(); startCheckout(plan) }}>{saving && selectedPlan.id === plan.id ? 'Opening checkout…' : plan.cta} <ArrowRight size={16} /></button>
           </article>)}
         </div>
         <section className="evera-paywall__value"><div><p className="evera-quiz__eyebrow">Personalized to your answers</p><h2>Your plan is built around you</h2><p>Evera creates a maintenance roadmap based on your answers, not a generic program.</p></div><div>{['Your GLP-1 journey stage', 'Your biggest challenges', 'Your maintenance goals', 'Your preferred focus areas'].map((item) => <span key={item}><Check size={15} /> {item}</span>)}</div></section>

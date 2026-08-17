@@ -58,11 +58,12 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   }
 
   const origin = (process.env.EVERA_APP_URL || req.headers.origin || 'https://everahealth.pro').replace(/\/$/, '')
-  const successUrl = safeReturnUrl(body.successUrl, '/create-account?payment=success&session_id={CHECKOUT_SESSION_ID}', origin)
+  const successUrl = safeReturnUrl(body.successUrl, '/payment-success?session_id={CHECKOUT_SESSION_ID}', origin)
   const cancelUrl = safeReturnUrl(body.cancelUrl, '/pricing?payment=cancelled', origin)
   const answerValues = Object.values(body.quizAnswers ?? {})
   const answerMetadata = Object.fromEntries(answerValues.slice(0, 12).map((answer, index) => [`quiz_${index + 1}`, answer.slice(0, 500)]))
   const plan = plans[planId]
+  const resultId = crypto.randomUUID()
 
   try {
     const form = new URLSearchParams()
@@ -75,12 +76,13 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     else form.set('line_items[0][price_data][product]', plan.product)
     form.set('success_url', successUrl)
     form.set('cancel_url', cancelUrl)
+    form.set('client_reference_id', resultId)
     const metadata = {
       plan: planId,
+      resultId,
       productName: plan.name,
       primaryFocus: (body.primaryFocus ?? '').slice(0, 500),
       secondaryFocuses: (body.secondaryFocuses ?? []).join(', ').slice(0, 500),
-      quizAnswers: JSON.stringify(answerValues).slice(0, 500),
       ...answerMetadata,
     }
     Object.entries(metadata).forEach(([key, value]) => form.set(`metadata[${key}]`, value))

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { ArrowRight, LockKeyhole } from 'lucide-react'
 import { EveraProgramDashboard } from './EveraProgramDashboard'
-import { getEveraAccount, markEveraPaid, signOutOfEvera, type EveraAccountData } from '../lib/everaAccount'
+import { getEveraAccount, signOutOfEvera, type EveraAccountData } from '../lib/everaAccount'
 import { getEveraFlowUrl } from '../lib/domainRouting'
+import { getEveraQuizDraft } from '../lib/everaFunnel'
 
 export function EveraDashboardPage() {
   const [account, setAccount] = useState<EveraAccountData | null>(null)
@@ -11,16 +12,13 @@ export function EveraDashboardPage() {
 
   useEffect(() => {
     let active = true
-    getEveraAccount().then(async (savedAccount) => {
-      if (!active || !savedAccount) return
-      const checkoutSucceeded = new URLSearchParams(window.location.search).get('checkout') === 'success'
-      if (checkoutSucceeded && !savedAccount.hasPaid && savedAccount.selectedPlan) {
-        const unlockedAccount = await markEveraPaid(savedAccount, savedAccount.selectedPlan)
-        if (active) setAccount(unlockedAccount)
-        window.history.replaceState({}, '', '/dashboard')
-      } else {
-        setAccount(savedAccount)
+    getEveraAccount().then((savedAccount) => {
+      if (!active) return
+      if (savedAccount && !savedAccount.hasPaid) {
+        window.location.replace('/pricing')
+        return
       }
+      setAccount(savedAccount)
     }).catch(() => {
       if (active) setMessage('We could not open your plan. Please sign in again.')
     }).finally(() => { if (active) setLoading(false) })
@@ -33,7 +31,10 @@ export function EveraDashboardPage() {
   }
 
   if (loading) return <main className="evera-dashboard-state"><span>◉</span><h1>Opening your Evera plan…</h1></main>
-  if (!account || !account.hasPaid) return <main className="evera-dashboard-state"><LockKeyhole size={34} /><h1>Your Evera plan is protected</h1><p>{message || (account ? 'Complete checkout to unlock your personalized program.' : 'Sign in to access your purchased plan.')}</p><a className="phase2-button" href={getEveraFlowUrl(account ? '' : '?signin=1')}>{account ? 'Return to plan selection' : 'Sign in'} <ArrowRight size={18} /></a></main>
+  if (!account) {
+    const hasQuiz = Boolean(getEveraQuizDraft())
+    return <main className="evera-dashboard-state"><LockKeyhole size={34} /><h1>Your Evera plan is protected</h1><p>{message || (hasQuiz ? 'Choose a plan to continue your personalized journey.' : 'Sign in to access a purchased plan, or complete the assessment to create one.')}</p><a className="phase2-button" href={hasQuiz ? '/pricing' : getEveraFlowUrl('?signin=1')}>{hasQuiz ? 'Return to plan selection' : 'Sign in'} <ArrowRight size={18} /></a></main>
+  }
 
   return <div className="evera-dashboard-page"><div className="evera-dashboard-page__brand">◉ Evera</div><EveraProgramDashboard account={account} onSignOut={signOut} /></div>
 }

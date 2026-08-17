@@ -69,3 +69,13 @@ frozen lead details, UTM columns, and payment-intent highlighting.
 - `Arrived Leads`
 
 Round 1 submissions continue going to `Early Access Leads`. Copy the latest `google-apps-script/Code.gs` into the spreadsheet's Apps Script editor and run `setupPhase2Sheets` once to create the routed tabs. For the updated Evera form only, you can run `setupEveraMaintenanceSheet` instead. Then update the existing web-app deployment with a new version. The existing `/exec` URL remains the same. Do not run `doPost` manually because it expects a real browser submission.
+
+## Evera verified payments
+
+Before deploying the paid Evera funnel:
+
+1. Run `supabase/evera_verified_purchases.sql` in the Supabase SQL editor.
+2. Add `STRIPE_SECRET_KEY`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, and `SUPABASE_SERVICE_ROLE_KEY` to the Vercel project environment variables.
+3. Redeploy the production site.
+
+Stripe returns customers to `/payment-success`. That page verifies the Checkout Session on the server and claims the purchase for the authenticated account before allowing dashboard access. Never expose the Supabase service-role key or Stripe secret key in client-side variables.

@@ -160,34 +160,22 @@ export async function signInToEvera(email: string, password: string): Promise<Ev
   return readSupabaseProfile(data.session)
 }
 
-export async function markEveraPaid(account: EveraAccountData, selectedPlan: string): Promise<EveraAccountData> {
-  const updated = { ...account, hasPaid: true, selectedPlan }
-  if (!supabase) {
-    writeLocalAccount(updated)
-    return updated
-  }
+export async function claimVerifiedEveraPurchase(sessionId: string): Promise<EveraAccountData> {
+  if (!supabase) throw new Error('Account persistence must be configured before a purchase can be claimed.')
+  const { data, error } = await supabase.auth.getSession()
+  if (error || !data.session?.access_token) throw new Error('Sign in before opening your purchased plan.')
 
-  const { error } = await supabase.from('evera_profiles').update({
-    has_paid: true,
-    selected_plan: selectedPlan,
-    updated_at: new Date().toISOString(),
-  }).eq('id', account.userId)
-  if (error) throw new Error('Payment succeeded, but access could not be updated. Please contact support.')
-  return updated
-}
-
-export async function saveEveraPlanSelection(account: EveraAccountData, selectedPlan: string): Promise<EveraAccountData> {
-  const updated = { ...account, selectedPlan }
-  if (!supabase) {
-    writeLocalAccount(updated)
-    return updated
-  }
-  const { error } = await supabase.from('evera_profiles').update({
-    selected_plan: selectedPlan,
-    updated_at: new Date().toISOString(),
-  }).eq('id', account.userId)
-  if (error) throw new Error('Your plan selection could not be saved. Please try again.')
-  return updated
+  const response = await fetch('/api/claim-purchase', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${data.session.access_token}`,
+    },
+    body: JSON.stringify({ sessionId }),
+  })
+  const result = await response.json() as { claimed?: boolean; error?: string }
+  if (!response.ok || !result.claimed) throw new Error(result.error || 'Your verified purchase could not be attached to this account.')
+  return readSupabaseProfile(data.session)
 }
 
 export async function signOutOfEvera() {
