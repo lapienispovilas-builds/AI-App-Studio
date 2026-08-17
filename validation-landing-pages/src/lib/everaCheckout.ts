@@ -45,7 +45,12 @@ export const everaPlans: EveraPlan[] = [
   },
 ]
 
-export const isStripeCheckoutConfigured = Boolean(import.meta.env.VITE_STRIPE_CHECKOUT_ENDPOINT?.trim())
+const localHostnames = new Set(['localhost', '127.0.0.1'])
+const defaultCheckoutEndpoint = typeof window !== 'undefined' && !localHostnames.has(window.location.hostname)
+  ? '/api/create-checkout-session'
+  : undefined
+
+export const isStripeCheckoutConfigured = Boolean(import.meta.env.VITE_STRIPE_CHECKOUT_ENDPOINT?.trim() || defaultCheckoutEndpoint)
 
 const stripeLinks: Record<EveraPlan['id'], string | undefined> = {
   'starter-7': import.meta.env.VITE_STRIPE_LINK_7_DAY?.trim(),
@@ -60,7 +65,7 @@ function isRealStripeLink(value?: string) {
 export const hasAnyStripeCheckout = isStripeCheckoutConfigured || Object.values(stripeLinks).some(isRealStripeLink)
 
 export async function beginEveraCheckout(plan: EveraPlan, draft: EveraQuizDraft) {
-  const endpoint = import.meta.env.VITE_STRIPE_CHECKOUT_ENDPOINT?.trim()
+  const endpoint = import.meta.env.VITE_STRIPE_CHECKOUT_ENDPOINT?.trim() || defaultCheckoutEndpoint
   const paymentLink = stripeLinks[plan.id]
   if (isRealStripeLink(paymentLink)) {
     window.location.assign(paymentLink!)
@@ -73,11 +78,12 @@ export async function beginEveraCheckout(plan: EveraPlan, draft: EveraQuizDraft)
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       planId: plan.id,
+      plan: plan.id === 'starter-7' ? '7-day' : plan.id === 'journey-90' ? '90-day' : '30-day',
       quizAnswers: draft.answers,
       primaryFocus: draft.primaryFocus,
       secondaryFocuses: draft.secondaryFocuses,
-      successUrl: `${window.location.origin}/create-account?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
-      cancelUrl: `${window.location.origin}/plan-preview?checkout=cancelled`,
+      successUrl: `${window.location.origin}/create-account?payment=success&session_id={CHECKOUT_SESSION_ID}`,
+      cancelUrl: `${window.location.origin}/pricing?payment=cancelled`,
     }),
   })
 

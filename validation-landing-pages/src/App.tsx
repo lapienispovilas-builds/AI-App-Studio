@@ -31,7 +31,7 @@ export function App() {
   if (showChapterStudentHome) return <ChapterrStudentLandingPage config={chapterrStudentLandingPage} />
   if (showEveraHome) return <Phase2LandingPage config={phase2LandingPagesByPath['/glp1-tracker-maintenance']} />
   if (path === '/dashboard') return <EveraDashboardPage />
-  if (path === '/plan-preview') return <EveraPlanPreviewPage />
+  if (path === '/plan-preview' || path === '/pricing') return <EveraPlanPreviewPage />
   if (path === '/create-account') return <EveraCreateAccountPage />
   if (path === '/') return <HomePage />
   if (path === `/${chapterrLandingPage.slug}`) return <ChapterrLandingPage config={chapterrLandingPage} />

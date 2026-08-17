@@ -13,7 +13,7 @@
         var everaDomain = window.location.hostname === 'everahealth.pro' || window.location.hostname === 'www.everahealth.pro';
         var everaRoute = window.location.pathname === '/glp1-tracker-maintenance' || window.location.pathname === '/glp1-tracker-maintenance/';
         var everaDashboardRoute = window.location.pathname === '/dashboard' || window.location.pathname === '/dashboard/';
-        var everaFunnelRoute = ['/plan-preview', '/plan-preview/', '/create-account', '/create-account/'].indexOf(window.location.pathname) !== -1;
+        var everaFunnelRoute = ['/plan-preview', '/plan-preview/', '/pricing', '/pricing/', '/create-account', '/create-account/', '/dashboard', '/dashboard/'].indexOf(window.location.pathname) !== -1;
         var rootRoute = window.location.pathname === '/';
         var showEveraMetadata = everaRoute || everaDashboardRoute || everaFunnelRoute || everaDomain;
         var showChapterMetadata = chapterRoute || (chapterDomain && rootRoute);
