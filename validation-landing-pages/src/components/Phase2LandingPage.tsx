@@ -78,7 +78,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
     const description = document.querySelector<HTMLMetaElement>('meta[name="description"]')
     const previousDescription = description?.content
     document.title = 'Evera | Personalized GLP-1 Maintenance Program'
-    if (description) description.content = 'Build a personalized 30-day GLP-1 maintenance plan with Evera.'
+    if (description) description.content = 'Build a personalized GLP-1 maintenance plan with Evera.'
     return () => {
       document.title = previousTitle
       if (description && previousDescription) description.content = previousDescription

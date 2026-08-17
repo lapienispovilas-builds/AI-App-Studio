@@ -28,7 +28,7 @@ export const trackGlpMaintenanceContent = {
     headline: 'A clear program, built around your answers.',
     steps: [
       { title: 'Tell us about your journey', description: 'Share your current GLP-1 stage, biggest challenges, and maintenance goals.' },
-      { title: 'Receive your 30-day plan', description: 'Get clear weekly priorities and daily actions designed around your answers.' },
+      { title: 'Receive your personalized maintenance roadmap', description: 'Get clear priorities and practical actions designed around your answers.' },
       { title: 'Build your long-term routine', description: 'Use the program to create habits and confidence you can carry forward.' },
     ],
   },

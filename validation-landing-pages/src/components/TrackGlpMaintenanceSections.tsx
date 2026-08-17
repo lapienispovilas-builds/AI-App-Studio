@@ -50,7 +50,7 @@ const planWeeks = [
 export function MaintenanceHeroVisual() {
   return (
     <div className="evera-plan-preview" aria-label="Example personalized Evera maintenance plan">
-      <div className="evera-plan-preview__top"><span><Sparkles size={16} /> Personalized for you</span><small>30 DAYS</small></div>
+      <div className="evera-plan-preview__top"><span><Sparkles size={16} /> Personalized for you</span><small>RECOMMENDED: 30 DAYS</small></div>
       <div className="evera-plan-preview__heading"><small>YOUR EVERA</small><strong>Maintenance Plan</strong><p>Created for your GLP-1 journey</p></div>
       <div className="evera-plan-preview__profile"><span>Based on your answers</span><strong>Transitioning into maintenance</strong></div>
       <div className="evera-plan-preview__priorities">
@@ -63,7 +63,7 @@ export function MaintenanceHeroVisual() {
 
 function PlanRoadmap() {
   return <div className="evera-roadmap">
-    <header><div><small>YOUR PERSONALIZED PROGRAM</small><h3>Your 30-Day Maintenance Plan</h3></div><span><ClipboardCheck size={18} /> 4 weeks</span></header>
+    <header><div><small>YOUR PERSONALIZED PROGRAM</small><h3>Your Evera Maintenance Plan</h3></div><span><ClipboardCheck size={18} /> Recommended: 30 days</span></header>
     <div className="evera-roadmap__weeks">
       {planWeeks.map((week, index) => <article className={index === 0 ? 'is-active' : ''} key={week.week}>
         <div className="evera-roadmap__week"><span>{String(index + 1).padStart(2, '0')}</span><div><small>{week.week}</small><strong>{week.title}</strong></div>{index === 0 && <em>Start here</em>}</div>
@@ -102,7 +102,7 @@ export function TrackGlpMaintenanceSections({ onStartQuiz }: { onStartQuiz: () =
       </section>
 
       <section className="evera-personalized-plan">
-        <div className="phase2-section-heading phase2-section-heading--center"><p className="phase2-kicker">Personalized to your answers</p><h2>Your personalized plan.</h2><p>A focused month of guidance, practical priorities and simple actions designed around your maintenance stage.</p></div>
+        <div className="phase2-section-heading phase2-section-heading--center"><p className="phase2-kicker">Personalized to your answers</p><h2>Your personalized plan.</h2><p>Practical guidance, priorities, and actions designed around your maintenance stage and preferred level of support.</p></div>
         <PlanRoadmap />
       </section>
 
@@ -120,7 +120,7 @@ export function TrackGlpMaintenanceSections({ onStartQuiz }: { onStartQuiz: () =
         </div>
       </section>
 
-      <section className="maintenance-plan-cta"><div><p className="phase2-kicker">Your plan starts with your answers</p><h2>Get your personalized maintenance plan.</h2><p>Answer a few questions about your GLP-1 journey and receive a plan designed around your current stage, challenges, and goals.</p><button className="phase2-button" type="button" onClick={onStartQuiz}>Create My Plan <ArrowRight size={18} /></button><small>Personalized 30-day program · Takes only a few minutes</small></div><Target size={170} aria-hidden="true" /></section>
+      <section className="maintenance-plan-cta"><div><p className="phase2-kicker">Your plan starts with your answers</p><h2>Get your personalized maintenance plan.</h2><p>Answer a few questions about your GLP-1 journey and receive a plan designed around your current stage, challenges, and goals.</p><button className="phase2-button" type="button" onClick={onStartQuiz}>Create My Plan <ArrowRight size={18} /></button><small>Personalized maintenance roadmap · Takes only a few minutes</small></div><Target size={170} aria-hidden="true" /></section>
     </>
   )
 }

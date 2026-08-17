@@ -46,12 +46,12 @@ export function EveraPlanPreviewPage() {
     </section>
 
     <section className="evera-paywall evera-paywall--page">
-      <div className="evera-paywall__heading"><p className="evera-quiz__eyebrow">Choose your plan</p><h2>Choose your maintenance journey</h2><p>Select the program length that fits your goals.</p></div>
-      <div className="evera-paywall__plans">{everaPlans.map((plan) => <article className={`${selectedPlan.id === plan.id ? 'is-selected ' : ''}${plan.id === 'complete-30' ? 'is-recommended' : ''}`} key={plan.id} onClick={() => setSelectedPlan(plan)}>
+      <div className="evera-paywall__heading"><p className="evera-quiz__eyebrow">Choose your plan</p><h2>Choose your maintenance journey</h2><p>Choose the support level that fits your maintenance journey.</p></div>
+      <div className="evera-paywall__plans">{everaPlans.map((plan) => { const isSelected = selectedPlan.id === plan.id; return <article className={`${isSelected ? 'is-selected ' : ''}${plan.id === 'complete-30' ? 'is-recommended' : ''}`} key={plan.id} role="radio" aria-checked={isSelected} tabIndex={0} onClick={() => setSelectedPlan(plan)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setSelectedPlan(plan) } }}>
         {plan.badge && <em>{plan.badge}</em>}<small>{plan.name}</small><strong>{plan.price}</strong><span className="evera-paywall__positioning">{plan.positioning}</span><p>{plan.description}</p>
         <ul>{plan.includes.map((item) => <li key={item}><Check size={14} /> {item}</li>)}</ul>
-        <button className={plan.id === 'complete-30' ? 'phase2-button' : 'evera-paywall__secondary'} type="button" disabled={loading} onClick={(event) => { event.stopPropagation(); checkout(plan) }}>{loading && selectedPlan.id === plan.id ? 'Opening checkout…' : plan.cta} <ArrowRight size={16} /></button>
-      </article>)}</div>
+        <button className={isSelected ? 'evera-paywall__primary' : 'evera-paywall__secondary'} type="button" disabled={loading} onClick={(event) => { event.stopPropagation(); checkout(plan) }}>{loading && isSelected ? 'Opening checkout…' : plan.cta} <ArrowRight size={16} /></button>
+      </article> })}</div>
 
       <section className="evera-paywall__roadmap"><p className="evera-quiz__eyebrow">Program preview</p><div className="evera-paywall__roadmap-content" key={selectedPlan.id}><h2>{preview.title}</h2><p>{preview.subtitle}</p><div>{preview.cards.map((card) => <article key={card.label}><small>{card.label}</small><strong>{card.title}</strong><ul>{card.items.map((item) => <li key={item}>{item}</li>)}</ul></article>)}</div></div></section>
       <div className="evera-paywall__closing"><p>Your selected plan</p><strong>{selectedPlan.name} · {selectedPlan.price}</strong><button className="phase2-button" type="button" disabled={loading} onClick={() => checkout()}>{loading ? 'Opening checkout…' : selectedPlan.cta} {!loading && <ArrowRight size={18} />}</button></div>

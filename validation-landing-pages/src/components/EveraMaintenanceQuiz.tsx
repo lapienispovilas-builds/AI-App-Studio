@@ -460,7 +460,7 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { on
         <h1>Your primary focus is<br /><span>{primaryFocus}</span></h1>
         <p>Based on your GLP-1 journey, goals, and answers, we created your maintenance roadmap.</p>
         <div className="evera-result__includes">
-          {['Personalized 30-day roadmap', 'Daily habit guidance', 'Progress tracking', 'Nutrition recommendations', 'Sustainable routines'].map((item) => <span key={item}><Check size={15} /> {item}</span>)}
+          {['Personalized maintenance roadmap', 'Daily habit guidance', 'Progress tracking', 'Nutrition recommendations', 'Sustainable routines'].map((item) => <span key={item}><Check size={15} /> {item}</span>)}
         </div>
         <button className="phase2-button" type="button" onClick={() => setView(account ? 'paywall' : 'account')}>Unlock my Evera plan <ArrowRight size={18} /></button>
         <small>Built from your 12 assessment answers</small>
@@ -470,7 +470,7 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { on
         <div className="evera-account__summary"><FocusIcon size={30} /><div><small>YOUR PLAN FOCUS</small><strong>{primaryFocus}</strong></div></div>
         <p className="evera-quiz__eyebrow">One last step</p>
         <h1>Save your personalized Evera plan</h1>
-        <p>Create your account to access your 30-day GLP-1 maintenance program anytime.</p>
+        <p>Create your account to access your personalized GLP-1 maintenance program anytime.</p>
         <form onSubmit={saveAccount}>
           <label><span><Mail size={16} /> Email</span><input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" autoComplete="email" /></label>
           <label><span><LockKeyhole size={16} /> Password</span><input type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="At least 6 characters" autoComplete="new-password" /></label>
