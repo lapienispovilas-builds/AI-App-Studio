@@ -15,6 +15,7 @@ import {
   WholeJourneyResearch,
 } from './TrackGlpPositioningVisuals'
 import { MaintenanceHeroVisual, TrackGlpMaintenanceSections } from './TrackGlpMaintenanceSections'
+import { EveraMaintenanceQuiz } from './EveraMaintenanceQuiz'
 
 const benefitIcons: Record<LandingBenefitIcon, LucideIcon> = {
   bell: Bell,
@@ -45,6 +46,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [showStickyCta, setShowStickyCta] = useState(false)
+  const [showMaintenanceQuiz, setShowMaintenanceQuiz] = useState(false)
   const hasTrackedLead = useRef(false)
   const heroRef = useRef<HTMLElement>(null)
   const footerRef = useRef<HTMLElement>(null)
@@ -127,7 +129,9 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
           <p className="phase2-kicker">{config.heroKicker}</p>
           <h1>{highlightPhrase(config.headline, config.heroHighlight)}</h1>
           <p>{highlightPhrase(config.subheadline, config.subheadlineHighlight)}</p>
-          <a className="phase2-button" href="#early-access">{config.cta} <span>→</span></a>
+          {isMaintenance
+            ? <button className="phase2-button" type="button" onClick={() => setShowMaintenanceQuiz(true)}>{config.cta} <span>→</span></button>
+            : <a className="phase2-button" href="#early-access">{config.cta} <span>→</span></a>}
           <small>{config.ctaSubtitle ?? config.ctaReassurance}</small>
         </div>
 
@@ -138,7 +142,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
             : <OutcomeMockup config={config.mockup} logo={config.logo} />}
       </section>
 
-      {isMaintenance && <TrackGlpMaintenanceSections />}
+      {isMaintenance && <TrackGlpMaintenanceSections onStartQuiz={() => setShowMaintenanceQuiz(true)} />}
 
       {!isMaintenance && config.problem && (
         <section className="phase2-problem">
@@ -342,7 +346,10 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
         </div>
       </footer>
 
-      <a className={showStickyCta ? 'phase2-sticky-cta is-visible' : 'phase2-sticky-cta'} href="#early-access">{config.stickyCta} <span>→</span></a>
+      {isMaintenance
+        ? <button className={showStickyCta ? 'phase2-sticky-cta is-visible' : 'phase2-sticky-cta'} type="button" onClick={() => setShowMaintenanceQuiz(true)}>{config.stickyCta} <span>→</span></button>
+        : <a className={showStickyCta ? 'phase2-sticky-cta is-visible' : 'phase2-sticky-cta'} href="#early-access">{config.stickyCta} <span>→</span></a>}
+      {isMaintenance && showMaintenanceQuiz && <EveraMaintenanceQuiz onClose={() => setShowMaintenanceQuiz(false)} />}
     </main>
   )
 }

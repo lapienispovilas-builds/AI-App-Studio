@@ -73,7 +73,7 @@ function PlanRoadmap() {
   </div>
 }
 
-export function TrackGlpMaintenanceSections() {
+export function TrackGlpMaintenanceSections({ onStartQuiz }: { onStartQuiz: () => void }) {
   return (
     <>
       <section className="maintenance-problem">
@@ -120,7 +120,7 @@ export function TrackGlpMaintenanceSections() {
         </div>
       </section>
 
-      <section className="maintenance-plan-cta"><div><p className="phase2-kicker">Your plan starts with your answers</p><h2>Get your personalized maintenance plan.</h2><p>Answer a few questions about your GLP-1 journey and receive a plan designed around your current stage, challenges, and goals.</p><a className="phase2-button" href="#early-access">Create My Plan <ArrowRight size={18} /></a><small>Personalized 30-day program · Takes only a few minutes</small></div><Target size={170} aria-hidden="true" /></section>
+      <section className="maintenance-plan-cta"><div><p className="phase2-kicker">Your plan starts with your answers</p><h2>Get your personalized maintenance plan.</h2><p>Answer a few questions about your GLP-1 journey and receive a plan designed around your current stage, challenges, and goals.</p><button className="phase2-button" type="button" onClick={onStartQuiz}>Create My Plan <ArrowRight size={18} /></button><small>Personalized 30-day program · Takes only a few minutes</small></div><Target size={170} aria-hidden="true" /></section>
     </>
   )
 }
