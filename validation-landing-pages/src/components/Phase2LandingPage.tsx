@@ -230,7 +230,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
         </section>
       )}
 
-      <section className="phase2-signup" id="early-access">
+      {!isMaintenance && <section className="phase2-signup" id="early-access">
         <div className="phase2-signup__intro">
           <p className="phase2-kicker">{isMaintenance ? 'Personalized assessment' : 'Early access'}</p>
           <h2>{config.signupHeadline ?? config.headline}</h2>
@@ -285,7 +285,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
             </form>
           )}
         </div>
-      </section>
+      </section>}
 
       {!isMaintenance && config.testimonials && (
         <section className="phase2-testimonials">
