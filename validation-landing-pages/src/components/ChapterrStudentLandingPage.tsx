@@ -65,7 +65,7 @@ export function ChapterrStudentLandingPage({ config }: { config: ChapterrStudent
         </div>
 
         <div className="chapterr-people chapterr-student-visual" aria-label="Studentai kartu atranda naują universitetinį miestą">
-          <img className="chapterr-lifestyle chapterr-lifestyle--main" src="/chapterr/chapterr-students-hero.png" alt="Keturi studentai kartu vaikšto Vilniaus senamiestyje" />
+          <img className="chapterr-lifestyle chapterr-lifestyle--main" src="/chapterr/chapter-students-vilnius.jpg" alt="Studentai kartu žvelgia į Vilniaus senamiestį" />
           <div className="chapterr-chapter-card chapterr-chapter-card--one"><MapPin size={17} /><span><small>Naujas miestas</small><strong>Vilnius</strong></span></div>
           <div className="chapterr-chapter-card chapterr-chapter-card--two"><GraduationCap size={17} /><span><small>Naujas etapas</small><strong>Pirmi studijų metai</strong></span></div>
           <div className="chapterr-connection"><UsersRound size={22} /><span><strong>Žmonės, kurie taip pat pradeda iš naujo.</strong><small>Jau turite apie ką kalbėti</small></span></div>

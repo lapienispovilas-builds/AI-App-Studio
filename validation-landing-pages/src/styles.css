@@ -110,6 +110,140 @@ fieldset { padding: 0; margin: 25px 0; border: 0; }
   .idea-card, .idea-card:nth-child(4), .idea-grid--assessments .idea-card, .idea-grid--assessments .idea-card:nth-child(4) { grid-column: span 1; }
 }
 
+/* Chapter students — energetic university launch visual refresh */
+main.chapterr-student-page {
+  --chapterr-ink: #17201f;
+  --chapterr-brown: #f25735;
+  --chapterr-rust: #f25735;
+  --chapterr-cream: #fff4ed;
+  --chapterr-sand: #ffd9ca;
+  color: var(--chapterr-ink);
+  background: #fffaf6;
+  font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+}
+.chapterr-student-page .chapterr-header { height: 72px; }
+.chapterr-student-page .chapterr-kicker { color: #d94325; font-weight: 900; letter-spacing: 1.1px; }
+.chapterr-student-page .chapterr-button {
+  color: #fff;
+  background: #f25735;
+  box-shadow: 0 16px 34px rgba(242,87,53,.28);
+}
+.chapterr-student-page .chapterr-button:hover { background: #db4325; }
+.chapterr-student-page .chapterr-hero h1,
+.chapterr-student-page .chapterr-section-heading h2,
+.chapterr-student-page .chapterr-concept h2,
+.chapterr-student-page .chapterr-how h2,
+.chapterr-student-page .chapterr-student-goal h2,
+.chapterr-student-page .chapterr-student-final__content h2 {
+  font-family: 'Manrope', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 850;
+  letter-spacing: -.055em;
+}
+.chapterr-student-page .chapterr-hero h1 { line-height: .96; }
+.chapterr-student-page .chapterr-highlight { color: #f25735; }
+.chapterr-student-page .chapterr-hero__subtitle,
+.chapterr-student-page .chapterr-student-goal > p:last-child,
+.chapterr-student-page .chapterr-student-concept__statement span,
+.chapterr-student-page .chapter-student-research-intro { color: #5b6562; }
+.chapterr-student-page .chapterr-people {
+  border-radius: 32px;
+  background: #d7eef3;
+  box-shadow: 0 28px 65px rgba(29,62,67,.18);
+}
+.chapterr-student-page .chapterr-people::after {
+  border-radius: 32px;
+  background: linear-gradient(180deg, rgba(7,31,36,.02) 42%, rgba(7,31,36,.64));
+}
+.chapterr-student-page .chapterr-student-visual .chapterr-lifestyle--main {
+  object-position: center center;
+  filter: saturate(1.12) contrast(1.03);
+}
+.chapterr-student-page .chapterr-chapter-card,
+.chapterr-student-page .chapterr-connection {
+  border-color: rgba(255,255,255,.82);
+  background: rgba(255,255,255,.94);
+  box-shadow: 0 14px 28px rgba(17,46,51,.18);
+}
+.chapterr-student-page .chapterr-chapter-card svg,
+.chapterr-student-page .chapterr-connection svg { color: #f25735; }
+.chapterr-student-page .chapterr-recognition { background: #fff1e9; }
+.chapterr-student-page .chapter-student-research-intro span { color: #d94325; }
+.chapterr-student-page .chapter-student-messages article > span { background: #f25735; box-shadow: 0 8px 20px rgba(242,87,53,.22); }
+.chapterr-student-page .chapter-student-messages article:nth-child(2) > span,
+.chapterr-student-page .chapter-student-messages article:nth-child(4) > span { color: #fff; background: #17201f; }
+.chapterr-student-page .chapter-student-messages article > div {
+  border-color: #ffd4c5;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(63,44,37,.07);
+}
+.chapterr-student-page .chapter-student-messages article.is-right > div { background: #ffe1d5; }
+.chapterr-student-page .chapter-student-messages p { color: #17201f; }
+.chapterr-student-page .chapter-student-messages small { color: #8b6c61; }
+.chapterr-student-page .chapter-student-meme {
+  border-color: #ffc6b2;
+  background: linear-gradient(145deg,#ffe2d6,#fff9f5);
+  box-shadow: 0 24px 55px rgba(242,87,53,.12);
+}
+.chapterr-student-page .chapter-student-meme__row { background: #fff; }
+.chapterr-student-page .chapter-student-meme__row.is-no { opacity: .7; }
+.chapterr-student-page .chapter-student-meme__row.is-yes { border-color: #f25735; box-shadow: 0 14px 30px rgba(242,87,53,.16); }
+.chapterr-student-page .chapter-student-meme__row.is-yes > span { background: #f25735; }
+.chapterr-student-page .chapter-student-meme__row.is-yes small { color: #d94325; }
+.chapterr-student-page .chapterr-student-concept__statement {
+  border-left-color: #f25735;
+  background: #fff0e8;
+}
+.chapterr-student-page .chapterr-student-goal { background: #ffd8c8; }
+.chapterr-student-page .chapterr-how { color: #fff; background: #17201f; }
+.chapterr-student-page .chapterr-how .chapterr-kicker { color: #ff9f82; }
+.chapterr-student-page .chapterr-steps article { border-color: rgba(255,255,255,.16); background: rgba(255,255,255,.07); }
+.chapterr-student-page .chapterr-step-number {
+  border-color: #f25735;
+  color: #fff !important;
+  background: #f25735;
+  font-family: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  font-weight: 850 !important;
+  box-shadow: 0 10px 24px rgba(242,87,53,.28);
+}
+.chapterr-student-page .chapter-step-product { color: #17201f; background: #fffaf6; }
+.chapterr-student-page .chapter-step-product > small,
+.chapterr-student-page .chapter-step-profiles em { color: #d94325; }
+.chapterr-student-page .chapter-step-quiz > div:nth-of-type(2) span.is-selected,
+.chapterr-student-page .chapter-step-profiles i,
+.chapterr-student-page .chapter-step-chat i,
+.chapterr-student-page .chapter-step-chat .is-mine p { border-color: #f25735; background: #f25735; }
+.chapterr-student-page .chapter-step-quiz button { background: #f25735; }
+.chapterr-student-page .chapter-step-activities svg { color: #f25735; }
+.chapterr-student-page .chapterr-student-final__overlay {
+  background: linear-gradient(90deg,rgba(23,32,31,.94) 0%,rgba(23,32,31,.8) 50%,rgba(242,87,53,.34) 100%);
+}
+.chapterr-student-page .chapterr-button--light { color: #fff; background: #f25735; }
+.chapterr-student-page .chapterr-footer { background: #fffaf6; }
+
+@media (max-width: 560px) {
+  .chapterr-student-page .chapterr-header { height: 62px; }
+  .chapterr-student-page .chapterr-hero { padding-top: 28px; gap: 40px; }
+  .chapterr-student-page .chapterr-hero h1 { font-size: 43px; line-height: .98; letter-spacing: -2.2px; }
+  .chapterr-student-page .chapterr-student-hero__lead { font-size: 18px; line-height: 1.38; }
+  .chapterr-student-page .chapterr-button { min-height: 58px; }
+  .chapterr-student-page .chapterr-student-visual { min-height: 430px; border-radius: 25px; }
+  .chapterr-student-page .chapterr-people::after { border-radius: 25px; }
+  .chapterr-student-page .chapterr-student-visual .chapterr-lifestyle--main { object-position: 50% center; }
+  .chapterr-student-page .chapterr-section-heading h2,
+  .chapterr-student-page .chapterr-concept h2,
+  .chapterr-student-page .chapterr-how h2,
+  .chapterr-student-page .chapterr-student-goal h2,
+  .chapterr-student-page .chapterr-student-final__content h2 { font-size: 38px; line-height: 1.02; letter-spacing: -1.8px; }
+  .chapterr-student-page .chapterr-recognition,
+  .chapterr-student-page .chapterr-how { padding-top: 72px; padding-bottom: 78px; }
+  .chapterr-student-page .chapterr-concept { padding-top: 76px; padding-bottom: 76px; gap: 42px; }
+  .chapterr-student-page .chapterr-student-goal { padding-top: 68px; padding-bottom: 68px; }
+  .chapterr-student-page .chapter-student-messages { gap: 13px; }
+  .chapterr-student-page .chapter-student-messages article { width: 98%; }
+  .chapterr-student-page .chapterr-steps { gap: 14px; }
+  .chapterr-student-page .chapterr-steps article { border-radius: 20px; }
+}
+
 /* Evera personalized maintenance quiz funnel */
 .evera-quiz { position:fixed; inset:0; z-index:1000; overflow-y:auto; color:#183229; background:linear-gradient(145deg,#fbfdfc,#eef7f2); }
 .evera-quiz__header { position:sticky; top:0; z-index:5; height:74px; padding:0 max(20px,calc((100% - 1120px)/2)); display:grid; grid-template-columns:44px 1fr 44px; align-items:center; border-bottom:1px solid rgba(47,125,99,.12); background:rgba(251,253,252,.9); backdrop-filter:blur(18px); }
