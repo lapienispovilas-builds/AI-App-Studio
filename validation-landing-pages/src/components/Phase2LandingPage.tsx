@@ -79,7 +79,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
     }
 
     if (config.questions.some((question) => !answers[question.id])) {
-      setError('Please answer each question before joining early access.')
+      setError(isMaintenance ? 'Please answer each question to build your plan.' : 'Please answer each question before joining early access.')
       return
     }
 
@@ -232,9 +232,9 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
 
       <section className="phase2-signup" id="early-access">
         <div className="phase2-signup__intro">
-          <p className="phase2-kicker">Early access</p>
+          <p className="phase2-kicker">{isMaintenance ? 'Personalized assessment' : 'Early access'}</p>
           <h2>{config.signupHeadline ?? config.headline}</h2>
-          <div className="phase2-proof-badge"><UsersRound size={16} /> Built with early users</div>
+          <div className="phase2-proof-badge"><UsersRound size={16} /> {isMaintenance ? 'A few questions · personalized result' : 'Built with early users'}</div>
           <p>{config.socialProof}</p>
           {config.trustNote && <p className="phase2-trust-note"><LockKeyhole size={16} /> <span>{config.trustNote}</span></p>}
         </div>
@@ -243,8 +243,8 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
           {submitted ? (
             <div className="phase2-success" role="status">
               <span>✓</span>
-              <h2>You're on the list.</h2>
-              <p>Thanks for helping shape {config.brand}.</p>
+              <h2>{isMaintenance ? 'Your answers are saved.' : "You're on the list."}</h2>
+              <p>{isMaintenance ? 'Thank you. Your answers will shape your Evera maintenance plan.' : `Thanks for helping shape ${config.brand}.`}</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} noValidate>
@@ -280,7 +280,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
 
               {error && <p className="phase2-form-error" role="alert">{error}</p>}
               <button className="phase2-button" type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Joining…' : config.cta} {!isSubmitting && <span>→</span>}
+                {isSubmitting ? (isMaintenance ? 'Building…' : 'Joining…') : config.cta} {!isSubmitting && <span>→</span>}
               </button>
             </form>
           )}
