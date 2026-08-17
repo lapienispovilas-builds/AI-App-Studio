@@ -603,7 +603,7 @@ export const trackGlpPositioningPages: Phase2LandingPageConfig[] = [
     heroKicker: 'Your personalized maintenance program',
     headline: "Don't let your GLP-1 weight loss become temporary.",
     heroHighlight: 'become temporary',
-    subheadline: 'Get a personalized 30-day maintenance plan designed around your GLP-1 journey, biggest challenges, and goals — so you know what to focus on after treatment.',
+    subheadline: 'Get a personalized 30-day maintenance plan designed around your GLP-1 journey, biggest challenges, and goals.',
     subheadlineHighlight: 'personalized 30-day maintenance plan',
     cta: 'Build My Plan',
     ctaSubtitle: 'Created for your GLP-1 journey.',

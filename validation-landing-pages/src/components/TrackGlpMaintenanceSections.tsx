@@ -89,6 +89,18 @@ export function TrackGlpMaintenanceSections() {
         <div className="maintenance-stat-card"><p className="phase2-kicker">{content.research.kicker}</p><div className="maintenance-stat-card__body"><strong>{content.research.statistic}</strong><p>{content.research.description}</p></div><div className="maintenance-stat-card__value">{content.research.value}</div></div>
       </section>
 
+      <section className="evera-program-feedback">
+        <div className="phase2-section-heading phase2-section-heading--center">
+          <p className="phase2-kicker">Real experiences</p>
+          <h2>Feedback from Evera program users.</h2>
+        </div>
+        <div className="evera-program-feedback__grid">
+          <figure><img src="/assets/evera-feedback/regina.png" alt="Evera program feedback from Regina" /></figure>
+          <figure><img src="/assets/evera-feedback/program-feedback-2.png" alt="Evera program feedback about staying calm and on track after GLP-1" /></figure>
+          <figure><img src="/assets/evera-feedback/program-feedback-3.png" alt="Evera program feedback about maintaining results after GLP-1" /></figure>
+        </div>
+      </section>
+
       <section className="evera-personalized-plan">
         <div className="phase2-section-heading phase2-section-heading--center"><p className="phase2-kicker">Personalized to your answers</p><h2>Your personalized plan.</h2><p>A focused month of guidance, practical priorities and simple actions designed around your maintenance stage.</p></div>
         <PlanRoadmap />
