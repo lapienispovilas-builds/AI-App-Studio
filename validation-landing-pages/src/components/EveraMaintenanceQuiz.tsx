@@ -194,6 +194,39 @@ const focusDetails: Record<Focus, { description: string; icon: typeof Target }> 
   'Transition Preparation': { description: 'Create clarity around what to focus on as your treatment and daily priorities change.', icon: ShieldCheck },
 }
 
+const planPreviews: Record<EveraPlan['id'], { title: string; subtitle: string; cards: Array<{ label: string; title: string; items: string[] }> }> = {
+  'starter-7': {
+    title: 'Your 7-day foundation includes',
+    subtitle: 'A quick start to understand your maintenance priorities and build confidence after GLP-1.',
+    cards: [
+      { label: 'Step 1', title: 'Understand your maintenance goals', items: ['Review your GLP-1 journey', 'Identify your biggest challenges', 'Set your starting baseline'] },
+      { label: 'Step 2', title: 'Build your first habits', items: ['Create simple daily routines', 'Focus on consistency over perfection', 'Establish your maintenance priorities'] },
+      { label: 'Step 3', title: 'Support your progress', items: ['Improve nutrition awareness', 'Add sustainable movement', 'Track your first wins'] },
+      { label: 'Step 4', title: 'Create your next step', items: ['Review your progress', 'Understand your focus areas', 'Decide your long-term maintenance approach'] },
+    ],
+  },
+  'complete-30': {
+    title: 'Your 30-day roadmap includes',
+    subtitle: 'A complete maintenance system designed to help you protect your weight loss and build habits that last.',
+    cards: [
+      { label: 'Week 1', title: 'Build your foundation', items: ['Understand your maintenance goals', 'Create your daily routine', 'Establish key habits'] },
+      { label: 'Week 2', title: 'Protect your progress', items: ['Support nutrition habits', 'Maintain consistency', 'Build confidence'] },
+      { label: 'Week 3', title: 'Strengthen your routine', items: ['Improve sustainable habits', 'Focus on movement and strength', 'Build long-term consistency'] },
+      { label: 'Week 4', title: 'Create your long-term system', items: ['Prepare for challenges', 'Build habits beyond the program', 'Create your maintenance strategy'] },
+    ],
+  },
+  'journey-90': {
+    title: 'Your 90-day maintenance journey includes',
+    subtitle: 'Long-term support to turn your GLP-1 results into sustainable lifestyle changes.',
+    cards: [
+      { label: 'Month 1', title: 'Build your foundation', items: ['Establish your maintenance routine', 'Create nutrition habits', 'Understand your progress patterns'] },
+      { label: 'Month 2', title: 'Strengthen your lifestyle', items: ['Improve consistency', 'Build strength and movement habits', 'Adapt your routine to real life'] },
+      { label: 'Month 3', title: 'Maintain your results', items: ['Handle challenges confidently', 'Create your long-term system', 'Continue tracking your progress'] },
+      { label: 'Beyond 90 days', title: 'Your maintenance framework', items: ['Keep your results sustainable', 'Understand what works for you', 'Continue improving your habits'] },
+    ],
+  },
+}
+
 type QuizView = 'question' | 'insight' | 'result' | 'account' | 'login' | 'paywall' | 'program'
 
 export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { onClose: () => void; initialView?: 'question' | 'login' }) {
@@ -356,6 +389,7 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { on
 
   const displayedFocus = account?.primaryFocus ?? primaryFocus
   const FocusIcon = focusDetails[displayedFocus].icon
+  const selectedPreview = planPreviews[selectedPlan.id]
 
   if (checkingSession) return <div className="evera-quiz evera-quiz--loading"><div className="evera-quiz__loader"><span>◉</span><p>Opening your Evera journey…</p></div></div>
 
@@ -452,12 +486,7 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { on
           </article>)}
         </div>
         <section className="evera-paywall__value"><div><p className="evera-quiz__eyebrow">Personalized to your answers</p><h2>Your plan is built around you</h2><p>Evera creates a maintenance roadmap based on your answers, not a generic program.</p></div><div>{['Your GLP-1 journey stage', 'Your biggest challenges', 'Your maintenance goals', 'Your preferred focus areas'].map((item) => <span key={item}><Check size={15} /> {item}</span>)}</div></section>
-        <section className="evera-paywall__roadmap"><p className="evera-quiz__eyebrow">Program preview</p><h2>Your 30-day roadmap includes</h2><div>{[
-          ['Week 1', 'Build your foundation', ['Understand your maintenance goals', 'Create your daily routine', 'Establish key habits']],
-          ['Week 2', 'Protect your progress', ['Support nutrition habits', 'Maintain consistency', 'Build confidence']],
-          ['Week 3', 'Strengthen your routine', ['Improve sustainable habits', 'Focus on movement and strength']],
-          ['Week 4', 'Create your long-term system', ['Prepare for challenges', 'Build habits beyond the program']],
-        ].map(([week, title, items]) => <article key={week as string}><small>{week as string}</small><strong>{title as string}</strong><ul>{(items as string[]).map((item) => <li key={item}>{item}</li>)}</ul></article>)}</div></section>
+        <section className="evera-paywall__roadmap"><p className="evera-quiz__eyebrow">Program preview</p><div className="evera-paywall__roadmap-content" key={selectedPlan.id}><h2>{selectedPreview.title}</h2><p>{selectedPreview.subtitle}</p><div>{selectedPreview.cards.map((card) => <article key={card.label}><small>{card.label}</small><strong>{card.title}</strong><ul>{card.items.map((item) => <li key={item}>{item}</li>)}</ul></article>)}</div></div></section>
         <div className="evera-paywall__closing">
           <p>Your recommended plan</p><strong>{selectedPlan.name} · {selectedPlan.price}</strong>
           <button className="phase2-button" type="button" disabled={saving} onClick={() => startCheckout()}>{saving ? 'Opening checkout…' : selectedPlan.cta} {!saving && <ArrowRight size={18} />}</button>
