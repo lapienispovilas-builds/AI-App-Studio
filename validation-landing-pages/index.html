@@ -10,7 +10,22 @@
         var chapterDomain = window.location.hostname === 'trychapter.lt' || window.location.hostname === 'www.trychapter.lt';
         var chapterRoute = window.location.pathname === '/chapterr-students' || window.location.pathname === '/chapterr-students/';
 
-        if (!chapterDomain && !chapterRoute) return;
+        var everaDomain = window.location.hostname === 'everahealth.pro' || window.location.hostname === 'www.everahealth.pro';
+        var everaRoute = window.location.pathname === '/glp1-tracker-maintenance' || window.location.pathname === '/glp1-tracker-maintenance/';
+        var rootRoute = window.location.pathname === '/';
+        var showEveraMetadata = everaRoute || (everaDomain && rootRoute);
+        var showChapterMetadata = chapterRoute || (chapterDomain && rootRoute);
+
+        if (showEveraMetadata) {
+          document.title = 'Evera | Personalized GLP-1 Maintenance Program';
+          document.documentElement.lang = 'en';
+          document.getElementById('site-description').setAttribute(
+            'content',
+            'Build a personalized 30-day GLP-1 maintenance plan with Evera.'
+          );
+        }
+
+        if (!showChapterMetadata) return;
 
         document.title = 'Chapter';
         document.documentElement.lang = 'lt';

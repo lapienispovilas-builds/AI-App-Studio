@@ -9,6 +9,7 @@ import { ChapterLegalPage } from './components/ChapterLegalPage'
 import { chapterLegalPagesByPath } from './chapterLegalPages'
 import { landingPagesByPath } from './landingPageConfig'
 import { phase2LandingPagesByPath } from './phase2LandingPageConfig'
+import { isEveraDomain } from './lib/domainRouting'
 
 const chapterStudentDomains = new Set(['trychapter.lt', 'www.trychapter.lt'])
 
@@ -19,11 +20,13 @@ export function shouldShowChapterStudentHome(hostname: string, path: string) {
 export function App() {
   const path = window.location.pathname.replace(/\/$/, '') || '/'
   const showChapterStudentHome = shouldShowChapterStudentHome(window.location.hostname, path)
+  const showEveraHome = path === '/' && isEveraDomain(window.location.hostname)
   const config = landingPagesByPath[path]
   const phase2Config = phase2LandingPagesByPath[path]
   const chapterLegalConfig = chapterLegalPagesByPath[path]
 
   if (showChapterStudentHome) return <ChapterrStudentLandingPage config={chapterrStudentLandingPage} />
+  if (showEveraHome) return <Phase2LandingPage config={phase2LandingPagesByPath['/glp1-tracker-maintenance']} />
   if (path === '/') return <HomePage />
   if (path === `/${chapterrLandingPage.slug}`) return <ChapterrLandingPage config={chapterrLandingPage} />
   if (path === `/${chapterrStudentLandingPage.slug}`) return <ChapterrStudentLandingPage config={chapterrStudentLandingPage} />

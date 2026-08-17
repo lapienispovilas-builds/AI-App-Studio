@@ -1,4 +1,5 @@
 import type { EveraAccountData } from './everaAccount'
+import { getEveraFlowUrl } from './domainRouting'
 
 export type EveraPlan = {
   id: 'starter-7' | 'complete-30' | 'journey-90'
@@ -27,8 +28,8 @@ export async function beginEveraCheckout(plan: EveraPlan, account: EveraAccountD
       planId: plan.id,
       userId: account.userId,
       customerEmail: account.email,
-      successUrl: `${window.location.origin}/glp1-tracker-maintenance?checkout=success`,
-      cancelUrl: `${window.location.origin}/glp1-tracker-maintenance?checkout=cancelled`,
+      successUrl: getEveraFlowUrl('?checkout=success'),
+      cancelUrl: getEveraFlowUrl('?checkout=cancelled'),
     }),
   })
 

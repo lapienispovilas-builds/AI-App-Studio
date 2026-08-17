@@ -1,4 +1,5 @@
 import { createClient, type Session, type SupabaseClient } from '@supabase/supabase-js'
+import { getEveraFlowUrl } from './domainRouting'
 
 export type EveraFocus = 'Weight Stability' | 'Sustainable Routine' | 'Nutrition & Protein' | 'Strength & Movement' | 'Transition Preparation'
 
@@ -186,7 +187,7 @@ export async function signOutOfEvera() {
 export async function requestEveraPasswordReset(email: string) {
   if (!supabase) throw new Error('Password reset email is available after Supabase is connected.')
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/glp1-tracker-maintenance`,
+    redirectTo: getEveraFlowUrl(),
   })
   if (error) throw new Error(error.message)
 }
