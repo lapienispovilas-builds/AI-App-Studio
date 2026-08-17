@@ -87,8 +87,8 @@ export async function beginEveraCheckout(plan: EveraPlan, draft: EveraQuizDraft)
     }),
   })
 
-  if (!response.ok) throw new Error('Checkout could not be started. Please try again.')
-  const payload = await response.json() as { url?: string }
+  const payload = await response.json().catch(() => ({})) as { url?: string; error?: string }
+  if (!response.ok) throw new Error(payload.error || 'Checkout could not be started. Please try again.')
   if (!payload.url) throw new Error('Checkout did not return a payment link.')
   window.location.assign(payload.url)
   return { testSuccess: false as const }

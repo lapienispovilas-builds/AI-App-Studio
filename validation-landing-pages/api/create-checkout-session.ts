@@ -16,11 +16,19 @@ type ApiResponse = {
   end: () => void
 }
 
-const plans = {
-  '7-day': { price: 'price_1U5P6nCOfJ4kxI6HehFhkl1J', name: 'Evera 7-Day Foundation' },
-  '30-day': { price: 'price_1U5P76COfJ4kxI6H4HvZuZdZ', name: 'Evera 30-Day Maintenance Plan' },
-  '90-day': { price: 'price_1U5P7KCOfJ4kxI6HvjdUAoYD', name: 'Evera 90-Day Maintenance Journey' },
+const planNames = {
+  '7-day': 'Evera 7-Day Foundation',
+  '30-day': 'Evera 30-Day Maintenance Plan',
+  '90-day': 'Evera 90-Day Maintenance Journey',
 } as const
+
+function getPlans() {
+  return {
+    '7-day': { price: process.env.STRIPE_7_DAY_PRICE_ID, name: planNames['7-day'] },
+    '30-day': { price: process.env.STRIPE_30_DAY_PRICE_ID, name: planNames['30-day'] },
+    '90-day': { price: process.env.STRIPE_90_DAY_PRICE_ID, name: planNames['90-day'] },
+  }
+}
 
 const clientPlanIds: Record<NonNullable<CheckoutRequest['planId']>, PlanId> = {
   'starter-7': '7-day',
@@ -52,6 +60,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
 
   const body = req.body ?? {}
   const planId = body.plan ?? (body.planId ? clientPlanIds[body.planId] : undefined)
+  const plans = getPlans()
   if (!planId || !plans[planId]) {
     res.status(400).json({ error: 'Choose a valid Evera plan.' })
     return
@@ -61,8 +70,15 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   const successUrl = safeReturnUrl(body.successUrl, '/payment-success?session_id={CHECKOUT_SESSION_ID}', origin)
   const cancelUrl = safeReturnUrl(body.cancelUrl, '/pricing?payment=cancelled', origin)
   const answerValues = Object.values(body.quizAnswers ?? {})
-  const answerMetadata = Object.fromEntries(answerValues.slice(0, 12).map((answer, index) => [`quiz_${index + 1}`, answer.slice(0, 500)]))
+  const answerMetadata = Object.fromEntries(answerValues.slice(0, 12).map((answer, index) => [
+    `quiz_${index + 1}`,
+    String(answer ?? '').slice(0, 500),
+  ]))
   const plan = plans[planId]
+  if (!plan.price?.startsWith('price_')) {
+    res.status(500).json({ error: `Stripe price is not configured for the ${planId} plan.` })
+    return
+  }
   const resultId = crypto.randomUUID()
 
   try {
@@ -93,7 +109,8 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     if (!stripeResponse.ok || !session.url) throw new Error(session.error?.message || 'Stripe did not return a Checkout URL.')
     res.status(200).json({ url: session.url })
   } catch (error) {
-    console.error('Stripe Checkout error', error instanceof Error ? error.message : error)
-    res.status(500).json({ error: 'Checkout could not be started.' })
+    const message = error instanceof Error ? error.message : 'Unknown checkout error.'
+    console.error('Stripe Checkout error', message)
+    res.status(500).json({ error: message })
   }
 }
