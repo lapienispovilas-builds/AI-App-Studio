@@ -32,6 +32,7 @@ import {
 } from '../lib/everaAccount'
 import { beginEveraCheckout, everaPlans, hasAnyStripeCheckout, type EveraPlan } from '../lib/everaCheckout'
 import { EveraProgramDashboard } from './EveraProgramDashboard'
+import { saveEveraQuizDraft } from '../lib/everaFunnel'
 
 type Focus = EveraFocus
 
@@ -194,7 +195,7 @@ const focusDetails: Record<Focus, { description: string; icon: typeof Target }> 
   'Transition Preparation': { description: 'Create clarity around what to focus on as your treatment and daily priorities change.', icon: ShieldCheck },
 }
 
-const planPreviews: Record<EveraPlan['id'], { title: string; subtitle: string; cards: Array<{ label: string; title: string; items: string[] }> }> = {
+export const planPreviews: Record<EveraPlan['id'], { title: string; subtitle: string; cards: Array<{ label: string; title: string; items: string[] }> }> = {
   'starter-7': {
     title: 'Your 7-day foundation includes',
     subtitle: 'A quick start to understand your maintenance priorities and build confidence after GLP-1.',
@@ -227,7 +228,7 @@ const planPreviews: Record<EveraPlan['id'], { title: string; subtitle: string; c
   },
 }
 
-type QuizView = 'question' | 'insight' | 'result' | 'account' | 'login' | 'paywall' | 'program'
+type QuizView = 'question' | 'insight' | 'analyzing' | 'result' | 'account' | 'login' | 'paywall' | 'program'
 
 export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { onClose: () => void; initialView?: 'question' | 'login' }) {
   const [questionIndex, setQuestionIndex] = useState(0)
@@ -274,12 +275,30 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { on
   const progress = ((questionIndex + (['result', 'account', 'login', 'paywall', 'program'].includes(view) ? 1 : 0)) / questions.length) * 100
 
   function chooseAnswer(option: QuizOption) {
-    setAnswers((current) => ({ ...current, [questionIndex]: option }))
+    const nextAnswers = { ...answers, [questionIndex]: option }
+    setAnswers(nextAnswers)
     window.setTimeout(() => {
       if (insight) setView('insight')
-      else if (questionIndex === questions.length - 1) setView('result')
+      else if (questionIndex === questions.length - 1) finishQuiz(nextAnswers)
       else setQuestionIndex((current) => current + 1)
     }, 160)
+  }
+
+  function finishQuiz(completedAnswers: Record<number, QuizOption>) {
+    const scores = Object.values(completedAnswers).reduce<Record<Focus, number>>((current, answer) => {
+      current[answer.focus] += 1
+      if (answer.secondaryFocus) current[answer.secondaryFocus] += 1
+      return current
+    }, { 'Weight Stability': 0, 'Sustainable Routine': 0, 'Nutrition & Protein': 0, 'Strength & Movement': 0, 'Transition Preparation': 0 })
+    const ranked = (Object.entries(scores).sort((a, b) => b[1] - a[1]).map(([focus]) => focus)) as Focus[]
+    saveEveraQuizDraft({
+      answers: Object.fromEntries(questions.map((question, index) => [question.title, completedAnswers[index]?.label ?? ''])),
+      primaryFocus: ranked[0] ?? 'Weight Stability',
+      secondaryFocuses: ranked.slice(1, 3),
+      createdAt: new Date().toISOString(),
+    })
+    setView('analyzing')
+    window.setTimeout(() => window.location.assign('/plan-preview'), 1400)
   }
 
   function continueFromInsight() {
@@ -367,7 +386,13 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { on
     try {
       const accountWithPlan = await saveEveraPlanSelection(account, plan.id)
       setAccount(accountWithPlan)
-      const checkout = await beginEveraCheckout(plan, accountWithPlan)
+      const checkout = await beginEveraCheckout(plan, {
+        answers: accountWithPlan.answers,
+        primaryFocus: accountWithPlan.primaryFocus,
+        secondaryFocuses: [],
+        selectedPlan: plan.id,
+        createdAt: new Date().toISOString(),
+      })
       if (checkout.testSuccess) {
         const paidAccount = await markEveraPaid(accountWithPlan, plan.id)
         setAccount(paidAccount)
@@ -426,6 +451,8 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { on
           <button className="phase2-button" type="button" onClick={continueFromInsight}>Continue <ArrowRight size={18} /></button>
         </div>
       </main>}
+
+      {view === 'analyzing' && <main className="evera-analyzing"><div><span>◉</span><i /><i /><i /></div><p className="evera-quiz__eyebrow">Analyzing your answers…</p><h1>Building your Evera maintenance plan…</h1><small>Connecting your goals, challenges, and priorities</small></main>}
 
       {view === 'result' && <main className="evera-result">
         <div className="evera-result__icon"><FocusIcon size={34} /></div>

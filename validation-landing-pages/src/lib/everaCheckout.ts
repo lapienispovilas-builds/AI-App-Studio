@@ -1,4 +1,4 @@
-import type { EveraAccountData } from './everaAccount'
+import type { EveraQuizDraft } from './everaFunnel'
 import { getEveraFlowUrl } from './domainRouting'
 
 export type EveraPlan = {
@@ -26,7 +26,7 @@ export const everaPlans: EveraPlan[] = [
   {
     id: 'complete-30',
     name: '30-Day Maintenance Plan',
-    price: '$14.99',
+    price: '$19.99',
     description: 'Your complete GLP-1 maintenance roadmap designed to help you protect your weight loss and build habits that last.',
     badge: 'Most popular',
     positioning: 'Recommended for most people because building maintenance habits takes consistency.',
@@ -36,10 +36,10 @@ export const everaPlans: EveraPlan[] = [
   {
     id: 'journey-90',
     name: '90-Day Maintenance Journey',
-    price: '$24.99',
+    price: '$39.99',
     description: 'Long-term support for building sustainable routines and maintaining your results beyond the first month.',
     badge: 'Best value',
-    positioning: '$0.28 per day',
+    positioning: '$0.44 per day',
     includes: ['Everything in the 30-day plan', 'Extended habit-building roadmap', 'Long-term progress tracking', 'Additional maintenance guidance'],
     cta: 'Start my 90-day journey',
   },
@@ -59,7 +59,7 @@ function isRealStripeLink(value?: string) {
 
 export const hasAnyStripeCheckout = isStripeCheckoutConfigured || Object.values(stripeLinks).some(isRealStripeLink)
 
-export async function beginEveraCheckout(plan: EveraPlan, account: EveraAccountData) {
+export async function beginEveraCheckout(plan: EveraPlan, draft: EveraQuizDraft) {
   const endpoint = import.meta.env.VITE_STRIPE_CHECKOUT_ENDPOINT?.trim()
   const paymentLink = stripeLinks[plan.id]
   if (isRealStripeLink(paymentLink)) {
@@ -73,10 +73,11 @@ export async function beginEveraCheckout(plan: EveraPlan, account: EveraAccountD
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       planId: plan.id,
-      userId: account.userId,
-      customerEmail: account.email,
-      successUrl: getEveraFlowUrl('?checkout=success'),
-      cancelUrl: getEveraFlowUrl('?checkout=cancelled'),
+      quizAnswers: draft.answers,
+      primaryFocus: draft.primaryFocus,
+      secondaryFocuses: draft.secondaryFocuses,
+      successUrl: `${window.location.origin}/create-account?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
+      cancelUrl: `${window.location.origin}/plan-preview?checkout=cancelled`,
     }),
   })
 
