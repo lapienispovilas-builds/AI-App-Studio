@@ -10,6 +10,8 @@ type StripeSession = {
   id?: string
   payment_status?: string
   payment_intent?: string | { id?: string }
+  amount_total?: number | null
+  currency?: string | null
   customer_details?: { email?: string | null }
   customer_email?: string | null
   created?: number
@@ -55,6 +57,8 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
       verified: true,
       sessionId: session.id ?? sessionId,
       paymentIntentId,
+      amountTotal: session.amount_total ?? null,
+      currency: session.currency ?? 'eur',
       plan: metadata.plan,
       resultId: metadata.resultId ?? session.client_reference_id,
       customerEmail: session.customer_details?.email ?? session.customer_email ?? '',

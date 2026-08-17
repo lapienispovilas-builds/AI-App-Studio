@@ -8,11 +8,14 @@ import {
   type EveraFocus,
 } from '../lib/everaAccount'
 import { saveEveraQuizDraft } from '../lib/everaFunnel'
+import { trackMetaEvent } from '../lib/metaPixel'
 
 type VerifiedPurchase = {
   verified: true
   sessionId: string
   paymentIntentId?: string
+  amountTotal?: number | null
+  currency?: string
   plan: '7-day' | '30-day' | '90-day'
   resultId?: string
   customerEmail: string
@@ -72,6 +75,12 @@ export function EveraPaymentSuccessPage() {
         })
         setPurchase(verifiedPurchase)
         setEmail(verifiedPurchase.customerEmail || '')
+        const fallbackAmounts = { '7-day': 7.99, '30-day': 14.99, '90-day': 24.99 }
+        trackMetaEvent('Purchase', {
+          value: typeof verifiedPurchase.amountTotal === 'number' ? verifiedPurchase.amountTotal / 100 : fallbackAmounts[verifiedPurchase.plan],
+          currency: (verifiedPurchase.currency || 'EUR').toUpperCase(),
+          content_name: planNames[verifiedPurchase.plan],
+        }, { onceKey: `purchase_${verifiedPurchase.sessionId}`, scope: 'local' })
 
         const account = await getEveraAccount()
         if (account && active) {

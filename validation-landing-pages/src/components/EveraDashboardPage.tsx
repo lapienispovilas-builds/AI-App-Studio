@@ -4,6 +4,7 @@ import { EveraProgramDashboard } from './EveraProgramDashboard'
 import { getEveraAccount, signOutOfEvera, type EveraAccountData } from '../lib/everaAccount'
 import { getEveraFlowUrl } from '../lib/domainRouting'
 import { getEveraQuizDraft } from '../lib/everaFunnel'
+import { trackMetaEvent } from '../lib/metaPixel'
 
 export function EveraDashboardPage() {
   const [account, setAccount] = useState<EveraAccountData | null>(null)
@@ -24,6 +25,15 @@ export function EveraDashboardPage() {
     }).finally(() => { if (active) setLoading(false) })
     return () => { active = false }
   }, [])
+
+  useEffect(() => {
+    if (!account?.hasPaid) return
+    const duration = account.selectedPlan === 'starter-7' ? '7-day' : account.selectedPlan === 'journey-90' ? '90-day' : '30-day'
+    trackMetaEvent('DashboardViewed', { program_duration: duration }, {
+      custom: true,
+      onceKey: `dashboard_viewed_${account.userId}_${account.selectedPlan ?? 'complete-30'}`,
+    })
+  }, [account])
 
   async function signOut() {
     await signOutOfEvera()

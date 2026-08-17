@@ -17,7 +17,7 @@ import {
   X,
 } from 'lucide-react'
 import { submitLead } from '../lib/submitLead'
-import { trackMetaLead } from '../lib/metaPixel'
+import { metaFocusValue, trackMetaEvent, trackMetaLead } from '../lib/metaPixel'
 import {
   createEveraAccount,
   getEveraAccount,
@@ -260,6 +260,15 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { on
     return () => { active = false }
   }, [])
 
+  useEffect(() => {
+    if (view !== 'program' || !account?.hasPaid) return
+    const duration = account.selectedPlan === 'starter-7' ? '7-day' : account.selectedPlan === 'journey-90' ? '90-day' : '30-day'
+    trackMetaEvent('DashboardViewed', { program_duration: duration }, {
+      custom: true,
+      onceKey: `dashboard_viewed_${account.userId}_${account.selectedPlan ?? 'complete-30'}`,
+    })
+  }, [account, view])
+
   const primaryFocus = useMemo<Focus>(() => {
     const scores = Object.values(answers).reduce<Record<Focus, number>>((current, answer) => {
       current[answer.focus] += 1
@@ -289,12 +298,18 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { on
       return current
     }, { 'Weight Stability': 0, 'Sustainable Routine': 0, 'Nutrition & Protein': 0, 'Strength & Movement': 0, 'Transition Preparation': 0 })
     const ranked = (Object.entries(scores).sort((a, b) => b[1] - a[1]).map(([focus]) => focus)) as Focus[]
+    const completedAt = new Date().toISOString()
+    const generatedFocus = ranked[0] ?? 'Weight Stability'
     saveEveraQuizDraft({
       answers: Object.fromEntries(questions.map((question, index) => [question.title, completedAnswers[index]?.label ?? ''])),
-      primaryFocus: ranked[0] ?? 'Weight Stability',
+      primaryFocus: generatedFocus,
       secondaryFocuses: ranked.slice(1, 3),
-      createdAt: new Date().toISOString(),
+      createdAt: completedAt,
     })
+    trackMetaEvent('QuizCompleted', {
+      quiz_name: 'evera_maintenance',
+      primary_focus: metaFocusValue(generatedFocus),
+    }, { custom: true, onceKey: `quiz_completed_${completedAt}` })
     setView('analyzing')
     window.setTimeout(() => window.location.assign('/plan-preview'), 1400)
   }
@@ -382,6 +397,11 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { on
     setSaving(true)
     setError('')
     try {
+      trackMetaEvent('InitiateCheckout', {
+        content_name: plan.name,
+        value: Number(plan.price.replace(/[^0-9.]/g, '')),
+        currency: 'EUR',
+      }, { onceKey: `checkout_${account.userId}_${plan.id}` })
       await beginEveraCheckout(plan, {
         answers: account.answers,
         primaryFocus: account.primaryFocus,

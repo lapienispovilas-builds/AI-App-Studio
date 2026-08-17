@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useRef, useState } from 'react'
 import { ArrowRight, Bell, ChartNoAxesCombined, Check, Clock3, Heart, LockKeyhole, MessageCircle, Quote, Sparkles, Target, UsersRound, type LucideIcon } from 'lucide-react'
 import type { LandingBenefitIcon, Phase2LandingPageConfig } from '../phase2LandingPageConfig'
-import { trackMetaLead } from '../lib/metaPixel'
+import { trackMetaEvent, trackMetaLead } from '../lib/metaPixel'
 import { submitLead } from '../lib/submitLead'
 import { OutcomeMockup } from './OutcomeMockup'
 import { ProductScreen, ScenarioStory } from './ProductStoryMockups'
@@ -50,6 +50,11 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
   const hasTrackedLead = useRef(false)
   const heroRef = useRef<HTMLElement>(null)
   const footerRef = useRef<HTMLElement>(null)
+
+  function startMaintenanceQuiz() {
+    trackMetaEvent('QuizStarted', { quiz_name: 'evera_maintenance' }, { custom: true, onceKey: 'quiz_started' })
+    setMaintenanceFlow('quiz')
+  }
 
   useEffect(() => {
     function updateStickyCta() {
@@ -144,7 +149,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
           <h1>{highlightPhrase(config.headline, config.heroHighlight)}</h1>
           <p>{highlightPhrase(config.subheadline, config.subheadlineHighlight)}</p>
           {isMaintenance
-            ? <button className="phase2-button" type="button" onClick={() => setMaintenanceFlow('quiz')}>{config.cta} <span>→</span></button>
+            ? <button className="phase2-button" type="button" onClick={startMaintenanceQuiz}>{config.cta} <span>→</span></button>
             : <a className="phase2-button" href="#early-access">{config.cta} <span>→</span></a>}
           <small>{config.ctaSubtitle ?? config.ctaReassurance}</small>
         </div>
@@ -156,7 +161,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
             : <OutcomeMockup config={config.mockup} logo={config.logo} />}
       </section>
 
-      {isMaintenance && <TrackGlpMaintenanceSections onStartQuiz={() => setMaintenanceFlow('quiz')} />}
+      {isMaintenance && <TrackGlpMaintenanceSections onStartQuiz={startMaintenanceQuiz} />}
 
       {!isMaintenance && config.problem && (
         <section className="phase2-problem">
@@ -361,7 +366,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
       </footer>
 
       {isMaintenance
-        ? <button className={showStickyCta ? 'phase2-sticky-cta is-visible' : 'phase2-sticky-cta'} type="button" onClick={() => setMaintenanceFlow('quiz')}>{config.stickyCta} <span>→</span></button>
+        ? <button className={showStickyCta ? 'phase2-sticky-cta is-visible' : 'phase2-sticky-cta'} type="button" onClick={startMaintenanceQuiz}>{config.stickyCta} <span>→</span></button>
         : <a className={showStickyCta ? 'phase2-sticky-cta is-visible' : 'phase2-sticky-cta'} href="#early-access">{config.stickyCta} <span>→</span></a>}
       {isMaintenance && maintenanceFlow && <EveraMaintenanceQuiz initialView={maintenanceFlow === 'login' ? 'login' : 'question'} onClose={() => setMaintenanceFlow(null)} />}
     </main>

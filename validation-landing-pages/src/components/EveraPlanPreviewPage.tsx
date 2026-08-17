@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { ArrowRight, Check, ShieldCheck, Sparkles, Target } from 'lucide-react'
 import { planPreviews } from './EveraMaintenanceQuiz'
 import { beginEveraCheckout, everaPlans, hasAnyStripeCheckout, type EveraPlan } from '../lib/everaCheckout'
 import { getEveraQuizDraft, updateEveraQuizDraft } from '../lib/everaFunnel'
 import { getEveraFlowUrl } from '../lib/domainRouting'
+import { metaFocusValue, trackMetaEvent } from '../lib/metaPixel'
 
 export function EveraPlanPreviewPage() {
   const draft = useMemo(() => getEveraQuizDraft(), [])
@@ -12,6 +13,15 @@ export function EveraPlanPreviewPage() {
   const [error, setError] = useState('')
   const preview = planPreviews[selectedPlan.id]
 
+  useEffect(() => {
+    if (!draft) return
+    const duration = selectedPlan.id === 'starter-7' ? '7-day' : selectedPlan.id === 'journey-90' ? '90-day' : '30-day'
+    trackMetaEvent('PlanGenerated', {
+      plan_type: metaFocusValue(draft.primaryFocus),
+      program_duration: duration,
+    }, { custom: true, onceKey: `plan_generated_${draft.createdAt}` })
+  }, [draft, selectedPlan.id])
+
   async function checkout(plan: EveraPlan = selectedPlan) {
     if (!draft) { window.location.assign(getEveraFlowUrl()); return }
     setSelectedPlan(plan)
@@ -19,6 +29,11 @@ export function EveraPlanPreviewPage() {
     setError('')
     try {
       const updatedDraft = updateEveraQuizDraft({ selectedPlan: plan.id }) ?? { ...draft, selectedPlan: plan.id }
+      trackMetaEvent('InitiateCheckout', {
+        content_name: plan.name,
+        value: Number(plan.price.replace(/[^0-9.]/g, '')),
+        currency: 'EUR',
+      }, { onceKey: `checkout_${draft.createdAt}_${plan.id}` })
       await beginEveraCheckout(plan, updatedDraft)
     } catch (checkoutError) {
       setError(checkoutError instanceof Error ? checkoutError.message : 'Checkout could not be started.')
