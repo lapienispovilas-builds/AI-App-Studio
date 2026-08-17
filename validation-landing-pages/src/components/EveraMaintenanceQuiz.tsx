@@ -8,6 +8,7 @@ import {
   Dumbbell,
   Leaf,
   LockKeyhole,
+  LogIn,
   Mail,
   ShieldCheck,
   Sparkles,
@@ -17,8 +18,20 @@ import {
 } from 'lucide-react'
 import { submitLead } from '../lib/submitLead'
 import { trackMetaLead } from '../lib/metaPixel'
+import {
+  createEveraAccount,
+  getEveraAccount,
+  isEveraTestMode,
+  markEveraPaid,
+  requestEveraPasswordReset,
+  signInToEvera,
+  signOutOfEvera,
+  type EveraAccountData,
+  type EveraFocus,
+} from '../lib/everaAccount'
+import { beginEveraCheckout, everaPlans, isStripeCheckoutConfigured } from '../lib/everaCheckout'
 
-type Focus = 'Weight Stability' | 'Sustainable Routine' | 'Nutrition & Protein' | 'Strength & Movement' | 'Transition Preparation'
+type Focus = EveraFocus
 
 type QuizOption = {
   label: string
@@ -179,19 +192,38 @@ const focusDetails: Record<Focus, { description: string; icon: typeof Target }> 
   'Transition Preparation': { description: 'Create clarity around what to focus on as your treatment and daily priorities change.', icon: ShieldCheck },
 }
 
-export function EveraMaintenanceQuiz({ onClose }: { onClose: () => void }) {
+type QuizView = 'question' | 'insight' | 'result' | 'account' | 'login' | 'paywall' | 'program'
+
+export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { onClose: () => void; initialView?: 'question' | 'login' }) {
   const [questionIndex, setQuestionIndex] = useState(0)
   const [answers, setAnswers] = useState<Record<number, QuizOption>>({})
-  const [view, setView] = useState<'question' | 'insight' | 'result' | 'account' | 'program'>('question')
+  const [view, setView] = useState<QuizView>(initialView)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
+  const [notice, setNotice] = useState('')
+  const [account, setAccount] = useState<EveraAccountData | null>(null)
+  const [selectedPlan, setSelectedPlan] = useState(everaPlans[1])
+  const [checkingSession, setCheckingSession] = useState(true)
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => { document.body.style.overflow = previousOverflow }
+  }, [])
+
+  useEffect(() => {
+    let active = true
+    getEveraAccount().then((savedAccount) => {
+      if (!active) return
+      if (savedAccount) {
+        setAccount(savedAccount)
+        setEmail(savedAccount.email)
+        setView(savedAccount.hasPaid ? 'program' : 'paywall')
+      }
+    }).finally(() => { if (active) setCheckingSession(false) })
+    return () => { active = false }
   }, [])
 
   const primaryFocus = useMemo<Focus>(() => {
@@ -204,7 +236,7 @@ export function EveraMaintenanceQuiz({ onClose }: { onClose: () => void }) {
   }, [answers])
 
   const insight = insights.find((item) => item.afterQuestion === questionIndex)
-  const progress = ((questionIndex + (view === 'result' || view === 'account' || view === 'program' ? 1 : 0)) / questions.length) * 100
+  const progress = ((questionIndex + (['result', 'account', 'login', 'paywall', 'program'].includes(view) ? 1 : 0)) / questions.length) * 100
 
   function chooseAnswer(option: QuizOption) {
     setAnswers((current) => ({ ...current, [questionIndex]: option }))
@@ -225,6 +257,8 @@ export function EveraMaintenanceQuiz({ onClose }: { onClose: () => void }) {
     if (view === 'insight') { setView('question'); return }
     if (view === 'result') { setView('question'); setQuestionIndex(questions.length - 1); return }
     if (view === 'account') { setView('result'); return }
+    if (view === 'login') { setView(initialView === 'login' ? 'question' : 'account'); return }
+    if (view === 'paywall') { setView('result'); return }
     if (questionIndex > 0) setQuestionIndex((current) => current - 1)
     else onClose()
   }
@@ -236,18 +270,25 @@ export function EveraMaintenanceQuiz({ onClose }: { onClose: () => void }) {
     setSaving(true)
     setError('')
     try {
+      const answerPayload = Object.fromEntries(questions.map((question, index) => [question.title, answers[index]?.label ?? '']))
+      const authResult = await createEveraAccount(email.trim(), password, answerPayload, primaryFocus)
+      setAccount(authResult.account)
       await submitLead({
         idea: 'Evera',
         page: '/glp1-tracker-maintenance',
         email: email.trim(),
         answers: {
-          ...Object.fromEntries(questions.map((question, index) => [question.title, answers[index]?.label ?? ''])),
+          ...answerPayload,
           'Personalized plan focus': primaryFocus,
           landingVariant: 'maintenance-program-quiz',
         },
       })
       trackMetaLead()
-      setView('program')
+      if (authResult.needsEmailConfirmation) {
+        setError('Check your email to confirm your Evera account, then return and sign in.')
+      } else {
+        setView('paywall')
+      }
     } catch (submissionError) {
       setError(submissionError instanceof Error ? submissionError.message : 'Something went wrong. Please try again.')
     } finally {
@@ -255,7 +296,62 @@ export function EveraMaintenanceQuiz({ onClose }: { onClose: () => void }) {
     }
   }
 
+  async function login(event: FormEvent) {
+    event.preventDefault()
+    if (!email || !password) { setError('Enter your email and password.'); return }
+    setSaving(true)
+    setError('')
+    try {
+      const signedInAccount = await signInToEvera(email.trim(), password)
+      setAccount(signedInAccount)
+      setView(signedInAccount.hasPaid ? 'program' : 'paywall')
+    } catch (loginError) {
+      setError(loginError instanceof Error ? loginError.message : 'Sign in failed. Please try again.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function forgotPassword() {
+    setError('')
+    setNotice('')
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError('Enter your email address first.'); return }
+    try {
+      await requestEveraPasswordReset(email.trim())
+      setNotice('Check your email for a password reset link.')
+    } catch (resetError) {
+      setError(resetError instanceof Error ? resetError.message : 'Password reset could not be started.')
+    }
+  }
+
+  async function startCheckout() {
+    if (!account) { setView('account'); return }
+    setSaving(true)
+    setError('')
+    try {
+      const checkout = await beginEveraCheckout(selectedPlan, account)
+      if (checkout.testSuccess) {
+        const paidAccount = await markEveraPaid(account, selectedPlan.id)
+        setAccount(paidAccount)
+        setView('program')
+      }
+    } catch (checkoutError) {
+      setError(checkoutError instanceof Error ? checkoutError.message : 'Checkout could not be started.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function logOut() {
+    await signOutOfEvera()
+    setAccount(null)
+    setPassword('')
+    setView('login')
+  }
+
   const FocusIcon = focusDetails[primaryFocus].icon
+
+  if (checkingSession) return <div className="evera-quiz evera-quiz--loading"><div className="evera-quiz__loader"><span>◉</span><p>Opening your Evera journey…</p></div></div>
 
   return (
     <div className="evera-quiz" role="dialog" aria-modal="true" aria-label="Evera personalized maintenance assessment">
@@ -265,7 +361,7 @@ export function EveraMaintenanceQuiz({ onClose }: { onClose: () => void }) {
         <button type="button" onClick={onClose} aria-label="Close assessment"><X size={20} /></button>
       </header>
 
-      {view !== 'program' && <div className="evera-quiz__progress">
+      {!['program', 'paywall', 'login'].includes(view) && <div className="evera-quiz__progress">
         <div><span>Creating your personalized GLP-1 maintenance plan</span><strong>{view === 'question' ? `Question ${questionIndex + 1} of 12` : view === 'insight' ? 'Personal insight' : 'Your plan'}</strong></div>
         <i><span style={{ width: `${Math.max(8, progress)}%` }} /></i>
       </div>}
@@ -295,11 +391,11 @@ export function EveraMaintenanceQuiz({ onClose }: { onClose: () => void }) {
         <div className="evera-result__icon"><FocusIcon size={34} /></div>
         <p className="evera-quiz__eyebrow">Your personalized Evera plan is ready</p>
         <h1>Your primary focus is<br /><span>{primaryFocus}</span></h1>
-        <p>{focusDetails[primaryFocus].description}</p>
+        <p>Based on your GLP-1 journey, goals, and answers, we created your maintenance roadmap.</p>
         <div className="evera-result__includes">
           {['Personalized 30-day roadmap', 'Daily habit guidance', 'Progress tracking', 'Nutrition recommendations', 'Sustainable routines'].map((item) => <span key={item}><Check size={15} /> {item}</span>)}
         </div>
-        <button className="phase2-button" type="button" onClick={() => setView('account')}>Create my Evera plan <ArrowRight size={18} /></button>
+        <button className="phase2-button" type="button" onClick={() => setView(account ? 'paywall' : 'account')}>Unlock my Evera plan <ArrowRight size={18} /></button>
         <small>Built from your 12 assessment answers</small>
       </main>}
 
@@ -307,14 +403,50 @@ export function EveraMaintenanceQuiz({ onClose }: { onClose: () => void }) {
         <div className="evera-account__summary"><FocusIcon size={30} /><div><small>YOUR PLAN FOCUS</small><strong>{primaryFocus}</strong></div></div>
         <p className="evera-quiz__eyebrow">One last step</p>
         <h1>Save your personalized Evera plan</h1>
-        <p>Create your login details to keep your results and continue to your program preview.</p>
+        <p>Create your account to access your 30-day GLP-1 maintenance program anytime.</p>
         <form onSubmit={saveAccount}>
           <label><span><Mail size={16} /> Email</span><input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" autoComplete="email" /></label>
           <label><span><LockKeyhole size={16} /> Password</span><input type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="At least 6 characters" autoComplete="new-password" /></label>
           {error && <p className="evera-account__error" role="alert">{error}</p>}
-          <button className="phase2-button" type="submit" disabled={saving}>{saving ? 'Saving…' : 'Start my 30-day plan'} {!saving && <ArrowRight size={18} />}</button>
+          <button className="phase2-button" type="submit" disabled={saving}>{saving ? 'Creating account…' : 'Continue to my plan'} {!saving && <ArrowRight size={18} />}</button>
         </form>
-        <small><LockKeyhole size={12} /> UI-only account preview for this early validation version. Your password is not transmitted or stored.</small>
+        <button className="evera-account__switch" type="button" onClick={() => { setError(''); setView('login') }}>Already have an account? <strong>Sign in</strong></button>
+        {isEveraTestMode && <small><LockKeyhole size={12} /> Local test mode is active until Supabase keys are added.</small>}
+      </main>}
+
+      {view === 'login' && <main className="evera-account evera-login">
+        <div className="evera-account__summary"><LogIn size={27} /><div><small>RETURNING MEMBER</small><strong>Your plan is waiting</strong></div></div>
+        <p className="evera-quiz__eyebrow">Welcome back</p>
+        <h1>Welcome back to Evera</h1>
+        <p>Sign in to continue your maintenance journey.</p>
+        <form onSubmit={login}>
+          <label><span><Mail size={16} /> Email</span><input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" autoComplete="email" /></label>
+          <label><span><LockKeyhole size={16} /> Password</span><input type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Your password" autoComplete="current-password" /></label>
+          <button className="evera-account__forgot" type="button" onClick={forgotPassword}>Forgot password?</button>
+          {notice && <p className="evera-account__notice" role="status">{notice}</p>}
+          {error && <p className="evera-account__error" role="alert">{error}</p>}
+          <button className="phase2-button" type="submit" disabled={saving}>{saving ? 'Signing in…' : 'Sign in'} {!saving && <ArrowRight size={18} />}</button>
+        </form>
+        <button className="evera-account__switch" type="button" onClick={() => { setError(''); setView('account') }}>New to Evera? <strong>Create your account</strong></button>
+        {isEveraTestMode && <small><LockKeyhole size={12} /> Local test mode is active until Supabase keys are added.</small>}
+      </main>}
+
+      {view === 'paywall' && <main className="evera-paywall">
+        <p className="evera-quiz__eyebrow">Your roadmap is ready</p>
+        <h1>Unlock your 30-day Evera maintenance plan</h1>
+        <p>Your personalized roadmap to maintain your GLP-1 progress.</p>
+        <div className="evera-paywall__benefits">
+          {['Personalized GLP-1 maintenance roadmap', 'Daily habit checklist', 'Protein and nutrition guidance', 'Weight stability tracking', 'Strength and movement recommendations', 'Weekly progress milestones'].map((item) => <span key={item}><Check size={15} /> {item}</span>)}
+        </div>
+        <div className="evera-paywall__plans">
+          {everaPlans.map((plan) => <button className={selectedPlan.id === plan.id ? 'is-selected' : ''} type="button" key={plan.id} onClick={() => setSelectedPlan(plan)}>
+            {plan.badge && <em>{plan.badge}</em>}
+            <small>{plan.name}</small><strong>{plan.price}</strong><span>{plan.description}</span><i>{selectedPlan.id === plan.id && <Check size={15} />}</i>
+          </button>)}
+        </div>
+        {error && <p className="evera-account__error" role="alert">{error}</p>}
+        <button className="phase2-button" type="button" disabled={saving} onClick={startCheckout}>{saving ? 'Opening checkout…' : 'Start my Evera program'} {!saving && <ArrowRight size={18} />}</button>
+        {!isStripeCheckoutConfigured && <small><ShieldCheck size={13} /> Test checkout mode: no card is charged.</small>}
       </main>}
 
       {view === 'program' && <main className="evera-program">
@@ -331,7 +463,7 @@ export function EveraMaintenanceQuiz({ onClose }: { onClose: () => void }) {
           </div></section>
           <aside><Target size={25} /><small>YOUR PRIMARY FOCUS</small><h3>{primaryFocus}</h3><p>{focusDetails[primaryFocus].description}</p><div><CheckCircle2 size={18} /> Your plan was shaped by all 12 answers.</div></aside>
         </div>
-        <button className="evera-program__close" type="button" onClick={onClose}>Return to Evera</button>
+        <div className="evera-program__actions"><button className="evera-program__close" type="button" onClick={onClose}>Return to Evera</button><button className="evera-program__close" type="button" onClick={logOut}>Sign out</button></div>
       </main>}
     </div>
   )

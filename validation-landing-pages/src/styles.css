@@ -133,6 +133,49 @@ fieldset { padding: 0; margin: 25px 0; border: 0; }
   .evera-quiz__progress { width:calc(100% - 28px); }.evera-quiz__progress > div { font-size:9px; }.evera-quiz__question,.evera-result,.evera-account,.evera-program { width:calc(100% - 28px); }.evera-quiz__question { margin-top:38px; }.evera-quiz__question h1,.evera-result h1,.evera-account h1 { font-size:32px; }.evera-quiz__answers { margin-top:28px; gap:9px; }.evera-quiz__answers button { padding:9px 13px; border-radius:16px; font-size:13px; }.evera-quiz__answers img { width:54px; height:44px; }.evera-insight { width:calc(100% - 24px); border-radius:24px; }.evera-insight__copy { padding:24px; }.evera-insight__copy h1 { font-size:30px; }.evera-result { margin-top:42px; }.evera-result__includes { padding:19px; }.evera-account form { padding:20px; }.evera-account > small { align-items:flex-start; text-align:left; }.evera-program > header h1 { font-size:36px; }.evera-program__tasks button { grid-template-columns:22px 1fr; }.evera-program__tasks button > svg { display:none; }
 }
 
+/* Evera account, login and checkout funnel */
+.evera-quiz--loading { display:grid; place-items:center; }
+.evera-quiz__loader { display:grid; justify-items:center; gap:12px; color:#2f7d63; font-weight:800; }
+.evera-quiz__loader span { font-size:32px; animation:evera-pulse 1.2s ease-in-out infinite; }
+.evera-quiz__loader p { margin:0; color:#687a74; font-size:13px; }
+@keyframes evera-pulse { 50% { transform:scale(.84); opacity:.55; } }
+.evera-account__switch,.evera-account__forgot { border:0; color:#64766f; background:transparent; cursor:pointer; font:inherit; }
+.evera-account__notice { margin:0; color:#2f7d63; font-size:12px; font-weight:700; }
+.evera-account__switch { margin-top:20px; font-size:12px; }
+.evera-account__switch strong { color:#2f7d63; }
+.evera-account__forgot { justify-self:end; margin-top:-6px; padding:0; font-size:11px; font-weight:750; }
+.evera-paywall { width:min(1040px,calc(100% - 40px)); margin:55px auto 90px; text-align:center; }
+.evera-paywall h1 { margin:15px auto 0; color:#18231f; font-size:clamp(36px,5vw,58px); line-height:1.05; letter-spacing:-2px; }
+.evera-paywall > p:not(.evera-quiz__eyebrow) { margin:18px 0 0; color:#687a74; font-size:17px; }
+.evera-paywall__benefits { width:min(760px,100%); margin:32px auto; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:11px 24px; text-align:left; }
+.evera-paywall__benefits span { display:flex; align-items:center; gap:9px; color:#40564f; font-size:13px; font-weight:700; }
+.evera-paywall__benefits svg { flex:none; color:#2f7d63; }
+.evera-paywall__plans { margin-top:38px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+.evera-paywall__plans button { position:relative; min-height:230px; padding:28px 20px 24px; display:flex; flex-direction:column; align-items:center; justify-content:center; border:1px solid rgba(47,125,99,.17); border-radius:25px; color:#29473d; background:#fff; box-shadow:0 16px 40px rgba(32,88,70,.06); cursor:pointer; font:inherit; transition:.18s ease; }
+.evera-paywall__plans button:hover,.evera-paywall__plans button.is-selected { transform:translateY(-3px); border-color:#2f7d63; box-shadow:0 20px 45px rgba(32,88,70,.12); }
+.evera-paywall__plans em { position:absolute; top:-13px; padding:7px 13px; border-radius:999px; color:#fff; background:#2f7d63; font-size:9px; font-style:normal; font-weight:900; letter-spacing:.7px; text-transform:uppercase; }
+.evera-paywall__plans small { font-size:13px; font-weight:850; }
+.evera-paywall__plans strong { margin-top:16px; color:#183229; font-size:36px; letter-spacing:-1px; }
+.evera-paywall__plans span { margin-top:7px; color:#7a8a84; font-size:11px; }
+.evera-paywall__plans i { position:absolute; right:16px; bottom:16px; width:27px; height:27px; display:grid; place-items:center; border-radius:50%; color:#fff; background:#2f7d63; font-style:normal; }
+.evera-paywall > .phase2-button { margin:30px auto 0; }
+.evera-paywall > small { margin-top:14px; display:flex; align-items:center; justify-content:center; gap:6px; color:#82908b; font-size:10px; }
+.evera-paywall > .evera-account__error { margin-top:22px; }
+.evera-program__actions { display:flex; align-items:center; justify-content:space-between; }
+.phase2-topbar__login { margin-left:auto; padding:9px 16px; border:1px solid rgba(47,125,99,.24); border-radius:999px; color:var(--accent-deep); background:#fff; cursor:pointer; font:inherit; font-size:12px; font-weight:800; }
+
+@media (max-width:760px) {
+  .evera-paywall__plans { grid-template-columns:1fr; }
+  .evera-paywall__plans button { min-height:170px; }
+}
+
+@media (max-width:430px) {
+  .evera-paywall { width:calc(100% - 28px); margin-top:38px; }
+  .evera-paywall h1 { font-size:32px; letter-spacing:-1.4px; }
+  .evera-paywall__benefits { grid-template-columns:1fr; }
+  .evera-paywall__plans { gap:13px; }
+}
+
 /* Evera personalized maintenance program */
 .evera-plan-preview { width:min(100%,520px); padding:30px; border:1px solid rgba(47,125,99,.2); border-radius:32px; color:#183229; background:linear-gradient(145deg,#fff 0%,#f5fbf8 58%,#eaf6f0 100%); box-shadow:0 28px 70px rgba(32,88,70,.16); }
 .evera-plan-preview__top,.evera-plan-preview__footer,.evera-roadmap header { display:flex; align-items:center; justify-content:space-between; gap:18px; }

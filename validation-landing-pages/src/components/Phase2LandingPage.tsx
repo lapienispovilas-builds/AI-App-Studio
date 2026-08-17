@@ -46,7 +46,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [showStickyCta, setShowStickyCta] = useState(false)
-  const [showMaintenanceQuiz, setShowMaintenanceQuiz] = useState(false)
+  const [maintenanceFlow, setMaintenanceFlow] = useState<'quiz' | 'login' | null>(null)
   const hasTrackedLead = useRef(false)
   const heroRef = useRef<HTMLElement>(null)
   const footerRef = useRef<HTMLElement>(null)
@@ -71,6 +71,19 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
       window.removeEventListener('resize', updateStickyCta)
     }
   }, [])
+
+  useEffect(() => {
+    if (!isMaintenance) return
+    const previousTitle = document.title
+    const description = document.querySelector<HTMLMetaElement>('meta[name="description"]')
+    const previousDescription = description?.content
+    document.title = 'Evera | Personalized GLP-1 Maintenance Program'
+    if (description) description.content = 'Build a personalized 30-day GLP-1 maintenance plan with Evera.'
+    return () => {
+      document.title = previousTitle
+      if (description && previousDescription) description.content = previousDescription
+    }
+  }, [isMaintenance])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -122,6 +135,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
     } as React.CSSProperties}>
       <header className="phase2-topbar">
         <div className="phase2-brand"><img src={config.logo} alt="" /><span>{config.brand}</span></div>
+        {isMaintenance && <button className="phase2-topbar__login" type="button" onClick={() => setMaintenanceFlow('login')}>Sign in</button>}
       </header>
 
       <section className="phase2-hero" ref={heroRef}>
@@ -130,7 +144,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
           <h1>{highlightPhrase(config.headline, config.heroHighlight)}</h1>
           <p>{highlightPhrase(config.subheadline, config.subheadlineHighlight)}</p>
           {isMaintenance
-            ? <button className="phase2-button" type="button" onClick={() => setShowMaintenanceQuiz(true)}>{config.cta} <span>→</span></button>
+            ? <button className="phase2-button" type="button" onClick={() => setMaintenanceFlow('quiz')}>{config.cta} <span>→</span></button>
             : <a className="phase2-button" href="#early-access">{config.cta} <span>→</span></a>}
           <small>{config.ctaSubtitle ?? config.ctaReassurance}</small>
         </div>
@@ -142,7 +156,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
             : <OutcomeMockup config={config.mockup} logo={config.logo} />}
       </section>
 
-      {isMaintenance && <TrackGlpMaintenanceSections onStartQuiz={() => setShowMaintenanceQuiz(true)} />}
+      {isMaintenance && <TrackGlpMaintenanceSections onStartQuiz={() => setMaintenanceFlow('quiz')} />}
 
       {!isMaintenance && config.problem && (
         <section className="phase2-problem">
@@ -347,9 +361,9 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
       </footer>
 
       {isMaintenance
-        ? <button className={showStickyCta ? 'phase2-sticky-cta is-visible' : 'phase2-sticky-cta'} type="button" onClick={() => setShowMaintenanceQuiz(true)}>{config.stickyCta} <span>→</span></button>
+        ? <button className={showStickyCta ? 'phase2-sticky-cta is-visible' : 'phase2-sticky-cta'} type="button" onClick={() => setMaintenanceFlow('quiz')}>{config.stickyCta} <span>→</span></button>
         : <a className={showStickyCta ? 'phase2-sticky-cta is-visible' : 'phase2-sticky-cta'} href="#early-access">{config.stickyCta} <span>→</span></a>}
-      {isMaintenance && showMaintenanceQuiz && <EveraMaintenanceQuiz onClose={() => setShowMaintenanceQuiz(false)} />}
+      {isMaintenance && maintenanceFlow && <EveraMaintenanceQuiz initialView={maintenanceFlow === 'login' ? 'login' : 'question'} onClose={() => setMaintenanceFlow(null)} />}
     </main>
   )
 }
