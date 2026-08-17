@@ -8,7 +8,6 @@ import {
   ListChecks,
   Route,
   ShieldCheck,
-  Sparkles,
   Target,
   TrendingUp,
 } from 'lucide-react'
@@ -16,13 +15,6 @@ import { trackGlpMaintenanceContent as content } from '../trackGlpMaintenanceCon
 
 const problemIcons = [TrendingUp, CalendarDays, HeartHandshake]
 const planFeatureIcons = [Compass, ListChecks, Route, ShieldCheck]
-
-const planPriorities = [
-  'Weight stability',
-  'Sustainable habits',
-  'Protein & nutrition',
-  'Strength & movement',
-]
 
 const planWeeks = [
   {
@@ -49,15 +41,12 @@ const planWeeks = [
 
 export function MaintenanceHeroVisual() {
   return (
-    <div className="evera-plan-preview" aria-label="Example personalized Evera maintenance plan">
-      <div className="evera-plan-preview__top"><span><Sparkles size={16} /> Personalized for you</span><small>RECOMMENDED: 30 DAYS</small></div>
-      <div className="evera-plan-preview__heading"><small>YOUR EVERA</small><strong>Maintenance Plan</strong><p>Created for your GLP-1 journey</p></div>
-      <div className="evera-plan-preview__profile"><span>Based on your answers</span><strong>Transitioning into maintenance</strong></div>
-      <div className="evera-plan-preview__priorities">
-        {planPriorities.map((priority) => <span key={priority}><i><Check size={12} /></i>{priority}</span>)}
-      </div>
-      <div className="evera-plan-preview__footer"><div><small>YOUR FIRST FOCUS</small><strong>Build a routine you can repeat</strong></div><ArrowRight size={20} /></div>
-    </div>
+    <figure className="evera-hero-image" aria-label="Preview of a personalized Evera maintenance plan">
+      <img
+        src="/assets/evera-maintenance-plan-hero.png"
+        alt="Woman holding a glass of water beside a personalized 30-day Evera maintenance plan preview"
+      />
+    </figure>
   )
 }
 
