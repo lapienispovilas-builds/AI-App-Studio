@@ -139,6 +139,13 @@ fieldset { padding: 0; margin: 25px 0; border: 0; }
 .evera-quiz__loader span { font-size:32px; animation:evera-pulse 1.2s ease-in-out infinite; }
 .evera-quiz__loader p { margin:0; color:#687a74; font-size:13px; }
 @keyframes evera-pulse { 50% { transform:scale(.84); opacity:.55; } }
+.evera-account input,
+.evera-account input[type='email'],
+.evera-account input[type='password'] { color:#20362e; background:#fff; -webkit-text-fill-color:#20362e; caret-color:#20362e; }
+.evera-account input:focus { background:#fff; }
+.evera-account input:-webkit-autofill,
+.evera-account input:-webkit-autofill:hover,
+.evera-account input:-webkit-autofill:focus { -webkit-text-fill-color:#20362e; -webkit-box-shadow:0 0 0 1000px #fff inset; box-shadow:0 0 0 1000px #fff inset; caret-color:#20362e; }
 .evera-account__switch,.evera-account__forgot { border:0; color:#64766f; background:transparent; cursor:pointer; font:inherit; }
 .evera-account__notice { margin:0; color:#2f7d63; font-size:12px; font-weight:700; }
 .evera-account__switch { margin-top:20px; font-size:12px; }
