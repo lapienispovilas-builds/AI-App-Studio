@@ -83,7 +83,7 @@ export async function beginEveraCheckout(plan: EveraPlan, draft: EveraQuizDraft)
       primaryFocus: draft.primaryFocus,
       secondaryFocuses: draft.secondaryFocuses,
       successUrl: `${window.location.origin}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancelUrl: `${window.location.origin}/pricing?payment=cancelled`,
+      cancelUrl: `${window.location.origin}${draft.locale === 'da' ? '/dk/pricing' : '/pricing'}?payment=cancelled`,
     }),
   })
 

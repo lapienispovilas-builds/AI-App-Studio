@@ -39,6 +39,7 @@ function highlightPhrase(text: string, phrase?: string) {
 
 export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig }) {
   const isMaintenance = config.landingVariant === 'maintenance'
+  const locale = config.slug === 'dk' ? 'da' : 'en'
   const isPositioning = Boolean(config.landingVariant)
   const [email, setEmail] = useState('')
   const [answers, setAnswers] = useState<Record<string, string>>({})
@@ -82,13 +83,16 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
     const previousTitle = document.title
     const description = document.querySelector<HTMLMetaElement>('meta[name="description"]')
     const previousDescription = description?.content
-    document.title = 'Evera | Personalized GLP-1 Maintenance Program'
-    if (description) description.content = 'Build a personalized GLP-1 maintenance plan with Evera.'
+    const previousLang = document.documentElement.lang
+    document.documentElement.lang = locale
+    document.title = locale === 'da' ? 'Evera | Personligt GLP-1-vedligeholdelsesprogram' : 'Evera | Personalized GLP-1 Maintenance Program'
+    if (description) description.content = locale === 'da' ? 'Skab en personlig GLP-1-vedligeholdelsesplan med Evera.' : 'Build a personalized GLP-1 maintenance plan with Evera.'
     return () => {
+      document.documentElement.lang = previousLang
       document.title = previousTitle
       if (description && previousDescription) description.content = previousDescription
     }
-  }, [isMaintenance])
+  }, [isMaintenance, locale])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -140,7 +144,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
     } as React.CSSProperties}>
       <header className="phase2-topbar">
         <div className="phase2-brand"><img src={config.logo} alt="" /><span>{config.brand}</span></div>
-        {isMaintenance && <button className="phase2-topbar__login" type="button" onClick={() => setMaintenanceFlow('login')}>Sign in</button>}
+        {isMaintenance && <button className="phase2-topbar__login" type="button" onClick={() => setMaintenanceFlow('login')}>{locale === 'da' ? 'Log ind' : 'Sign in'}</button>}
       </header>
 
       <section className="phase2-hero" ref={heroRef}>
@@ -155,13 +159,13 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
         </div>
 
         {isMaintenance
-          ? <MaintenanceHeroVisual />
+          ? <MaintenanceHeroVisual locale={locale} />
           : config.landingVariant
             ? <PositioningHero variant={config.landingVariant} />
             : <OutcomeMockup config={config.mockup} logo={config.logo} />}
       </section>
 
-      {isMaintenance && <TrackGlpMaintenanceSections onStartQuiz={startMaintenanceQuiz} />}
+      {isMaintenance && <TrackGlpMaintenanceSections onStartQuiz={startMaintenanceQuiz} locale={locale} />}
 
       {!isMaintenance && config.problem && (
         <section className="phase2-problem">
@@ -358,17 +362,17 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
       <footer className="phase2-footer" ref={footerRef}>
         <div className="phase2-brand"><img src={config.logo} alt="" /><span>{config.brand}</span></div>
         <div className="phase2-footer__legal" aria-label="Legal information">
-          <span>Privacy Statement</span>
-          <span>Terms and Conditions</span>
-          <span>DMCA Policy</span>
-          <span>Do Not Sell My Info</span>
+          <span>{locale === 'da' ? 'Privatlivspolitik' : 'Privacy Statement'}</span>
+          <span>{locale === 'da' ? 'Vilkår og betingelser' : 'Terms and Conditions'}</span>
+          <span>{locale === 'da' ? 'DMCA-politik' : 'DMCA Policy'}</span>
+          <span>{locale === 'da' ? 'Sælg ikke mine oplysninger' : 'Do Not Sell My Info'}</span>
         </div>
       </footer>
 
       {isMaintenance
         ? <button className={showStickyCta ? 'phase2-sticky-cta is-visible' : 'phase2-sticky-cta'} type="button" onClick={startMaintenanceQuiz}>{config.stickyCta} <span>→</span></button>
         : <a className={showStickyCta ? 'phase2-sticky-cta is-visible' : 'phase2-sticky-cta'} href="#early-access">{config.stickyCta} <span>→</span></a>}
-      {isMaintenance && maintenanceFlow && <EveraMaintenanceQuiz initialView={maintenanceFlow === 'login' ? 'login' : 'question'} onClose={() => setMaintenanceFlow(null)} />}
+      {isMaintenance && maintenanceFlow && <EveraMaintenanceQuiz locale={locale} initialView={maintenanceFlow === 'login' ? 'login' : 'question'} onClose={() => setMaintenanceFlow(null)} />}
     </main>
   )
 }

@@ -5,13 +5,16 @@ import { beginEveraCheckout, everaPlans, hasAnyStripeCheckout, type EveraPlan } 
 import { getEveraQuizDraft, updateEveraQuizDraft } from '../lib/everaFunnel'
 import { getEveraFlowUrl } from '../lib/domainRouting'
 import { metaFocusValue, trackMetaEvent } from '../lib/metaPixel'
+import { danishFocusLabels, danishPlanPreviews, danishPlans, type EveraLocale } from '../everaDanish'
 
-export function EveraPlanPreviewPage() {
+export function EveraPlanPreviewPage({ locale = 'en' }: { locale?: EveraLocale }) {
   const draft = useMemo(() => getEveraQuizDraft(), [])
-  const [selectedPlan, setSelectedPlan] = useState<EveraPlan>(() => everaPlans.find((plan) => plan.id === draft?.selectedPlan) ?? everaPlans[1])
+  const localizedPlans = locale === 'da' ? danishPlans : everaPlans
+  const previews = locale === 'da' ? danishPlanPreviews : planPreviews
+  const [selectedPlan, setSelectedPlan] = useState<EveraPlan>(() => localizedPlans.find((plan) => plan.id === draft?.selectedPlan) ?? localizedPlans[1])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const preview = planPreviews[selectedPlan.id]
+  const preview = previews[selectedPlan.id]
 
   useEffect(() => {
     if (!draft) return
@@ -42,32 +45,32 @@ export function EveraPlanPreviewPage() {
     }
   }
 
-  if (!draft) return <main className="evera-dashboard-state"><Target size={34} /><h1>Complete your Evera assessment first</h1><p>Your answers create the recommendation shown on this page.</p><a className="phase2-button" href={getEveraFlowUrl()}>Build my plan <ArrowRight size={18} /></a></main>
+  if (!draft) return <main className="evera-dashboard-state"><Target size={34} /><h1>{locale === 'da' ? 'Gennemfør først din Evera-vurdering' : 'Complete your Evera assessment first'}</h1><p>{locale === 'da' ? 'Dine svar skaber anbefalingen på denne side.' : 'Your answers create the recommendation shown on this page.'}</p><a className="phase2-button" href={locale === 'da' ? '/dk' : getEveraFlowUrl()}>{locale === 'da' ? 'Skab min plan' : 'Build my plan'} <ArrowRight size={18} /></a></main>
 
   return <main className="evera-plan-page">
-    <header className="evera-flow-header"><a href={getEveraFlowUrl()}>◉ Evera</a><span>Personalized maintenance program</span></header>
+    <header className="evera-flow-header"><a href={locale === 'da' ? '/dk' : getEveraFlowUrl()}>◉ Evera</a><span>{locale === 'da' ? 'Personligt vedligeholdelsesprogram' : 'Personalized maintenance program'}</span></header>
     <section className="evera-plan-result">
       <div className="evera-plan-result__icon"><Sparkles size={28} /></div>
-      <p className="evera-quiz__eyebrow">Your personalized result</p>
-      <h1>Your Evera Maintenance Plan is ready</h1>
-      <p>Based on your GLP-1 journey, goals, and challenges, we created a program designed around the priorities that matter most to you.</p>
-      <div className="evera-plan-result__focus"><div><small>PRIMARY FOCUS</small><strong>{draft.primaryFocus}</strong></div><div><small>ADDITIONAL FOCUS AREAS</small>{draft.secondaryFocuses.map((focus) => <span key={focus}>{focus}</span>)}</div></div>
-      <div className="evera-plan-result__recommended"><small>RECOMMENDED PLAN</small><strong>30-Day Maintenance Plan</strong><span>Enough time to build consistency without feeling overwhelming.</span></div>
-      <div className="evera-result__includes">{['Personalized maintenance roadmap', 'Daily habit guidance', 'Nutrition and protein support', 'Progress check-ins', 'Sustainable routines'].map((item) => <span key={item}><Check size={15} /> {item}</span>)}</div>
+      <p className="evera-quiz__eyebrow">{locale === 'da' ? 'Dit personlige resultat' : 'Your personalized result'}</p>
+      <h1>{locale === 'da' ? 'Din Evera-vedligeholdelsesplan er klar' : 'Your Evera Maintenance Plan is ready'}</h1>
+      <p>{locale === 'da' ? 'Baseret på din GLP-1-rejse, dine mål og udfordringer har vi skabt et program omkring de prioriteter, der betyder mest for dig.' : 'Based on your GLP-1 journey, goals, and challenges, we created a program designed around the priorities that matter most to you.'}</p>
+      <div className="evera-plan-result__focus"><div><small>{locale === 'da' ? 'PRIMÆRT FOKUS' : 'PRIMARY FOCUS'}</small><strong>{locale === 'da' ? danishFocusLabels[draft.primaryFocus] : draft.primaryFocus}</strong></div><div><small>{locale === 'da' ? 'YDERLIGERE FOKUSOMRÅDER' : 'ADDITIONAL FOCUS AREAS'}</small>{draft.secondaryFocuses.map((focus) => <span key={focus}>{locale === 'da' ? danishFocusLabels[focus] : focus}</span>)}</div></div>
+      <div className="evera-plan-result__recommended"><small>{locale === 'da' ? 'ANBEFALET PLAN' : 'RECOMMENDED PLAN'}</small><strong>{locale === 'da' ? '30-dages vedligeholdelsesplan' : '30-Day Maintenance Plan'}</strong><span>{locale === 'da' ? 'Nok tid til at skabe kontinuitet uden at det føles overvældende.' : 'Enough time to build consistency without feeling overwhelming.'}</span></div>
+      <div className="evera-result__includes">{(locale === 'da' ? ['Personlig vedligeholdelsesplan', 'Daglig vanevejledning', 'Ernærings- og proteinstøtte', 'Fremskridtstjek', 'Bæredygtige rutiner'] : ['Personalized maintenance roadmap', 'Daily habit guidance', 'Nutrition and protein support', 'Progress check-ins', 'Sustainable routines']).map((item) => <span key={item}><Check size={15} /> {item}</span>)}</div>
     </section>
 
     <section className="evera-paywall evera-paywall--page">
-      <div className="evera-paywall__heading"><p className="evera-quiz__eyebrow">Choose your plan</p><h2>Choose your maintenance journey</h2><p>Choose the support level that fits your maintenance journey.</p></div>
-      <div className="evera-paywall__plans">{everaPlans.map((plan) => { const isSelected = selectedPlan.id === plan.id; return <article className={`${isSelected ? 'is-selected ' : ''}${plan.id === 'complete-30' ? 'is-recommended' : ''}`} key={plan.id} role="radio" aria-checked={isSelected} tabIndex={0} onClick={() => setSelectedPlan(plan)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setSelectedPlan(plan) } }}>
+      <div className="evera-paywall__heading"><p className="evera-quiz__eyebrow">{locale === 'da' ? 'Vælg din plan' : 'Choose your plan'}</p><h2>{locale === 'da' ? 'Vælg din vedligeholdelsesrejse' : 'Choose your maintenance journey'}</h2><p>{locale === 'da' ? 'Vælg det støtteniveau, der passer til din rejse.' : 'Choose the support level that fits your maintenance journey.'}</p></div>
+      <div className="evera-paywall__plans">{localizedPlans.map((plan) => { const isSelected = selectedPlan.id === plan.id; return <article className={`${isSelected ? 'is-selected ' : ''}${plan.id === 'complete-30' ? 'is-recommended' : ''}`} key={plan.id} role="radio" aria-checked={isSelected} tabIndex={0} onClick={() => setSelectedPlan(plan)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setSelectedPlan(plan) } }}>
         {plan.badge && <em>{plan.badge}</em>}<small>{plan.name}</small><strong>{plan.price}</strong><span className="evera-paywall__positioning">{plan.positioning}</span><p>{plan.description}</p>
         <ul>{plan.includes.map((item) => <li key={item}><Check size={14} /> {item}</li>)}</ul>
-        <button className={isSelected ? 'evera-paywall__primary' : 'evera-paywall__secondary'} type="button" disabled={loading} onClick={(event) => { event.stopPropagation(); checkout(plan) }}>{loading && isSelected ? 'Opening checkout…' : plan.cta} <ArrowRight size={16} /></button>
+        <button className={isSelected ? 'evera-paywall__primary' : 'evera-paywall__secondary'} type="button" disabled={loading} onClick={(event) => { event.stopPropagation(); checkout(plan) }}>{loading && isSelected ? (locale === 'da' ? 'Åbner betaling…' : 'Opening checkout…') : plan.cta} <ArrowRight size={16} /></button>
       </article> })}</div>
 
-      <section className="evera-paywall__roadmap"><p className="evera-quiz__eyebrow">Program preview</p><div className="evera-paywall__roadmap-content" key={selectedPlan.id}><h2>{preview.title}</h2><p>{preview.subtitle}</p><div>{preview.cards.map((card) => <article key={card.label}><small>{card.label}</small><strong>{card.title}</strong><ul>{card.items.map((item) => <li key={item}>{item}</li>)}</ul></article>)}</div></div></section>
-      <div className="evera-paywall__closing"><p>Your selected plan</p><strong>{selectedPlan.name} · {selectedPlan.price}</strong><button className="phase2-button" type="button" disabled={loading} onClick={() => checkout()}>{loading ? 'Opening checkout…' : selectedPlan.cta} {!loading && <ArrowRight size={18} />}</button></div>
+      <section className="evera-paywall__roadmap"><p className="evera-quiz__eyebrow">{locale === 'da' ? 'Forhåndsvisning af program' : 'Program preview'}</p><div className="evera-paywall__roadmap-content" key={selectedPlan.id}><h2>{preview.title}</h2><p>{preview.subtitle}</p><div>{preview.cards.map((card) => <article key={card.label}><small>{card.label}</small><strong>{card.title}</strong><ul>{card.items.map((item) => <li key={item}>{item}</li>)}</ul></article>)}</div></div></section>
+      <div className="evera-paywall__closing"><p>{locale === 'da' ? 'Din valgte plan' : 'Your selected plan'}</p><strong>{selectedPlan.name} · {selectedPlan.price}</strong><button className="phase2-button" type="button" disabled={loading} onClick={() => checkout()}>{loading ? (locale === 'da' ? 'Åbner betaling…' : 'Opening checkout…') : selectedPlan.cta} {!loading && <ArrowRight size={18} />}</button></div>
       {error && <p className="evera-account__error" role="alert">{error}</p>}
-      {!hasAnyStripeCheckout && <small><ShieldCheck size={13} /> Test checkout mode: no card is charged.</small>}
+      {!hasAnyStripeCheckout && <small><ShieldCheck size={13} /> {locale === 'da' ? 'Testbetaling: Intet kort bliver debiteret.' : 'Test checkout mode: no card is charged.'}</small>}
     </section>
   </main>
 }

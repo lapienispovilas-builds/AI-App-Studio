@@ -14,6 +14,7 @@ import { EveraDashboardPage } from './components/EveraDashboardPage'
 import { EveraPlanPreviewPage } from './components/EveraPlanPreviewPage'
 import { EveraCreateAccountPage } from './components/EveraCreateAccountPage'
 import { EveraPaymentSuccessPage } from './components/EveraPaymentSuccessPage'
+import { createDanishLandingConfig } from './everaDanish'
 
 const chapterStudentDomains = new Set(['trychapter.lt', 'www.trychapter.lt'])
 
@@ -28,9 +29,12 @@ export function App() {
   const config = landingPagesByPath[path]
   const phase2Config = phase2LandingPagesByPath[path]
   const chapterLegalConfig = chapterLegalPagesByPath[path]
+  const danishEveraConfig = createDanishLandingConfig(phase2LandingPagesByPath['/glp1-tracker-maintenance'])
 
   if (showChapterStudentHome) return <ChapterrStudentLandingPage config={chapterrStudentLandingPage} />
   if (showEveraHome) return <Phase2LandingPage config={phase2LandingPagesByPath['/glp1-tracker-maintenance']} />
+  if (path === '/dk') return <Phase2LandingPage config={danishEveraConfig} />
+  if (path === '/dk/plan-preview' || path === '/dk/pricing') return <EveraPlanPreviewPage locale="da" />
   if (path === '/dashboard') return <EveraDashboardPage />
   if (path === '/plan-preview' || path === '/pricing') return <EveraPlanPreviewPage />
   if (path === '/payment-success') return <EveraPaymentSuccessPage />

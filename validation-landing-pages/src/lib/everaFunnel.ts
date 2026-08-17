@@ -6,6 +6,7 @@ export type EveraQuizDraft = {
   primaryFocus: EveraFocus
   secondaryFocuses: EveraFocus[]
   selectedPlan?: EveraPlan['id']
+  locale?: 'en' | 'da'
   checkoutComplete?: boolean
   createdAt: string
 }

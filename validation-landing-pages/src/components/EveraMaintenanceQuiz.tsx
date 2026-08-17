@@ -31,6 +31,7 @@ import {
 import { beginEveraCheckout, everaPlans, hasAnyStripeCheckout, type EveraPlan } from '../lib/everaCheckout'
 import { EveraProgramDashboard } from './EveraProgramDashboard'
 import { saveEveraQuizDraft } from '../lib/everaFunnel'
+import { danishInsights, danishPlanPreviews, danishPlans, danishQuestions, type EveraLocale } from '../everaDanish'
 
 type Focus = EveraFocus
 
@@ -46,7 +47,7 @@ type QuizQuestion = {
   options: QuizOption[]
 }
 
-const questions: QuizQuestion[] = [
+const englishQuestions: QuizQuestion[] = [
   {
     title: 'Where are you currently in your GLP-1 journey?',
     options: [
@@ -164,7 +165,7 @@ const questions: QuizQuestion[] = [
   },
 ]
 
-const insights = [
+const englishInsights = [
   {
     afterQuestion: 2,
     image: '/assets/evera-quiz/walking.jpg',
@@ -228,7 +229,10 @@ export const planPreviews: Record<EveraPlan['id'], { title: string; subtitle: st
 
 type QuizView = 'question' | 'insight' | 'analyzing' | 'result' | 'account' | 'login' | 'paywall' | 'program'
 
-export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { onClose: () => void; initialView?: 'question' | 'login' }) {
+export function EveraMaintenanceQuiz({ onClose, initialView = 'question', locale = 'en' }: { onClose: () => void; initialView?: 'question' | 'login'; locale?: EveraLocale }) {
+  const questions = locale === 'da' ? danishQuestions : englishQuestions
+  const insights = locale === 'da' ? danishInsights : englishInsights
+  const localizedPlans = locale === 'da' ? danishPlans : everaPlans
   const [questionIndex, setQuestionIndex] = useState(0)
   const [answers, setAnswers] = useState<Record<number, QuizOption>>({})
   const [view, setView] = useState<QuizView>(initialView)
@@ -238,7 +242,7 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { on
   const [saving, setSaving] = useState(false)
   const [notice, setNotice] = useState('')
   const [account, setAccount] = useState<EveraAccountData | null>(null)
-  const [selectedPlan, setSelectedPlan] = useState(everaPlans[1])
+  const [selectedPlan, setSelectedPlan] = useState(localizedPlans[1])
   const [checkingSession, setCheckingSession] = useState(true)
 
   useEffect(() => {
@@ -304,6 +308,7 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { on
       answers: Object.fromEntries(questions.map((question, index) => [question.title, completedAnswers[index]?.label ?? ''])),
       primaryFocus: generatedFocus,
       secondaryFocuses: ranked.slice(1, 3),
+      locale,
       createdAt: completedAt,
     })
     trackMetaEvent('QuizCompleted', {
@@ -311,7 +316,7 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { on
       primary_focus: metaFocusValue(generatedFocus),
     }, { custom: true, onceKey: `quiz_completed_${completedAt}` })
     setView('analyzing')
-    window.setTimeout(() => window.location.assign('/plan-preview'), 1400)
+    window.setTimeout(() => window.location.assign(locale === 'da' ? '/dk/plan-preview' : '/plan-preview'), 1400)
   }
 
   function continueFromInsight() {
@@ -425,45 +430,45 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { on
 
   const displayedFocus = account?.primaryFocus ?? primaryFocus
   const FocusIcon = focusDetails[displayedFocus].icon
-  const selectedPreview = planPreviews[selectedPlan.id]
+  const selectedPreview = (locale === 'da' ? danishPlanPreviews : planPreviews)[selectedPlan.id]
 
-  if (checkingSession) return <div className="evera-quiz evera-quiz--loading"><div className="evera-quiz__loader"><span>◉</span><p>Opening your Evera journey…</p></div></div>
+  if (checkingSession) return <div className="evera-quiz evera-quiz--loading"><div className="evera-quiz__loader"><span>◉</span><p>{locale === 'da' ? 'Åbner din Evera-rejse…' : 'Opening your Evera journey…'}</p></div></div>
 
   return (
     <div className="evera-quiz" role="dialog" aria-modal="true" aria-label="Evera personalized maintenance assessment">
       <header className="evera-quiz__header">
-        <button type="button" onClick={goBack} aria-label="Go back"><ArrowLeft size={20} /></button>
+        <button type="button" onClick={goBack} aria-label={locale === 'da' ? 'Gå tilbage' : 'Go back'}><ArrowLeft size={20} /></button>
         <div className="evera-quiz__brand"><span>◉</span> Evera</div>
-        <button type="button" onClick={onClose} aria-label="Close assessment"><X size={20} /></button>
+        <button type="button" onClick={onClose} aria-label={locale === 'da' ? 'Luk vurdering' : 'Close assessment'}><X size={20} /></button>
       </header>
 
       {!['program', 'paywall', 'login'].includes(view) && <div className="evera-quiz__progress">
-        <div><span>Creating your personalized GLP-1 maintenance plan</span><strong>{view === 'question' ? `Question ${questionIndex + 1} of 12` : view === 'insight' ? 'Personal insight' : 'Your plan'}</strong></div>
+        <div><span>{locale === 'da' ? 'Vi skaber din personlige GLP-1-vedligeholdelsesplan' : 'Creating your personalized GLP-1 maintenance plan'}</span><strong>{view === 'question' ? (locale === 'da' ? `Spørgsmål ${questionIndex + 1} af 12` : `Question ${questionIndex + 1} of 12`) : view === 'insight' ? (locale === 'da' ? 'Personlig indsigt' : 'Personal insight') : (locale === 'da' ? 'Din plan' : 'Your plan')}</strong></div>
         <i><span style={{ width: `${Math.max(8, progress)}%` }} /></i>
       </div>}
 
       {view === 'question' && <main className="evera-quiz__question">
-        <p className="evera-quiz__eyebrow">Tell us about your journey</p>
+        <p className="evera-quiz__eyebrow">{locale === 'da' ? 'Fortæl os om din rejse' : 'Tell us about your journey'}</p>
         <h1>{questions[questionIndex].title}</h1>
         <div className="evera-quiz__answers">
           {questions[questionIndex].options.map((option) => <button className={answers[questionIndex]?.label === option.label ? 'is-selected' : ''} type="button" key={option.label} onClick={() => chooseAnswer(option)}>
             <span>{option.label}</span><i>{answers[questionIndex]?.label === option.label ? <Check size={17} /> : <ChevronRight size={17} />}</i>
           </button>)}
         </div>
-        <small>Your answers help shape your program. There are no wrong choices.</small>
+        <small>{locale === 'da' ? 'Dine svar former dit program. Der er ingen forkerte valg.' : 'Your answers help shape your program. There are no wrong choices.'}</small>
       </main>}
 
       {view === 'insight' && insight && <main className="evera-insight">
         <img src={insight.image} alt="Supportive maintenance lifestyle" />
         <div className="evera-insight__copy">
-          <span><Sparkles size={16} /> A useful perspective</span>
-          <section><small>MYTH</small><h1>“{insight.myth}”</h1></section>
-          <section className="is-fact"><small>FACT</small><p>{insight.fact}</p></section>
-          <button className="phase2-button" type="button" onClick={continueFromInsight}>Continue <ArrowRight size={18} /></button>
+          <span><Sparkles size={16} /> {locale === 'da' ? 'Et nyttigt perspektiv' : 'A useful perspective'}</span>
+          <section><small>{locale === 'da' ? 'MYTE' : 'MYTH'}</small><h1>“{insight.myth}”</h1></section>
+          <section className="is-fact"><small>{locale === 'da' ? 'FAKTA' : 'FACT'}</small><p>{insight.fact}</p></section>
+          <button className="phase2-button" type="button" onClick={continueFromInsight}>{locale === 'da' ? 'Fortsæt' : 'Continue'} <ArrowRight size={18} /></button>
         </div>
       </main>}
 
-      {view === 'analyzing' && <main className="evera-analyzing"><div><span>◉</span><i /><i /><i /></div><p className="evera-quiz__eyebrow">Analyzing your answers…</p><h1>Building your Evera maintenance plan…</h1><small>Connecting your goals, challenges, and priorities</small></main>}
+      {view === 'analyzing' && <main className="evera-analyzing"><div><span>◉</span><i /><i /><i /></div><p className="evera-quiz__eyebrow">{locale === 'da' ? 'Analyserer dine svar…' : 'Analyzing your answers…'}</p><h1>{locale === 'da' ? 'Skaber din Evera-vedligeholdelsesplan…' : 'Building your Evera maintenance plan…'}</h1><small>{locale === 'da' ? 'Forbinder dine mål, udfordringer og prioriteter' : 'Connecting your goals, challenges, and priorities'}</small></main>}
 
       {view === 'result' && <main className="evera-result">
         <div className="evera-result__icon"><FocusIcon size={34} /></div>
@@ -516,7 +521,7 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { on
         <div className="evera-paywall__focus"><FocusIcon size={27} /><div><small>YOUR PRIMARY FOCUS</small><strong>{displayedFocus}</strong><span>Your plan is personalized based on your answers.</span></div></div>
         <div className="evera-paywall__heading"><h2>Choose your maintenance journey</h2><p>Select the program length that fits your goals.</p></div>
         <div className="evera-paywall__plans">
-          {everaPlans.map((plan) => <article className={`${selectedPlan.id === plan.id ? 'is-selected ' : ''}${plan.id === 'complete-30' ? 'is-recommended' : ''}`} key={plan.id} onClick={() => setSelectedPlan(plan)}>
+          {localizedPlans.map((plan) => <article className={`${selectedPlan.id === plan.id ? 'is-selected ' : ''}${plan.id === 'complete-30' ? 'is-recommended' : ''}`} key={plan.id} onClick={() => setSelectedPlan(plan)}>
             {plan.badge && <em>{plan.badge}</em>}
             <small>{plan.name}</small><strong>{plan.price}</strong><span className="evera-paywall__positioning">{plan.positioning}</span><p>{plan.description}</p>
             <ul>{plan.includes.map((item) => <li key={item}><Check size={14} /> {item}</li>)}</ul>
