@@ -12,8 +12,9 @@
 
         var everaDomain = window.location.hostname === 'everahealth.pro' || window.location.hostname === 'www.everahealth.pro';
         var everaRoute = window.location.pathname === '/glp1-tracker-maintenance' || window.location.pathname === '/glp1-tracker-maintenance/';
+        var everaDashboardRoute = window.location.pathname === '/dashboard' || window.location.pathname === '/dashboard/';
         var rootRoute = window.location.pathname === '/';
-        var showEveraMetadata = everaRoute || (everaDomain && rootRoute);
+        var showEveraMetadata = everaRoute || everaDashboardRoute || everaDomain;
         var showChapterMetadata = chapterRoute || (chapterDomain && rootRoute);
 
         if (showEveraMetadata) {

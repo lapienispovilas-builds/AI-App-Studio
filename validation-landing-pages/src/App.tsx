@@ -10,6 +10,7 @@ import { chapterLegalPagesByPath } from './chapterLegalPages'
 import { landingPagesByPath } from './landingPageConfig'
 import { phase2LandingPagesByPath } from './phase2LandingPageConfig'
 import { isEveraDomain } from './lib/domainRouting'
+import { EveraDashboardPage } from './components/EveraDashboardPage'
 
 const chapterStudentDomains = new Set(['trychapter.lt', 'www.trychapter.lt'])
 
@@ -27,6 +28,7 @@ export function App() {
 
   if (showChapterStudentHome) return <ChapterrStudentLandingPage config={chapterrStudentLandingPage} />
   if (showEveraHome) return <Phase2LandingPage config={phase2LandingPagesByPath['/glp1-tracker-maintenance']} />
+  if (path === '/dashboard') return <EveraDashboardPage />
   if (path === '/') return <HomePage />
   if (path === `/${chapterrLandingPage.slug}`) return <ChapterrLandingPage config={chapterrLandingPage} />
   if (path === `/${chapterrStudentLandingPage.slug}`) return <ChapterrStudentLandingPage config={chapterrStudentLandingPage} />

@@ -24,12 +24,14 @@ import {
   isEveraTestMode,
   markEveraPaid,
   requestEveraPasswordReset,
+  saveEveraPlanSelection,
   signInToEvera,
   signOutOfEvera,
   type EveraAccountData,
   type EveraFocus,
 } from '../lib/everaAccount'
-import { beginEveraCheckout, everaPlans, isStripeCheckoutConfigured } from '../lib/everaCheckout'
+import { beginEveraCheckout, everaPlans, hasAnyStripeCheckout, type EveraPlan } from '../lib/everaCheckout'
+import { EveraProgramDashboard } from './EveraProgramDashboard'
 
 type Focus = EveraFocus
 
@@ -324,16 +326,19 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { on
     }
   }
 
-  async function startCheckout() {
+  async function startCheckout(plan: EveraPlan = selectedPlan) {
     if (!account) { setView('account'); return }
+    setSelectedPlan(plan)
     setSaving(true)
     setError('')
     try {
-      const checkout = await beginEveraCheckout(selectedPlan, account)
+      const accountWithPlan = await saveEveraPlanSelection(account, plan.id)
+      setAccount(accountWithPlan)
+      const checkout = await beginEveraCheckout(plan, accountWithPlan)
       if (checkout.testSuccess) {
-        const paidAccount = await markEveraPaid(account, selectedPlan.id)
+        const paidAccount = await markEveraPaid(accountWithPlan, plan.id)
         setAccount(paidAccount)
-        setView('program')
+        window.location.assign('/dashboard')
       }
     } catch (checkoutError) {
       setError(checkoutError instanceof Error ? checkoutError.message : 'Checkout could not be started.')
@@ -349,7 +354,8 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { on
     setView('login')
   }
 
-  const FocusIcon = focusDetails[primaryFocus].icon
+  const displayedFocus = account?.primaryFocus ?? primaryFocus
+  const FocusIcon = focusDetails[displayedFocus].icon
 
   if (checkingSession) return <div className="evera-quiz evera-quiz--loading"><div className="evera-quiz__loader"><span>◉</span><p>Opening your Evera journey…</p></div></div>
 
@@ -432,39 +438,35 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question' }: { on
       </main>}
 
       {view === 'paywall' && <main className="evera-paywall">
-        <p className="evera-quiz__eyebrow">Your roadmap is ready</p>
-        <h1>Unlock your 30-day Evera maintenance plan</h1>
-        <p>Your personalized roadmap to maintain your GLP-1 progress.</p>
-        <div className="evera-paywall__benefits">
-          {['Personalized GLP-1 maintenance roadmap', 'Daily habit checklist', 'Protein and nutrition guidance', 'Weight stability tracking', 'Strength and movement recommendations', 'Weekly progress milestones'].map((item) => <span key={item}><Check size={15} /> {item}</span>)}
-        </div>
+        <p className="evera-quiz__eyebrow">Your personalized program</p>
+        <h1>Your Evera plan is ready</h1>
+        <p>Based on your GLP-1 journey, goals, and challenges, we created a personalized maintenance program designed to help you protect your progress.</p>
+        <div className="evera-paywall__focus"><FocusIcon size={27} /><div><small>YOUR PRIMARY FOCUS</small><strong>{displayedFocus}</strong><span>Your plan is personalized based on your answers.</span></div></div>
+        <div className="evera-paywall__heading"><h2>Choose your maintenance journey</h2><p>Select the program length that fits your goals.</p></div>
         <div className="evera-paywall__plans">
-          {everaPlans.map((plan) => <button className={selectedPlan.id === plan.id ? 'is-selected' : ''} type="button" key={plan.id} onClick={() => setSelectedPlan(plan)}>
+          {everaPlans.map((plan) => <article className={`${selectedPlan.id === plan.id ? 'is-selected ' : ''}${plan.id === 'complete-30' ? 'is-recommended' : ''}`} key={plan.id} onClick={() => setSelectedPlan(plan)}>
             {plan.badge && <em>{plan.badge}</em>}
-            <small>{plan.name}</small><strong>{plan.price}</strong><span>{plan.description}</span><i>{selectedPlan.id === plan.id && <Check size={15} />}</i>
-          </button>)}
+            <small>{plan.name}</small><strong>{plan.price}</strong><span className="evera-paywall__positioning">{plan.positioning}</span><p>{plan.description}</p>
+            <ul>{plan.includes.map((item) => <li key={item}><Check size={14} /> {item}</li>)}</ul>
+            <button className={plan.id === 'complete-30' ? 'phase2-button' : 'evera-paywall__secondary'} type="button" disabled={saving} onClick={(event) => { event.stopPropagation(); startCheckout(plan) }}>{saving && selectedPlan.id === plan.id ? 'Opening checkout…' : plan.cta} <ArrowRight size={16} /></button>
+          </article>)}
+        </div>
+        <section className="evera-paywall__value"><div><p className="evera-quiz__eyebrow">Personalized to your answers</p><h2>Your plan is built around you</h2><p>Evera creates a maintenance roadmap based on your answers, not a generic program.</p></div><div>{['Your GLP-1 journey stage', 'Your biggest challenges', 'Your maintenance goals', 'Your preferred focus areas'].map((item) => <span key={item}><Check size={15} /> {item}</span>)}</div></section>
+        <section className="evera-paywall__roadmap"><p className="evera-quiz__eyebrow">Program preview</p><h2>Your 30-day roadmap includes</h2><div>{[
+          ['Week 1', 'Build your foundation', ['Understand your maintenance goals', 'Create your daily routine', 'Establish key habits']],
+          ['Week 2', 'Protect your progress', ['Support nutrition habits', 'Maintain consistency', 'Build confidence']],
+          ['Week 3', 'Strengthen your routine', ['Improve sustainable habits', 'Focus on movement and strength']],
+          ['Week 4', 'Create your long-term system', ['Prepare for challenges', 'Build habits beyond the program']],
+        ].map(([week, title, items]) => <article key={week as string}><small>{week as string}</small><strong>{title as string}</strong><ul>{(items as string[]).map((item) => <li key={item}>{item}</li>)}</ul></article>)}</div></section>
+        <div className="evera-paywall__closing">
+          <p>Your recommended plan</p><strong>{selectedPlan.name} · {selectedPlan.price}</strong>
+          <button className="phase2-button" type="button" disabled={saving} onClick={() => startCheckout()}>{saving ? 'Opening checkout…' : selectedPlan.cta} {!saving && <ArrowRight size={18} />}</button>
         </div>
         {error && <p className="evera-account__error" role="alert">{error}</p>}
-        <button className="phase2-button" type="button" disabled={saving} onClick={startCheckout}>{saving ? 'Opening checkout…' : 'Start my Evera program'} {!saving && <ArrowRight size={18} />}</button>
-        {!isStripeCheckoutConfigured && <small><ShieldCheck size={13} /> Test checkout mode: no card is charged.</small>}
+        {!hasAnyStripeCheckout && <small><ShieldCheck size={13} /> Test checkout mode: no card is charged.</small>}
       </main>}
 
-      {view === 'program' && <main className="evera-program">
-        <header><div><p>YOUR PERSONALIZED PROGRAM</p><h1>Your 30-Day Evera Maintenance Plan</h1></div><span>Day 1 of 30</span></header>
-        <div className="evera-program__progress"><div><strong>Week 1 progress</strong><span>0%</span></div><i><span /></i></div>
-        <div className="evera-program__layout">
-          <section className="evera-program__week"><small>WEEK 1</small><h2>Build your foundation</h2><p>Your first week creates a calm, repeatable baseline around the priorities that matter most.</p><div className="evera-program__tasks">
-            {[
-              ['Protein foundation', 'Choose one protein anchor for today'],
-              ['Daily movement', 'Take a comfortable 15-minute walk'],
-              ['Weight awareness', 'Record your starting maintenance weight'],
-              ['Habit checklist', 'Choose two habits to repeat this week'],
-            ].map(([title, description]) => <button type="button" key={title}><i /><span><strong>{title}</strong><small>{description}</small></span><ChevronRight size={17} /></button>)}
-          </div></section>
-          <aside><Target size={25} /><small>YOUR PRIMARY FOCUS</small><h3>{primaryFocus}</h3><p>{focusDetails[primaryFocus].description}</p><div><CheckCircle2 size={18} /> Your plan was shaped by all 12 answers.</div></aside>
-        </div>
-        <div className="evera-program__actions"><button className="evera-program__close" type="button" onClick={onClose}>Return to Evera</button><button className="evera-program__close" type="button" onClick={logOut}>Sign out</button></div>
-      </main>}
+      {view === 'program' && account?.hasPaid && <EveraProgramDashboard account={account} onExit={onClose} onSignOut={logOut} />}
     </div>
   )
 }

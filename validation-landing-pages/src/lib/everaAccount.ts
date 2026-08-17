@@ -176,6 +176,20 @@ export async function markEveraPaid(account: EveraAccountData, selectedPlan: str
   return updated
 }
 
+export async function saveEveraPlanSelection(account: EveraAccountData, selectedPlan: string): Promise<EveraAccountData> {
+  const updated = { ...account, selectedPlan }
+  if (!supabase) {
+    writeLocalAccount(updated)
+    return updated
+  }
+  const { error } = await supabase.from('evera_profiles').update({
+    selected_plan: selectedPlan,
+    updated_at: new Date().toISOString(),
+  }).eq('id', account.userId)
+  if (error) throw new Error('Your plan selection could not be saved. Please try again.')
+  return updated
+}
+
 export async function signOutOfEvera() {
   if (!supabase) {
     window.localStorage.removeItem(LOCAL_SESSION_KEY)

@@ -46,7 +46,7 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [showStickyCta, setShowStickyCta] = useState(false)
-  const [maintenanceFlow, setMaintenanceFlow] = useState<'quiz' | 'login' | null>(null)
+  const [maintenanceFlow, setMaintenanceFlow] = useState<'quiz' | 'login' | null>(() => new URLSearchParams(window.location.search).get('signin') === '1' ? 'login' : null)
   const hasTrackedLead = useRef(false)
   const heroRef = useRef<HTMLElement>(null)
   const footerRef = useRef<HTMLElement>(null)
