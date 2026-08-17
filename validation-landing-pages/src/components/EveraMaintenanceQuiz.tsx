@@ -24,7 +24,6 @@ type QuizOption = {
   label: string
   focus: Focus
   secondaryFocus?: Focus
-  image?: string
 }
 
 type QuizQuestion = {
@@ -59,8 +58,8 @@ const questions: QuizQuestion[] = [
     options: [
       { label: 'Keeping my weight stable', focus: 'Weight Stability' },
       { label: 'Building healthy routines without medication', focus: 'Sustainable Routine' },
-      { label: 'Getting enough protein', focus: 'Nutrition & Protein', image: '/assets/evera-quiz/nutrition.jpg' },
-      { label: 'Staying active and strong', focus: 'Strength & Movement', image: '/assets/evera-quiz/strength.jpg' },
+      { label: 'Getting enough protein', focus: 'Nutrition & Protein' },
+      { label: 'Staying active and strong', focus: 'Strength & Movement' },
       { label: 'Knowing when and how to transition', focus: 'Transition Preparation' },
     ],
   },
@@ -88,9 +87,9 @@ const questions: QuizQuestion[] = [
     title: 'What is your biggest lifestyle challenge?',
     options: [
       { label: 'Staying consistent', focus: 'Sustainable Routine' },
-      { label: 'Planning meals', focus: 'Nutrition & Protein', image: '/assets/evera-quiz/nutrition.jpg' },
+      { label: 'Planning meals', focus: 'Nutrition & Protein' },
       { label: 'Getting enough protein', focus: 'Nutrition & Protein' },
-      { label: 'Finding time for movement', focus: 'Strength & Movement', image: '/assets/evera-quiz/walking.jpg' },
+      { label: 'Finding time for movement', focus: 'Strength & Movement' },
       { label: 'Avoiding old habits', focus: 'Weight Stability' },
     ],
   },
@@ -125,16 +124,16 @@ const questions: QuizQuestion[] = [
     title: 'How active are you currently?',
     options: [
       { label: 'Mostly sedentary', focus: 'Strength & Movement' },
-      { label: 'Light activity', focus: 'Strength & Movement', image: '/assets/evera-quiz/walking.jpg' },
+      { label: 'Light activity', focus: 'Strength & Movement' },
       { label: 'Exercise a few times per week', focus: 'Strength & Movement' },
-      { label: 'Regular strength training', focus: 'Strength & Movement', image: '/assets/evera-quiz/strength.jpg' },
+      { label: 'Regular strength training', focus: 'Strength & Movement' },
     ],
   },
   {
     title: 'How would you describe your nutrition?',
     options: [
       { label: 'I struggle with consistency', focus: 'Sustainable Routine' },
-      { label: 'I need more protein', focus: 'Nutrition & Protein', image: '/assets/evera-quiz/nutrition.jpg' },
+      { label: 'I need more protein', focus: 'Nutrition & Protein' },
       { label: 'I eat well but need structure', focus: 'Nutrition & Protein' },
       { label: 'I already have strong habits', focus: 'Weight Stability' },
     ],
@@ -276,7 +275,6 @@ export function EveraMaintenanceQuiz({ onClose }: { onClose: () => void }) {
         <h1>{questions[questionIndex].title}</h1>
         <div className="evera-quiz__answers">
           {questions[questionIndex].options.map((option) => <button className={answers[questionIndex]?.label === option.label ? 'is-selected' : ''} type="button" key={option.label} onClick={() => chooseAnswer(option)}>
-            {option.image && <img src={option.image} alt="" />}
             <span>{option.label}</span><i>{answers[questionIndex]?.label === option.label ? <Check size={17} /> : <ChevronRight size={17} />}</i>
           </button>)}
         </div>
