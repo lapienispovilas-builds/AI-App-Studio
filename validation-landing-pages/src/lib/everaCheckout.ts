@@ -50,7 +50,16 @@ const defaultCheckoutEndpoint = typeof window !== 'undefined' && !localHostnames
   ? '/api/create-checkout-session'
   : undefined
 
-export const isStripeCheckoutConfigured = Boolean(import.meta.env.VITE_STRIPE_CHECKOUT_ENDPOINT?.trim() || defaultCheckoutEndpoint)
+function normalizeCheckoutEndpoint(value?: string) {
+  const endpoint = value?.trim()
+  if (!endpoint) return undefined
+  if (/^https?:\/\//i.test(endpoint)) return endpoint
+  return `/${endpoint.replace(/^\/+/, '')}`
+}
+
+const configuredCheckoutEndpoint = normalizeCheckoutEndpoint(import.meta.env.VITE_STRIPE_CHECKOUT_ENDPOINT)
+
+export const isStripeCheckoutConfigured = Boolean(configuredCheckoutEndpoint || defaultCheckoutEndpoint)
 
 const stripeLinks: Record<EveraPlan['id'], string | undefined> = {
   'starter-7': import.meta.env.VITE_STRIPE_LINK_7_DAY?.trim(),
@@ -65,7 +74,7 @@ function isRealStripeLink(value?: string) {
 export const hasAnyStripeCheckout = isStripeCheckoutConfigured || Object.values(stripeLinks).some(isRealStripeLink)
 
 export async function beginEveraCheckout(plan: EveraPlan, draft: EveraQuizDraft) {
-  const endpoint = import.meta.env.VITE_STRIPE_CHECKOUT_ENDPOINT?.trim() || defaultCheckoutEndpoint
+  const endpoint = configuredCheckoutEndpoint || defaultCheckoutEndpoint
   const paymentLink = stripeLinks[plan.id]
   if (!endpoint && isRealStripeLink(paymentLink)) {
     window.location.assign(paymentLink!)
