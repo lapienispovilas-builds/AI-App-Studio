@@ -17,9 +17,9 @@ type ApiResponse = {
 }
 
 const plans = {
-  '7-day': { product: 'prod_V5YSGvrT6X8Nhq', name: 'Evera 7-Day Foundation', amount: 799 },
-  '30-day': { product: 'prod_V5YVS7NJuGwCzi', name: 'Evera 30-Day Maintenance Plan', amount: 1499 },
-  '90-day': { product: 'prod_V5YWhAtsYAEAfe', name: 'Evera 90-Day Maintenance Journey', amount: 2499 },
+  '7-day': { price: 'price_1U5P6nCOfJ4kxI6HehFhkl1J', name: 'Evera 7-Day Foundation' },
+  '30-day': { price: 'price_1U5P76COfJ4kxI6H4HvZuZdZ', name: 'Evera 30-Day Maintenance Plan' },
+  '90-day': { price: 'price_1U5P7KCOfJ4kxI6HvjdUAoYD', name: 'Evera 90-Day Maintenance Journey' },
 } as const
 
 const clientPlanIds: Record<NonNullable<CheckoutRequest['planId']>, PlanId> = {
@@ -69,11 +69,8 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     const form = new URLSearchParams()
     form.set('mode', 'payment')
     form.set('customer_creation', 'always')
+    form.set('line_items[0][price]', plan.price)
     form.set('line_items[0][quantity]', '1')
-    form.set('line_items[0][price_data][currency]', 'eur')
-    form.set('line_items[0][price_data][unit_amount]', String(plan.amount))
-    if (secretKey.startsWith('sk_test_')) form.set('line_items[0][price_data][product_data][name]', plan.name)
-    else form.set('line_items[0][price_data][product]', plan.product)
     form.set('success_url', successUrl)
     form.set('cancel_url', cancelUrl)
     form.set('client_reference_id', resultId)
