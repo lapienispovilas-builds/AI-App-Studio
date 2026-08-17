@@ -1,5 +1,3 @@
-import Stripe from 'stripe'
-
 type ApiRequest = { method?: string; query?: { session_id?: string | string[] } }
 type ApiResponse = {
   status: (code: number) => ApiResponse
@@ -22,8 +20,11 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   }
 
   try {
-    const stripe = new Stripe(secretKey)
-    const session = await stripe.checkout.sessions.retrieve(sessionId)
+    const stripeResponse = await fetch(`https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(sessionId)}`, {
+      headers: { Authorization: `Bearer ${secretKey}` },
+    })
+    const session = await stripeResponse.json() as { payment_status?: string; metadata?: { plan?: string } }
+    if (!stripeResponse.ok) throw new Error('Stripe could not verify this Checkout Session.')
     if (session.payment_status !== 'paid') {
       res.status(402).json({ verified: false })
       return

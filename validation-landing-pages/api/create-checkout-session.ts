@@ -1,5 +1,3 @@
-import Stripe from 'stripe'
-
 type PlanId = '7-day' | '30-day' | '90-day'
 type CheckoutRequest = {
   plan?: PlanId
@@ -67,26 +65,33 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   const plan = plans[planId]
 
   try {
-    const stripe = new Stripe(secretKey)
-    const priceData = secretKey.startsWith('sk_test_')
-      ? { currency: 'eur', unit_amount: plan.amount, product_data: { name: plan.name } }
-      : { currency: 'eur', unit_amount: plan.amount, product: plan.product }
-    const session = await stripe.checkout.sessions.create({
-      mode: 'payment',
-      customer_creation: 'always',
-      line_items: [{ quantity: 1, price_data: priceData }],
-      success_url: successUrl,
-      cancel_url: cancelUrl,
-      metadata: {
-        plan: planId,
-        productName: plan.name,
-        primaryFocus: (body.primaryFocus ?? '').slice(0, 500),
-        secondaryFocuses: (body.secondaryFocuses ?? []).join(', ').slice(0, 500),
-        quizAnswers: JSON.stringify(answerValues).slice(0, 500),
-        ...answerMetadata,
-      },
+    const form = new URLSearchParams()
+    form.set('mode', 'payment')
+    form.set('customer_creation', 'always')
+    form.set('line_items[0][quantity]', '1')
+    form.set('line_items[0][price_data][currency]', 'eur')
+    form.set('line_items[0][price_data][unit_amount]', String(plan.amount))
+    if (secretKey.startsWith('sk_test_')) form.set('line_items[0][price_data][product_data][name]', plan.name)
+    else form.set('line_items[0][price_data][product]', plan.product)
+    form.set('success_url', successUrl)
+    form.set('cancel_url', cancelUrl)
+    const metadata = {
+      plan: planId,
+      productName: plan.name,
+      primaryFocus: (body.primaryFocus ?? '').slice(0, 500),
+      secondaryFocuses: (body.secondaryFocuses ?? []).join(', ').slice(0, 500),
+      quizAnswers: JSON.stringify(answerValues).slice(0, 500),
+      ...answerMetadata,
+    }
+    Object.entries(metadata).forEach(([key, value]) => form.set(`metadata[${key}]`, value))
+
+    const stripeResponse = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${secretKey}`, 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: form,
     })
-    if (!session.url) throw new Error('Stripe did not return a Checkout URL.')
+    const session = await stripeResponse.json() as { url?: string; error?: { message?: string } }
+    if (!stripeResponse.ok || !session.url) throw new Error(session.error?.message || 'Stripe did not return a Checkout URL.')
     res.status(200).json({ url: session.url })
   } catch (error) {
     console.error('Stripe Checkout error', error instanceof Error ? error.message : error)
