@@ -12,7 +12,7 @@ export type EveraPlan = {
 export const everaPlans: EveraPlan[] = [
   { id: 'starter-7', name: '7-Day Starter', price: '$7.99', description: '$1.14 per day' },
   { id: 'complete-30', name: '30-Day Complete Program', price: '$9.99', description: '$0.33 per day', badge: 'Most Popular' },
-  { id: 'journey-90', name: '90-Day Maintenance Journey', price: '$34.99', description: '$0.39 per day' },
+  { id: 'journey-90', name: '90-Day Maintenance Journey', price: '$24.99', description: '$0.28 per day' },
 ]
 
 export const isStripeCheckoutConfigured = Boolean(import.meta.env.VITE_STRIPE_CHECKOUT_ENDPOINT?.trim())
