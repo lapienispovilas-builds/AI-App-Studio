@@ -19,7 +19,6 @@ export type ChapterrStudentLandingPageConfig = {
   finalHeadline: string
   finalText: string
   finalCta: string
-  typeformUrl: string
 }
 
 export const chapterrStudentLandingPage: ChapterrStudentLandingPageConfig = {
@@ -48,5 +47,4 @@ export const chapterrStudentLandingPage: ChapterrStudentLandingPageConfig = {
   finalHeadline: 'Pirmi studijų metai prisimenami ne dėl paskaitų.',
   finalText: 'O dėl žmonių, kuriuos sutinki pakeliui.',
   finalCta: 'Rasti savo žmones',
-  typeformUrl: 'https://form.typeform.com/to/h1yDeKZ6',
 }

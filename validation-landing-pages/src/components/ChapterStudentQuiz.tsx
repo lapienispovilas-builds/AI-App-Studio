@@ -1,0 +1,240 @@
+import { ArrowLeft, ArrowRight, Check, Star, UsersRound } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { submitLead } from '../lib/submitLead'
+import { trackMetaEvent, trackMetaLead } from '../lib/metaPixel'
+
+type QuizAnswer = string | string[]
+type QuizAnswers = Record<string, QuizAnswer>
+
+type Question = {
+  id: string
+  title: string
+  description: string
+  type: 'single' | 'multiple' | 'text' | 'contact' | 'optional'
+  options?: string[]
+  placeholder?: string
+}
+
+const questions: Question[] = [
+  {
+    id: 'city',
+    title: 'Kuriame mieste pradėsi studijas?',
+    description: 'Norime sujungti tave su žmonėmis, kurie bus tame pačiame mieste ir galės susitikti ne tik internete.',
+    type: 'single',
+    options: ['Vilnius', 'Kaunas', 'Klaipėda', 'Šiauliai', 'Panevėžys', 'Kitas'],
+  },
+  {
+    id: 'studies',
+    title: 'Ką studijuosi?',
+    description: 'Kartais lengviausias būdas pradėti pokalbį yra rasti žmogų, kuris supranta tavo studijų kryptį arba turi panašių interesų.',
+    type: 'text',
+    placeholder: 'Pvz. marketingas, medicina, programavimas...',
+  },
+  {
+    id: 'studyStage',
+    title: 'Kuriame studijų etape esi?',
+    description: 'Pirmi metai, magistras ar naujas etapas po pertraukos dažnai reiškia skirtingus iššūkius. Norime rasti žmones, kurie išgyvena panašų laikotarpį.',
+    type: 'single',
+    options: ['Pirmi bakalauro metai', 'Tęsiu bakalauro studijas', 'Magistras', 'Doktorantūra', 'Nesimokau, bet pradedu naują etapą'],
+  },
+  {
+    id: 'freeTime',
+    title: 'Kaip mėgsti leisti savo laisvalaikį?',
+    description: 'Pagal pomėgius lengviau rasti žmones, su kuriais iškart turi apie ką kalbėti. Gali pasirinkti kelis variantus.',
+    type: 'multiple',
+    options: ['Sportas / gym / aktyvumas', 'Kavinės / brunch / chill', 'Vakarėliai / barai / naktinis gyvenimas', 'Gaming / filmai / serialai', 'Kūryba / fotografija / menas', 'Verslas / startupai / side projects', 'Kelionės', 'Kita'],
+  },
+  {
+    id: 'peopleType',
+    title: 'Kokio tipo žmones norėtum sutikti?',
+    description: 'Kiekvienas ieško skirtingo savo rato. Tai padeda suprasti, su kuo tau būtų įdomiausia susipažinti. Gali pasirinkti kelis variantus.',
+    type: 'multiple',
+    options: ['Aktyvių ir mėgstančių veiklas', 'Ambicingų ir siekiančių tikslų', 'Ramių pokalbių ir kavos draugų', 'Kūrybingų žmonių', 'Sportuojančių žmonių', 'Naujas miestas / naujos patirtys'],
+  },
+  {
+    id: 'cityHope',
+    title: 'Ko labiausiai tikiesi iš naujo miesto?',
+    description: 'Naujas etapas kiekvienam atrodo skirtingai. Norime suprasti, ko ieškai tu.',
+    type: 'single',
+    options: ['Susirasti draugų', 'Rasti žmonių bendroms veikloms', 'Turėti su kuo pasikalbėti', 'Atrasti naujas vietas', 'Išbandyti daugiau veiklų'],
+  },
+  {
+    id: 'meetingStyle',
+    title: 'Kaip norėtum susipažinti?',
+    description: 'Norime pasiūlyti tokį pažinimo būdą, kuris tau atrodo natūraliausias.',
+    type: 'single',
+    options: ['Mažoje žmonių grupėje', 'Vienas prieš vieną', 'Per bendras veiklas', 'Per miesto vietų rekomendacijas'],
+  },
+  {
+    id: 'contacts',
+    title: 'Tavo kontaktai',
+    description: 'Palik kontaktus ir pranešime, kai pirmieji studentų ratai tavo mieste bus suformuoti.',
+    type: 'contact',
+  },
+  {
+    id: 'instagram',
+    title: 'Tavo Instagram (nebūtina)',
+    description: 'Jeigu nori, pridėk Instagram — taip galėsime lengviau sujungti žmones prieš pirmus susitikimus.',
+    type: 'optional',
+    placeholder: '@tavo_vardas',
+  },
+]
+
+const storageKey = 'chapter_student_quiz_answers'
+
+function initialAnswers(): QuizAnswers {
+  try {
+    const stored = window.sessionStorage.getItem(storageKey)
+    return stored ? JSON.parse(stored) as QuizAnswers : {}
+  } catch {
+    return {}
+  }
+}
+
+function answerAsText(answer: QuizAnswer | undefined) {
+  return Array.isArray(answer) ? answer.join(', ') : answer ?? ''
+}
+
+function chapterHomeHref() {
+  return ['trychapter.lt', 'www.trychapter.lt'].includes(window.location.hostname.toLowerCase()) ? '/' : '/chapterr-students'
+}
+
+export function ChapterStudentQuiz() {
+  const [screen, setScreen] = useState<'intro' | 'questions' | 'complete'>('intro')
+  const [index, setIndex] = useState(0)
+  const [answers, setAnswers] = useState<QuizAnswers>(initialAnswers)
+  const [name, setName] = useState(() => answerAsText(initialAnswers().name))
+  const [phone, setPhone] = useState(() => answerAsText(initialAnswers().phone))
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
+  const hasTrackedLead = useRef(false)
+  const question = questions[index]
+
+  useEffect(() => {
+    try { window.sessionStorage.setItem(storageKey, JSON.stringify({ ...answers, name, phone })) } catch { /* Keep quiz usable when storage is unavailable. */ }
+  }, [answers, name, phone])
+
+  const canContinue = useMemo(() => {
+    if (question.type === 'optional') return true
+    if (question.type === 'contact') return name.trim().length > 1 && phone.trim().length >= 6
+    const value = answers[question.id]
+    return Array.isArray(value) ? value.length > 0 : Boolean(value?.trim())
+  }, [answers, name, phone, question])
+
+  function startQuiz() {
+    setScreen('questions')
+    trackMetaEvent('quiz_started', { quiz_name: 'chapter_student_matching' }, { custom: true, onceKey: 'chapter_quiz_started' })
+  }
+
+  function setSingle(value: string) {
+    setAnswers((current) => ({ ...current, [question.id]: value }))
+  }
+
+  function toggleMultiple(value: string) {
+    setAnswers((current) => {
+      const selected = Array.isArray(current[question.id]) ? current[question.id] as string[] : []
+      return { ...current, [question.id]: selected.includes(value) ? selected.filter((item) => item !== value) : [...selected, value] }
+    })
+  }
+
+  async function continueQuiz() {
+    if (!canContinue || submitting) return
+    trackMetaEvent('question_completed', { quiz_name: 'chapter_student_matching', question_number: index + 1, question_id: question.id }, { custom: true, onceKey: `chapter_question_${index + 1}` })
+
+    if (index < questions.length - 1) {
+      setIndex((current) => current + 1)
+      return
+    }
+
+    setSubmitting(true)
+    setSubmitError('')
+    const finalAnswers: QuizAnswers = { ...answers, name: name.trim(), phone: phone.trim() }
+    try {
+      await submitLead({
+        idea: 'Chapter student matching',
+        page: '/chapterr-students',
+        email: '',
+        answers: Object.fromEntries(Object.entries(finalAnswers).map(([key, value]) => [key, answerAsText(value)])),
+      })
+      trackMetaEvent('quiz_finished', { quiz_name: 'chapter_student_matching' }, { custom: true, onceKey: 'chapter_quiz_finished' })
+      trackMetaEvent('contact_submitted', { quiz_name: 'chapter_student_matching', city: answerAsText(finalAnswers['city']) }, { custom: true, onceKey: 'chapter_contact_submitted' })
+      if (!hasTrackedLead.current) hasTrackedLead.current = trackMetaLead()
+      try { window.sessionStorage.removeItem(storageKey) } catch { /* Submission still succeeds. */ }
+      setScreen('complete')
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : 'Nepavyko išsaugoti atsakymų. Bandyk dar kartą.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  function goBack() {
+    if (index === 0) setScreen('intro')
+    else setIndex((current) => current - 1)
+  }
+
+  if (screen === 'intro') return <main className="chapter-quiz chapter-quiz--intro">
+    <div className="chapter-quiz__brand"><span><UsersRound size={21} /></span>Chapter</div>
+    <section className="chapter-quiz__intro-card">
+      <p className="chapter-quiz__eyebrow">Tavo naujas ratas prasideda čia</p>
+      <h1>Atrask žmones, su kuriais pradėsi naują etapą lengviau</h1>
+      <p>Atsakyk į kelis klausimus apie save ir padėsime rasti studentus su panašiais interesais, gyvenimo būdu ir noru susipažinti naujame mieste.</p>
+      <button type="button" onClick={startQuiz}>Rasti savo žmones <ArrowRight size={20} /></button>
+      <small>9 trumpi klausimai · apie 2 minutes</small>
+    </section>
+  </main>
+
+  if (screen === 'complete') return <main className="chapter-quiz chapter-quiz--complete">
+    <section className="chapter-quiz__complete-card">
+      <div className="chapter-quiz__complete-image"><img src="/chapterr/chapter-students-vilnius.jpg" alt="Studentai kartu žvelgia į Vilniaus senamiestį" /></div>
+      <span className="chapter-quiz__star"><Star size={25} fill="currentColor" /></span>
+      <h1>Ačiū! ⭐</h1>
+      <p>Pagal tavo atsakymus ieškosime žmonių, kurie:</p>
+      <ul><li><Check size={18} />Pradeda panašų etapą</li><li><Check size={18} />Turi panašių interesų</li><li><Check size={18} />Taip pat ieško savo rato naujame mieste</li></ul>
+      <strong>Pirmieji studentų ratai bus kuriami prieš studijų pradžią.</strong>
+      <a href={chapterHomeHref()}>Grįžti į Chapter <ArrowRight size={19} /></a>
+    </section>
+  </main>
+
+  return <main className="chapter-quiz">
+    <header className="chapter-quiz__header">
+      <button type="button" onClick={goBack} aria-label="Grįžti atgal"><ArrowLeft size={21} /></button>
+      <div><span>{index + 1} / {questions.length}</span><div><i style={{ width: `${((index + 1) / questions.length) * 100}%` }} /></div></div>
+      <a href={chapterHomeHref()} aria-label="Uždaryti klausimyną">Chapter</a>
+    </header>
+    <section className="chapter-quiz__question" key={question.id}>
+      <p className="chapter-quiz__eyebrow">Kuriame tavo rato dalis</p>
+      <h1>{question.title}</h1>
+      <p className="chapter-quiz__why">{question.description}</p>
+
+      {(question.type === 'single' || question.type === 'multiple') && <div className="chapter-quiz__options">
+        {question.options?.map((option) => {
+          const value = answers[question.id]
+          const selected = Array.isArray(value) ? value.includes(option) : value === option
+          return <button className={selected ? 'is-selected' : ''} type="button" onClick={() => question.type === 'multiple' ? toggleMultiple(option) : setSingle(option)} key={option}>
+            <span>{selected && <Check size={17} />}</span>{option}
+          </button>
+        })}
+      </div>}
+
+      {(question.type === 'text' || question.type === 'optional') && <label className="chapter-quiz__field">
+        <span>{question.type === 'optional' ? 'Instagram username' : 'Studijų kryptis'}</span>
+        <input autoFocus value={answerAsText(answers[question.id])} onChange={(event) => setAnswers((current) => ({ ...current, [question.id]: event.target.value }))} placeholder={question.placeholder} />
+      </label>}
+
+      {question.type === 'contact' && <div className="chapter-quiz__contact">
+        <label><span>Vardas</span><input autoFocus autoComplete="given-name" value={name} onChange={(event) => setName(event.target.value)} placeholder="Tavo vardas" /></label>
+        <label><span>Telefono numeris</span><input type="tel" inputMode="tel" autoComplete="tel" value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="+370 6..." /></label>
+        <small>Naudosime tik tam, kad galėtume susisiekti dėl Chapter.</small>
+      </div>}
+
+      {submitError && <p className="chapter-quiz__error" role="alert">{submitError}</p>}
+      <div className="chapter-quiz__actions">
+        <button type="button" className="chapter-quiz__continue" disabled={!canContinue || submitting} onClick={continueQuiz}>
+          {submitting ? 'Saugome…' : index === questions.length - 1 ? 'Baigti' : 'Tęsti'} {!submitting && <ArrowRight size={20} />}
+        </button>
+        {question.type === 'optional' && !answerAsText(answers[question.id]) && <small>Šį klausimą gali praleisti</small>}
+      </div>
+    </section>
+  </main>
+}

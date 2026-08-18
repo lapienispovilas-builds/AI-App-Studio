@@ -2,9 +2,9 @@ import { ArrowRight, BookOpen, Check, Coffee, GraduationCap, MapPin, MessageCirc
 import type { ChapterrStudentLandingPageConfig } from '../chapterrStudentLandingPageConfig'
 import { ChapterFooter } from './ChapterFooter'
 
-function typeformHref(typeformUrl: string) {
-  const query = window.location.search.replace(/^\?/, '')
-  return query ? `${typeformUrl}?${query}` : typeformUrl
+function quizHref(slug: string) {
+  const isChapterDomain = ['trychapter.lt', 'www.trychapter.lt'].includes(window.location.hostname.toLowerCase())
+  return isChapterDomain ? '/quiz' : `/${slug}/quiz`
 }
 
 function StudentResearchMessages({ messages }: { messages: string[] }) {
@@ -45,7 +45,7 @@ function highlightedHeadline(headline: string) {
 }
 
 export function ChapterrStudentLandingPage({ config }: { config: ChapterrStudentLandingPageConfig }) {
-  const waitlistUrl = typeformHref(config.typeformUrl)
+  const waitlistUrl = quizHref(config.slug)
 
   return (
     <main className="chapterr-page chapterr-student-page">

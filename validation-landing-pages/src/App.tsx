@@ -15,6 +15,7 @@ import { EveraPlanPreviewPage } from './components/EveraPlanPreviewPage'
 import { EveraCreateAccountPage } from './components/EveraCreateAccountPage'
 import { EveraPaymentSuccessPage } from './components/EveraPaymentSuccessPage'
 import { createDanishLandingConfig } from './everaDanish'
+import { ChapterStudentQuiz } from './components/ChapterStudentQuiz'
 
 const chapterStudentDomains = new Set(['trychapter.lt', 'www.trychapter.lt'])
 
@@ -25,6 +26,7 @@ export function shouldShowChapterStudentHome(hostname: string, path: string) {
 export function App() {
   const path = window.location.pathname.replace(/\/$/, '') || '/'
   const showChapterStudentHome = shouldShowChapterStudentHome(window.location.hostname, path)
+  const showChapterStudentQuiz = path === `/${chapterrStudentLandingPage.slug}/quiz` || (path === '/quiz' && chapterStudentDomains.has(window.location.hostname.toLowerCase()))
   const showEveraHome = path === '/' && isEveraDomain(window.location.hostname)
   const config = landingPagesByPath[path]
   const phase2Config = phase2LandingPagesByPath[path]
@@ -32,6 +34,7 @@ export function App() {
   const danishEveraConfig = createDanishLandingConfig(phase2LandingPagesByPath['/glp1-tracker-maintenance'])
 
   if (showChapterStudentHome) return <ChapterrStudentLandingPage config={chapterrStudentLandingPage} />
+  if (showChapterStudentQuiz) return <ChapterStudentQuiz />
   if (showEveraHome) return <Phase2LandingPage config={phase2LandingPagesByPath['/glp1-tracker-maintenance']} />
   if (path === '/dk') return <Phase2LandingPage config={danishEveraConfig} />
   if (path === '/dk/plan-preview' || path === '/dk/pricing') return <EveraPlanPreviewPage locale="da" />
