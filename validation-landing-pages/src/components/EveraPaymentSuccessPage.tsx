@@ -9,6 +9,7 @@ import {
 } from '../lib/everaAccount'
 import { saveEveraQuizDraft } from '../lib/everaFunnel'
 import { trackMetaEvent } from '../lib/metaPixel'
+import { identifyEveraUser, postHogPlanValue, trackEveraEvent } from '../lib/posthogAnalytics'
 
 type VerifiedPurchase = {
   verified: true
@@ -81,9 +82,16 @@ export function EveraPaymentSuccessPage() {
           currency: (verifiedPurchase.currency || 'EUR').toUpperCase(),
           content_name: planNames[verifiedPurchase.plan],
         }, { onceKey: `purchase_${verifiedPurchase.sessionId}`, scope: 'local' })
+        // PostHog funnel: emitted only after the server verifies Stripe's paid session.
+        trackEveraEvent('checkout_completed', {
+          selected_plan: postHogPlanValue(verifiedPurchase.plan),
+          value: typeof verifiedPurchase.amountTotal === 'number' ? verifiedPurchase.amountTotal / 100 : fallbackAmounts[verifiedPurchase.plan],
+          currency: (verifiedPurchase.currency || 'EUR').toUpperCase(),
+        }, `checkout_completed_${verifiedPurchase.sessionId}`)
 
         const account = await getEveraAccount()
         if (account && active) {
+          identifyEveraUser(account.userId, postHogPlanValue(selectedPlan))
           await claimVerifiedEveraPurchase(verifiedPurchase.sessionId)
           window.location.replace('/dashboard')
         }
@@ -107,12 +115,16 @@ export function EveraPaymentSuccessPage() {
     try {
       if (mode === 'create') {
         const result = await createEveraAccount(email.trim(), password, purchase.quizAnswers, purchase.primaryFocus)
+        identifyEveraUser(result.account.userId, postHogPlanValue(storedPlanIds[purchase.plan]))
+        trackEveraEvent('account_created')
         if (result.needsEmailConfirmation) {
           setNotice('Confirm your email, then return to this payment link and sign in to open your plan.')
           return
         }
       } else {
-        await signInToEvera(email.trim(), password)
+        const account = await signInToEvera(email.trim(), password)
+        identifyEveraUser(account.userId, postHogPlanValue(storedPlanIds[purchase.plan]))
+        trackEveraEvent('login_completed')
       }
       await claimVerifiedEveraPurchase(purchase.sessionId)
       window.location.replace('/dashboard')

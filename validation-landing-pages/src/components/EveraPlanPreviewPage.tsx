@@ -6,6 +6,7 @@ import { getEveraQuizDraft, updateEveraQuizDraft } from '../lib/everaFunnel'
 import { getEveraFlowUrl } from '../lib/domainRouting'
 import { metaFocusValue, trackMetaEvent } from '../lib/metaPixel'
 import { danishFocusLabels, danishPlanPreviews, danishPlans, type EveraLocale } from '../everaDanish'
+import { postHogFocusValue, postHogPlanValue, trackEveraEvent } from '../lib/posthogAnalytics'
 
 export function EveraPlanPreviewPage({ locale = 'en' }: { locale?: EveraLocale }) {
   const draft = useMemo(() => getEveraQuizDraft(), [])
@@ -23,7 +24,20 @@ export function EveraPlanPreviewPage({ locale = 'en' }: { locale?: EveraLocale }
       plan_type: metaFocusValue(draft.primaryFocus),
       program_duration: duration,
     }, { custom: true, onceKey: `plan_generated_${draft.createdAt}` })
+    // PostHog funnel: result and recommendation are intentionally free of raw quiz answers.
+    trackEveraEvent('result_viewed', { primary_focus: postHogFocusValue(draft.primaryFocus) }, `result_viewed_${draft.createdAt}`)
+    trackEveraEvent('plan_recommendation_viewed', { recommended_plan: '30_day' }, `recommendation_viewed_${draft.createdAt}`)
+    trackEveraEvent('paywall_viewed', { recommended_plan: '30_day' }, `paywall_viewed_${draft.createdAt}`)
   }, [draft, selectedPlan.id])
+
+  function selectPlan(plan: EveraPlan) {
+    setSelectedPlan(plan)
+    trackEveraEvent('plan_selected', {
+      selected_plan: postHogPlanValue(plan.id),
+      price: Number(plan.price.replace(/[^0-9.]/g, '')),
+      currency: 'EUR',
+    })
+  }
 
   async function checkout(plan: EveraPlan = selectedPlan) {
     if (!draft) { window.location.assign(getEveraFlowUrl()); return }
@@ -37,6 +51,8 @@ export function EveraPlanPreviewPage({ locale = 'en' }: { locale?: EveraLocale }
         value: Number(plan.price.replace(/[^0-9.]/g, '')),
         currency: 'EUR',
       }, { onceKey: `checkout_${draft.createdAt}_${plan.id}` })
+      // PostHog funnel: capture immediately before handing off to Stripe.
+      trackEveraEvent('checkout_started', { selected_plan: postHogPlanValue(plan.id) })
       await beginEveraCheckout(plan, updatedDraft)
     } catch (checkoutError) {
       setError(checkoutError instanceof Error ? checkoutError.message : 'Checkout could not be started.')
@@ -61,7 +77,7 @@ export function EveraPlanPreviewPage({ locale = 'en' }: { locale?: EveraLocale }
 
     <section className="evera-paywall evera-paywall--page">
       <div className="evera-paywall__heading"><p className="evera-quiz__eyebrow">{locale === 'da' ? 'Vælg din plan' : 'Choose your plan'}</p><h2>{locale === 'da' ? 'Vælg din vedligeholdelsesrejse' : 'Choose your maintenance journey'}</h2><p>{locale === 'da' ? 'Vælg det støtteniveau, der passer til din rejse.' : 'Choose the support level that fits your maintenance journey.'}</p></div>
-      <div className="evera-paywall__plans">{localizedPlans.map((plan) => { const isSelected = selectedPlan.id === plan.id; return <article className={`${isSelected ? 'is-selected ' : ''}${plan.id === 'complete-30' ? 'is-recommended' : ''}`} key={plan.id} role="radio" aria-checked={isSelected} tabIndex={0} onClick={() => setSelectedPlan(plan)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setSelectedPlan(plan) } }}>
+      <div className="evera-paywall__plans">{localizedPlans.map((plan) => { const isSelected = selectedPlan.id === plan.id; return <article className={`${isSelected ? 'is-selected ' : ''}${plan.id === 'complete-30' ? 'is-recommended' : ''}`} key={plan.id} role="radio" aria-checked={isSelected} tabIndex={0} onClick={() => selectPlan(plan)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectPlan(plan) } }}>
         {plan.badge && <em>{plan.badge}</em>}<small>{plan.name}</small><strong>{plan.price}</strong><span className="evera-paywall__positioning">{plan.positioning}</span><p>{plan.description}</p>
         <ul>{plan.includes.map((item) => <li key={item}><Check size={14} /> {item}</li>)}</ul>
         <button className={isSelected ? 'evera-paywall__primary' : 'evera-paywall__secondary'} type="button" disabled={loading} onClick={(event) => { event.stopPropagation(); checkout(plan) }}>{loading && isSelected ? (locale === 'da' ? 'Åbner betaling…' : 'Opening checkout…') : plan.cta} <ArrowRight size={16} /></button>

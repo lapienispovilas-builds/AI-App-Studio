@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { HomePage } from './components/HomePage'
 import { LandingPage } from './components/LandingPage'
 import { Phase2LandingPage } from './components/Phase2LandingPage'
@@ -16,6 +17,7 @@ import { EveraCreateAccountPage } from './components/EveraCreateAccountPage'
 import { EveraPaymentSuccessPage } from './components/EveraPaymentSuccessPage'
 import { createDanishLandingConfig } from './everaDanish'
 import { ChapterStudentQuiz } from './components/ChapterStudentQuiz'
+import { trackEveraPageView } from './lib/posthogAnalytics'
 
 const chapterStudentDomains = new Set(['trychapter.lt', 'www.trychapter.lt'])
 
@@ -32,6 +34,13 @@ export function App() {
   const phase2Config = phase2LandingPagesByPath[path]
   const chapterLegalConfig = chapterLegalPagesByPath[path]
   const danishEveraConfig = createDanishLandingConfig(phase2LandingPagesByPath['/glp1-tracker-maintenance'])
+  const isEveraPage = isEveraDomain(window.location.hostname)
+    || path === '/glp1-tracker-maintenance'
+    || ['/dk', '/dk/plan-preview', '/dk/pricing', '/dashboard', '/plan-preview', '/pricing', '/payment-success', '/create-account'].includes(path)
+
+  useEffect(() => {
+    if (isEveraPage) trackEveraPageView(path)
+  }, [isEveraPage, path])
 
   if (showChapterStudentHome) return <ChapterrStudentLandingPage config={chapterrStudentLandingPage} />
   if (showChapterStudentQuiz) return <ChapterStudentQuiz />

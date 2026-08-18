@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Check, CheckCircle2, ChevronDown, ChevronRight, LockKeyhole, Target } from 'lucide-react'
 import type { EveraAccountData, EveraFocus } from '../lib/everaAccount'
 import { everaPlans } from '../lib/everaCheckout'
+import { postHogPlanValue, trackEveraEvent } from '../lib/posthogAnalytics'
 
 const focusDescriptions: Record<EveraFocus, string> = {
   'Weight Stability': 'Build awareness around your maintenance range and respond to changes without obsessing over every number.',
@@ -40,14 +41,22 @@ export function EveraProgramDashboard({ account, onExit, onSignOut }: { account:
   const completion = progress.completed.length * 25
   const allComplete = completion === 100
 
+  useEffect(() => {
+    // Day 1 begins when the purchased program opens with its first action ready.
+    trackEveraEvent('first_day_started', { program_duration: postHogPlanValue(purchasedPlan.id) }, `first_day_${account.userId}_${purchasedPlan.id}`)
+  }, [account.userId, purchasedPlan.id])
+
   function save(next: DayOneProgress) {
     setProgress(next)
     try { window.localStorage.setItem(storageKey, JSON.stringify(next)) } catch { /* Keep current session working. */ }
   }
 
   function complete(task: TaskId, updates: Partial<DayOneProgress> = {}) {
+    const isFirstCompletion = progress.completed.length === 0 && !progress.completed.includes(task)
     const completed = progress.completed.includes(task) ? progress.completed : [...progress.completed, task]
     save({ ...progress, ...updates, completed })
+    // PostHog funnel: no task name, weight, food choice, or other health detail is sent.
+    if (isFirstCompletion) trackEveraEvent('first_task_completed', { program_duration: postHogPlanValue(purchasedPlan.id) }, `first_task_${account.userId}_${purchasedPlan.id}`)
     setActiveTask(null)
   }
 
@@ -75,7 +84,7 @@ export function EveraProgramDashboard({ account, onExit, onSignOut }: { account:
           const isComplete = progress.completed.includes(task)
           const isOpen = activeTask === task
           return <article className={`${isOpen ? 'is-open ' : ''}${isComplete ? 'is-complete' : ''}`} key={task}>
-            <button type="button" onClick={() => setActiveTask(isOpen ? null : task)} aria-expanded={isOpen}><i>{isComplete && <Check size={13} />}</i><span><strong>{title}</strong><small>{description}</small></span>{isOpen ? <ChevronDown size={17} /> : <ChevronRight size={17} />}</button>
+            <button type="button" onClick={() => { if (!isOpen) trackEveraEvent('first_day_started', { program_duration: postHogPlanValue(purchasedPlan.id) }, `first_day_${account.userId}_${purchasedPlan.id}`); setActiveTask(isOpen ? null : task) }} aria-expanded={isOpen}><i>{isComplete && <Check size={13} />}</i><span><strong>{title}</strong><small>{description}</small></span>{isOpen ? <ChevronDown size={17} /> : <ChevronRight size={17} />}</button>
             {isOpen && <div className="evera-program__task-detail">
               {task === 'protein' && <><p>Choose one protein anchor for today.</p><div className="evera-program__choices">{proteinOptions.map((option) => <button className={progress.protein === option ? 'is-selected' : ''} type="button" key={option} onClick={() => save({ ...progress, protein: option, completed: progress.completed.filter((item) => item !== 'protein') })}>{progress.protein === option && <Check size={14} />}{option}</button>)}</div><button className="evera-program__task-cta" type="button" disabled={!progress.protein} onClick={() => complete('protein')}>Save and complete</button></>}
               {task === 'movement' && <><p>Take a comfortable 15-minute walk today.</p><blockquote>Small consistent actions help protect your progress after GLP-1.</blockquote><button className="evera-program__task-cta" type="button" onClick={() => complete('movement')}>Mark complete</button></>}

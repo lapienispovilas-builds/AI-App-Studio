@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useState } from 'react'
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react'
 import {
   ArrowLeft,
   ArrowRight,
@@ -32,6 +32,7 @@ import { beginEveraCheckout, everaPlans, hasAnyStripeCheckout, type EveraPlan } 
 import { EveraProgramDashboard } from './EveraProgramDashboard'
 import { saveEveraQuizDraft } from '../lib/everaFunnel'
 import { danishInsights, danishPlanPreviews, danishPlans, danishQuestions, type EveraLocale } from '../everaDanish'
+import { identifyEveraUser, postHogFocusValue, postHogPlanValue, resetEveraAnalyticsUser, trackEveraEvent } from '../lib/posthogAnalytics'
 
 type Focus = EveraFocus
 
@@ -244,6 +245,14 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question', locale
   const [account, setAccount] = useState<EveraAccountData | null>(null)
   const [selectedPlan, setSelectedPlan] = useState(localizedPlans[1])
   const [checkingSession, setCheckingSession] = useState(true)
+  const viewedQuestions = useRef(new Set<number>())
+
+  useEffect(() => {
+    if (view !== 'question' || viewedQuestions.current.has(questionIndex)) return
+    viewedQuestions.current.add(questionIndex)
+    // PostHog funnel: only the question number is captured, never the health-related answer.
+    trackEveraEvent('quiz_question_viewed', { question_number: questionIndex + 1, quiz_locale: locale })
+  }, [locale, questionIndex, view])
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow
@@ -315,6 +324,11 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question', locale
       quiz_name: 'evera_maintenance',
       primary_focus: metaFocusValue(generatedFocus),
     }, { custom: true, onceKey: `quiz_completed_${completedAt}` })
+    trackEveraEvent('quiz_finished', {
+      quiz_name: 'evera_maintenance',
+      primary_focus: postHogFocusValue(generatedFocus),
+      question_count: questions.length,
+    }, `quiz_finished_${completedAt}`)
     setView('analyzing')
     window.setTimeout(() => window.location.assign(locale === 'da' ? '/dk/plan-preview' : '/plan-preview'), 1400)
   }
@@ -345,6 +359,8 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question', locale
       const answerPayload = Object.fromEntries(questions.map((question, index) => [question.title, answers[index]?.label ?? '']))
       const authResult = await createEveraAccount(email.trim(), password, answerPayload, primaryFocus)
       setAccount(authResult.account)
+      identifyEveraUser(authResult.account.userId)
+      trackEveraEvent('account_created', { account_mode: isEveraTestMode ? 'local_test' : 'supabase' })
       await submitLead({
         idea: 'Evera',
         page: '/glp1-tracker-maintenance',
@@ -376,6 +392,8 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question', locale
     try {
       const signedInAccount = await signInToEvera(email.trim(), password)
       setAccount(signedInAccount)
+      identifyEveraUser(signedInAccount.userId, postHogPlanValue(signedInAccount.selectedPlan))
+      trackEveraEvent('login_completed')
       setView(signedInAccount.hasPaid ? 'program' : 'paywall')
     } catch (loginError) {
       setError(loginError instanceof Error ? loginError.message : 'Sign in failed. Please try again.')
@@ -407,6 +425,7 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question', locale
         value: Number(plan.price.replace(/[^0-9.]/g, '')),
         currency: 'EUR',
       }, { onceKey: `checkout_${account.userId}_${plan.id}` })
+      trackEveraEvent('checkout_started', { selected_plan: postHogPlanValue(plan.id) })
       await beginEveraCheckout(plan, {
         answers: account.answers,
         primaryFocus: account.primaryFocus,
@@ -423,6 +442,7 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question', locale
 
   async function logOut() {
     await signOutOfEvera()
+    resetEveraAnalyticsUser()
     setAccount(null)
     setPassword('')
     setView('login')
@@ -431,6 +451,15 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question', locale
   const displayedFocus = account?.primaryFocus ?? primaryFocus
   const FocusIcon = focusDetails[displayedFocus].icon
   const selectedPreview = (locale === 'da' ? danishPlanPreviews : planPreviews)[selectedPlan.id]
+
+  function selectPlan(plan: EveraPlan) {
+    setSelectedPlan(plan)
+    trackEveraEvent('plan_selected', {
+      selected_plan: postHogPlanValue(plan.id),
+      price: Number(plan.price.replace(/[^0-9.]/g, '')),
+      currency: 'EUR',
+    })
+  }
 
   if (checkingSession) return <div className="evera-quiz evera-quiz--loading"><div className="evera-quiz__loader"><span>◉</span><p>{locale === 'da' ? 'Åbner din Evera-rejse…' : 'Opening your Evera journey…'}</p></div></div>
 
@@ -521,7 +550,7 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question', locale
         <div className="evera-paywall__focus"><FocusIcon size={27} /><div><small>YOUR PRIMARY FOCUS</small><strong>{displayedFocus}</strong><span>Your plan is personalized based on your answers.</span></div></div>
         <div className="evera-paywall__heading"><h2>Choose your maintenance journey</h2><p>Select the program length that fits your goals.</p></div>
         <div className="evera-paywall__plans">
-          {localizedPlans.map((plan) => <article className={`${selectedPlan.id === plan.id ? 'is-selected ' : ''}${plan.id === 'complete-30' ? 'is-recommended' : ''}`} key={plan.id} onClick={() => setSelectedPlan(plan)}>
+          {localizedPlans.map((plan) => <article className={`${selectedPlan.id === plan.id ? 'is-selected ' : ''}${plan.id === 'complete-30' ? 'is-recommended' : ''}`} key={plan.id} onClick={() => selectPlan(plan)}>
             {plan.badge && <em>{plan.badge}</em>}
             <small>{plan.name}</small><strong>{plan.price}</strong><span className="evera-paywall__positioning">{plan.positioning}</span><p>{plan.description}</p>
             <ul>{plan.includes.map((item) => <li key={item}><Check size={14} /> {item}</li>)}</ul>

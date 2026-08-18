@@ -16,6 +16,7 @@ import {
 } from './TrackGlpPositioningVisuals'
 import { MaintenanceHeroVisual, TrackGlpMaintenanceSections } from './TrackGlpMaintenanceSections'
 import { EveraMaintenanceQuiz } from './EveraMaintenanceQuiz'
+import { trackEveraEvent } from '../lib/posthogAnalytics'
 
 const benefitIcons: Record<LandingBenefitIcon, LucideIcon> = {
   bell: Bell,
@@ -54,6 +55,9 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
 
   function startMaintenanceQuiz() {
     trackMetaEvent('QuizStarted', { quiz_name: 'evera_maintenance' }, { custom: true, onceKey: 'quiz_started' })
+    // PostHog funnel: the hero/section CTA begins the Evera assessment.
+    trackEveraEvent('hero_cta_clicked', { cta_location: 'landing_page' })
+    trackEveraEvent('quiz_started', { quiz_name: 'evera_maintenance' }, 'quiz_started')
     setMaintenanceFlow('quiz')
   }
 

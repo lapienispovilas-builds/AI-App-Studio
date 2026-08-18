@@ -9,9 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@posthog/react": "^1.10.3",
     "@supabase/supabase-js": "^2.112.3",
     "@vitejs/plugin-react": "latest",
     "lucide-react": "^1.29.0",
+    "posthog-js": "^1.418.0",
     "react": "latest",
     "react-dom": "latest",
     "typescript": "5.9.3",

@@ -5,6 +5,7 @@ import { getEveraAccount, signOutOfEvera, type EveraAccountData } from '../lib/e
 import { getEveraFlowUrl } from '../lib/domainRouting'
 import { getEveraQuizDraft } from '../lib/everaFunnel'
 import { trackMetaEvent } from '../lib/metaPixel'
+import { identifyEveraUser, postHogPlanValue, resetEveraAnalyticsUser, trackEveraEvent } from '../lib/posthogAnalytics'
 
 export function EveraDashboardPage() {
   const [account, setAccount] = useState<EveraAccountData | null>(null)
@@ -33,10 +34,13 @@ export function EveraDashboardPage() {
       custom: true,
       onceKey: `dashboard_viewed_${account.userId}_${account.selectedPlan ?? 'complete-30'}`,
     })
+    identifyEveraUser(account.userId, postHogPlanValue(account.selectedPlan))
+    trackEveraEvent('dashboard_viewed', { program_duration: postHogPlanValue(account.selectedPlan) }, `dashboard_viewed_${account.userId}_${account.selectedPlan}`)
   }, [account])
 
   async function signOut() {
     await signOutOfEvera()
+    resetEveraAnalyticsUser()
     window.location.assign(getEveraFlowUrl('?signin=1'))
   }
 
