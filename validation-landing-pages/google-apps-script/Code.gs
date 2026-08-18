@@ -15,6 +15,7 @@ const PHASE_2_SHEETS = {
       'meetingStyle',
       'name',
       'phone',
+      'whatsapp',
       'instagram',
     ],
     contactField: 'phone',
@@ -90,8 +91,8 @@ function doPost(e) {
     const phase2Config = PHASE_2_SHEETS[pagePath];
 
     if (phase2Config && phase2Config.contactField === 'phone') {
-      if (!data.answers || !String(data.answers.phone || '').trim()) {
-        return jsonResponse({ ok: false, error: 'A phone number is required.' });
+      if (!data.answers || (!String(data.answers.phone || '').trim() && !String(data.answers.whatsapp || '').trim())) {
+        return jsonResponse({ ok: false, error: 'A phone number or WhatsApp username is required.' });
       }
     } else if (!data.email || !isValidEmail(data.email)) {
       return jsonResponse({ ok: false, error: 'A valid email address is required.' });

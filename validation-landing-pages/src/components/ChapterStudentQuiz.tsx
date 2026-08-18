@@ -101,25 +101,27 @@ function chapterHomeHref() {
 
 export function ChapterStudentQuiz() {
   const [screen, setScreen] = useState<'intro' | 'questions' | 'complete'>('intro')
+  const [interstitial, setInterstitial] = useState<'party' | 'special' | null>(null)
   const [index, setIndex] = useState(0)
   const [answers, setAnswers] = useState<QuizAnswers>(initialAnswers)
   const [name, setName] = useState(() => answerAsText(initialAnswers().name))
   const [phone, setPhone] = useState(() => answerAsText(initialAnswers().phone))
+  const [whatsapp, setWhatsapp] = useState(() => answerAsText(initialAnswers().whatsapp))
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState('')
   const hasTrackedLead = useRef(false)
   const question = questions[index]
 
   useEffect(() => {
-    try { window.sessionStorage.setItem(storageKey, JSON.stringify({ ...answers, name, phone })) } catch { /* Keep quiz usable when storage is unavailable. */ }
-  }, [answers, name, phone])
+    try { window.sessionStorage.setItem(storageKey, JSON.stringify({ ...answers, name, phone, whatsapp })) } catch { /* Keep quiz usable when storage is unavailable. */ }
+  }, [answers, name, phone, whatsapp])
 
   const canContinue = useMemo(() => {
     if (question.type === 'optional') return true
-    if (question.type === 'contact') return name.trim().length > 1 && phone.trim().length >= 6
+    if (question.type === 'contact') return name.trim().length > 1 && (phone.trim().length >= 6 || whatsapp.trim().length > 1)
     const value = answers[question.id]
     return Array.isArray(value) ? value.length > 0 : Boolean(value?.trim())
-  }, [answers, name, phone, question])
+  }, [answers, name, phone, whatsapp, question])
 
   function startQuiz() {
     setScreen('questions')
@@ -143,12 +145,14 @@ export function ChapterStudentQuiz() {
 
     if (index < questions.length - 1) {
       setIndex((current) => current + 1)
+      if (index === 2) setInterstitial('party')
+      if (index === 5) setInterstitial('special')
       return
     }
 
     setSubmitting(true)
     setSubmitError('')
-    const finalAnswers: QuizAnswers = { ...answers, name: name.trim(), phone: phone.trim() }
+    const finalAnswers: QuizAnswers = { ...answers, name: name.trim(), phone: phone.trim(), whatsapp: whatsapp.trim() }
     try {
       await submitLead({
         idea: 'Chapter student matching',
@@ -176,6 +180,7 @@ export function ChapterStudentQuiz() {
   if (screen === 'intro') return <main className="chapter-quiz chapter-quiz--intro">
     <div className="chapter-quiz__brand"><span><UsersRound size={21} /></span>Chapter</div>
     <section className="chapter-quiz__intro-card">
+      <img className="chapter-quiz__intro-meme" src="/chapterr/chapter-quiz-drake.jpg" alt="Naujos pažintys universitete pagal tavo hobius ir asmenybę" />
       <p className="chapter-quiz__eyebrow">Tavo naujas ratas prasideda čia</p>
       <h1>Atrask žmones, su kuriais pradėsi naują etapą lengviau</h1>
       <p>Atsakyk į kelis klausimus apie save ir padėsime rasti studentus su panašiais interesais, gyvenimo būdu ir noru susipažinti naujame mieste.</p>
@@ -193,6 +198,17 @@ export function ChapterStudentQuiz() {
       <ul><li><Check size={18} />Pradeda panašų etapą</li><li><Check size={18} />Turi panašių interesų</li><li><Check size={18} />Taip pat ieško savo rato naujame mieste</li></ul>
       <strong>Pirmieji studentų ratai bus kuriami prieš studijų pradžią.</strong>
       <a href={chapterHomeHref()}>Grįžti į Chapter <ArrowRight size={19} /></a>
+    </section>
+  </main>
+
+  if (interstitial) return <main className="chapter-quiz chapter-quiz--interstitial">
+    <section className="chapter-quiz__interstitial-card">
+      <img
+        src={interstitial === 'party' ? '/chapterr/chapter-quiz-party.gif' : '/chapterr/chapter-quiz-special.jpg'}
+        alt={interstitial === 'party' ? 'Kai baigiasi pirma sesija ir galima atsipūsti' : 'I am special meme'}
+      />
+      {interstitial === 'special' && <h1>šitas čia netyčia pateko</h1>}
+      <button type="button" onClick={() => setInterstitial(null)}>Tęsti <ArrowRight size={20} /></button>
     </section>
   </main>
 
@@ -225,6 +241,8 @@ export function ChapterStudentQuiz() {
       {question.type === 'contact' && <div className="chapter-quiz__contact">
         <label><span>Vardas</span><input autoFocus autoComplete="given-name" value={name} onChange={(event) => setName(event.target.value)} placeholder="Tavo vardas" /></label>
         <label><span>Telefono numeris</span><input type="tel" inputMode="tel" autoComplete="tel" value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="+370 6..." /></label>
+        <span className="chapter-quiz__or">arba</span>
+        <label><span>WhatsApp user name</span><input autoComplete="username" value={whatsapp} onChange={(event) => setWhatsapp(event.target.value)} placeholder="Tavo WhatsApp vardas" /></label>
         <small>Naudosime tik tam, kad galėtume susisiekti dėl Chapter.</small>
       </div>}
 
