@@ -55,6 +55,7 @@ Restart `npm run dev` after creating or changing `.env.local`. For Vercel, add t
 
 Phase 2 submissions are separated into five sheet tabs with columns matching each page's questions:
 
+- `Chapter Leads`
 - `TrackGLP Leads`
 - `Evera Maintenance Leads`
 - `Evera Whole Journey Leads`
@@ -70,12 +71,21 @@ frozen lead details, UTM columns, and payment-intent highlighting.
 
 Round 1 submissions continue going to `Early Access Leads`. Copy the latest `google-apps-script/Code.gs` into the spreadsheet's Apps Script editor and run `setupPhase2Sheets` once to create the routed tabs. For the updated Evera form only, you can run `setupEveraMaintenanceSheet` instead. Then update the existing web-app deployment with a new version. The existing `/exec` URL remains the same. Do not run `doPost` manually because it expects a real browser submission.
 
+For the Chapter student quiz, copy the latest script into the same Apps Script
+project and run `setupChapterLeadSheet()` once. This creates a separate
+`Chapter Leads` tab with columns for city, studies, study stage, interests,
+preferred people, expectations, meeting style, name, phone, Instagram, and UTM
+tracking. Deploy a new version of the web app afterward; keep the same `/exec`
+URL and `VITE_GOOGLE_APPS_SCRIPT_URL` value.
+
 ## Evera verified payments
 
 Before deploying the paid Evera funnel:
 
 1. Run `supabase/evera_verified_purchases.sql` in the Supabase SQL editor.
-2. Add `STRIPE_SECRET_KEY`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, and `SUPABASE_SERVICE_ROLE_KEY` to the Vercel project environment variables.
+2. Add `STRIPE_SECRET_KEY`, `STRIPE_7_DAY_PRICE_ID`, `STRIPE_30_DAY_PRICE_ID`, `STRIPE_90_DAY_PRICE_ID`, `STRIPE_WEBHOOK_SECRET`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, and `SUPABASE_SERVICE_ROLE_KEY` to the Vercel project environment variables.
 3. Redeploy the production site.
 
 Stripe returns customers to `/payment-success`. That page verifies the Checkout Session on the server and claims the purchase for the authenticated account before allowing dashboard access. Never expose the Supabase service-role key or Stripe secret key in client-side variables.
+
+Configure the Stripe webhook endpoint as `https://everahealth.pro/api/stripe-webhook` and subscribe it to `checkout.session.completed` and `payment_intent.succeeded`.

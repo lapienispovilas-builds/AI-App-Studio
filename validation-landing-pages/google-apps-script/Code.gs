@@ -3,6 +3,22 @@ const LEGACY_SHEET_NAME = 'Early Access Leads';
 // Phase 2 submissions are routed by page path because the Round 1 project also
 // uses the Arrived and Together brand names.
 const PHASE_2_SHEETS = {
+  '/chapterr-students': {
+    sheetName: 'Chapter Leads',
+    questions: [
+      'city',
+      'studies',
+      'studyStage',
+      'freeTime',
+      'peopleType',
+      'cityHope',
+      'meetingStyle',
+      'name',
+      'phone',
+      'instagram',
+    ],
+    contactField: 'phone',
+  },
   '/glp1-tracker': {
     sheetName: 'TrackGLP Leads',
     questions: ["What's your biggest challenge?", 'What would help you most?'],
@@ -69,13 +85,17 @@ function doPost(e) {
 
     const data = JSON.parse(e.postData.contents);
 
-    if (!data.email || !isValidEmail(data.email)) {
-      return jsonResponse({ ok: false, error: 'A valid email address is required.' });
-    }
-
     const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
     const pagePath = normalizePagePath(data.page);
     const phase2Config = PHASE_2_SHEETS[pagePath];
+
+    if (phase2Config && phase2Config.contactField === 'phone') {
+      if (!data.answers || !String(data.answers.phone || '').trim()) {
+        return jsonResponse({ ok: false, error: 'A phone number is required.' });
+      }
+    } else if (!data.email || !isValidEmail(data.email)) {
+      return jsonResponse({ ok: false, error: 'A valid email address is required.' });
+    }
 
     if (phase2Config) {
       appendPhase2Lead(spreadsheet, phase2Config, data, pagePath);
@@ -131,6 +151,17 @@ function setupEveraWholeJourneySheet() {
 function setupEveraLeadSheets() {
   setupEveraMaintenanceSheet();
   setupEveraWholeJourneySheet();
+}
+
+// Run this once to create and format the dedicated Chapter student leads tab.
+// Chapter uses a phone number as its required contact instead of email.
+function setupChapterLeadSheet() {
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  const config = PHASE_2_SHEETS['/chapterr-students'];
+  const headers = phase2Headers(config.questions);
+  const sheet = getOrCreateSheet(spreadsheet, config.sheetName, headers);
+
+  formatLeadSheet(sheet, headers, config.questions.length);
 }
 
 function appendPhase2Lead(spreadsheet, config, data, pagePath) {
