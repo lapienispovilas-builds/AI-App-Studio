@@ -1391,6 +1391,17 @@ main.chapterr-student-page {
 .chapterr-footer__legal a { color: #6f665f; text-decoration: none; transition: color .18s ease; }
 .chapterr-footer__legal a:hover { color: var(--chapterr-ink); }
 .chapterr-student-footer .chapterr-wordmark { flex: 0 0 auto; }
+.chapterr-footer__links { display: grid; justify-items: end; gap: 17px; }
+.chapterr-footer__social { display: flex; align-items: center; gap: 10px; }
+.chapterr-footer__social a { width: 42px; height: 42px; display: grid; place-items: center; border: 1px solid #ead8cf; border-radius: 50%; color: #17201f; background: #fff; text-decoration: none; transition: color .18s ease, border-color .18s ease, background .18s ease, transform .18s ease; }
+.chapterr-footer__social a:hover { color: #fff; border-color: #f25735; background: #f25735; transform: translateY(-2px); }
+.chapterr-footer__social svg { width: 21px; height: 21px; overflow: visible; fill: currentColor; }
+.chapterr-footer__social svg rect, .chapterr-footer__social svg circle { fill: none; stroke: currentColor; stroke-width: 1.8; }
+.chapterr-footer__social svg circle.is-filled { fill: currentColor; stroke: none; }
+@media (max-width: 560px) {
+  .chapterr-footer__links { justify-items: center; }
+  .chapterr-footer__social, .chapterr-footer__legal { justify-content: center; }
+}
 .chapterr-legal-page { min-height: 100vh; background: #fffdf9; }
 .chapterr-legal { width: min(820px,calc(100% - 40px)); margin: 0 auto; padding: 92px 0 120px; }
 .chapterr-legal__back { width: fit-content; margin-bottom: 58px; display: inline-flex; align-items: center; gap: 8px; color: #736960; font-size: 14px; font-weight: 700; text-decoration: none; }
