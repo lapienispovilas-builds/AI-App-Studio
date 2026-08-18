@@ -155,7 +155,7 @@ main.chapterr-student-page {
   background: linear-gradient(180deg, rgba(7,31,36,.02) 42%, rgba(7,31,36,.64));
 }
 .chapterr-student-page .chapterr-student-visual .chapterr-lifestyle--main {
-  object-position: center center;
+  object-position: 50% center;
   filter: saturate(1.12) contrast(1.03);
 }
 .chapterr-student-page .chapterr-chapter-card,
@@ -226,9 +226,9 @@ main.chapterr-student-page {
   .chapterr-student-page .chapterr-hero h1 { font-size: 43px; line-height: .98; letter-spacing: -2.2px; }
   .chapterr-student-page .chapterr-student-hero__lead { font-size: 18px; line-height: 1.38; }
   .chapterr-student-page .chapterr-button { min-height: 58px; }
-  .chapterr-student-page .chapterr-student-visual { min-height: 430px; border-radius: 25px; }
+  .chapterr-student-page .chapterr-student-visual { min-height: 390px; border-radius: 25px; }
   .chapterr-student-page .chapterr-people::after { border-radius: 25px; }
-  .chapterr-student-page .chapterr-student-visual .chapterr-lifestyle--main { object-position: 50% center; }
+  .chapterr-student-page .chapterr-student-visual .chapterr-lifestyle--main { object-position: 52% center; }
   .chapterr-student-page .chapterr-section-heading h2,
   .chapterr-student-page .chapterr-concept h2,
   .chapterr-student-page .chapterr-how h2,
@@ -259,6 +259,7 @@ main.chapterr-student-page {
 .chapter-quiz__brand > span { width:38px; height:38px; display:grid; place-items:center; border-radius:13px; color:#fff; background:var(--chapter-accent); }
 .chapter-quiz--intro { display:flex; flex-direction:column; }
 .chapter-quiz__intro-card { width:min(820px,calc(100% - 40px)); margin:auto; padding:70px 0 110px; text-align:center; }
+.chapter-quiz__intro-meme { width:min(430px,100%); margin:0 auto 34px; display:block; border-radius:24px; box-shadow:0 18px 42px rgba(28,35,33,.14); }
 .chapter-quiz__eyebrow { margin:0 0 19px; color:var(--chapter-accent-deep); font-size:12px; font-weight:900; letter-spacing:1.2px; text-transform:uppercase; }
 .chapter-quiz__intro-card h1,.chapter-quiz__question h1,.chapter-quiz__complete-card h1 { margin:0; font-family:'Manrope',sans-serif; font-size:clamp(42px,6.5vw,72px); font-weight:850; line-height:.98; letter-spacing:-.055em; }
 .chapter-quiz__intro-card > p:not(.chapter-quiz__eyebrow) { max-width:670px; margin:28px auto 0; color:#5f6966; font-size:19px; line-height:1.65; }
@@ -288,6 +289,7 @@ main.chapterr-student-page {
 .chapter-quiz__field input,.chapter-quiz__contact input { width:100%; min-height:64px; padding:0 18px; border:1.5px solid #e8d7d0; border-radius:17px; outline:0; color:var(--chapter-ink); background:#fff; font-size:17px; }
 .chapter-quiz__field input:focus,.chapter-quiz__contact input:focus { border-color:var(--chapter-accent); box-shadow:0 0 0 4px rgba(242,87,53,.09); }
 .chapter-quiz__contact { display:grid; gap:20px; }
+.chapter-quiz__or { margin:-5px 0; color:#8a918f; font-size:13px; font-weight:850; text-align:center; text-transform:lowercase; }
 .chapter-quiz__contact > small { padding:15px 17px; border-radius:14px; color:#66706d; background:#fff0e9; font-size:13px; line-height:1.5; }
 .chapter-quiz__actions { margin-top:34px; display:grid; justify-items:center; gap:11px; }
 .chapter-quiz__continue { width:min(100%,420px); }
@@ -306,10 +308,16 @@ main.chapterr-student-page {
 .chapter-quiz__complete-card li svg { color:var(--chapter-accent); }
 .chapter-quiz__complete-card > strong { max-width:510px; margin:28px auto 0; display:block; padding:17px; border-radius:15px; background:#fff0e9; line-height:1.5; }
 .chapter-quiz__complete-card > a { margin-top:26px; }
+.chapter-quiz--interstitial { padding:40px 20px max(60px,env(safe-area-inset-bottom)); display:grid; place-items:center; }
+.chapter-quiz__interstitial-card { width:min(520px,100%); display:grid; justify-items:center; gap:24px; text-align:center; }
+.chapter-quiz__interstitial-card img { width:100%; max-height:62vh; display:block; object-fit:contain; border-radius:24px; box-shadow:0 20px 52px rgba(28,35,33,.16); }
+.chapter-quiz__interstitial-card h1 { margin:0; font-family:'Manrope',sans-serif; font-size:clamp(32px,6vw,48px); font-weight:850; letter-spacing:-.045em; }
+.chapter-quiz__interstitial-card button { width:min(100%,420px); min-height:58px; padding:0 25px; display:inline-flex; align-items:center; justify-content:center; gap:13px; border:0; border-radius:999px; color:#fff; background:var(--chapter-accent); box-shadow:0 16px 34px rgba(242,87,53,.26); font-weight:850; cursor:pointer; }
 
 @media (max-width:600px) {
   .chapter-quiz__brand { height:66px; }
   .chapter-quiz__intro-card { width:calc(100% - 32px); padding:45px 0 75px; }
+  .chapter-quiz__intro-meme { margin-bottom:28px; border-radius:18px; }
   .chapter-quiz__intro-card h1 { font-size:43px; }
   .chapter-quiz__intro-card > p:not(.chapter-quiz__eyebrow) { margin-top:22px; font-size:16px; }
   .chapter-quiz__intro-card > button { width:100%; margin-top:30px; }
@@ -1325,7 +1333,7 @@ main.chapterr-student-page {
 .chapterr-student-hero__lead { max-width: 590px; margin: 27px 0 0; color: var(--chapterr-ink); font-size: 21px; font-weight: 780; line-height: 1.45; }
 .chapterr-student-hero .chapterr-hero__subtitle { margin-top: 12px; }
 .chapterr-student-visual { overflow: hidden; }
-.chapterr-student-visual .chapterr-lifestyle--main { object-position: center 42%; filter: saturate(.76) contrast(.98); }
+.chapterr-student-visual .chapterr-lifestyle--main { object-position: 50% center; filter: saturate(1.05) contrast(1.01); }
 .chapterr-student-visual .chapterr-chapter-card--one { left: 18px; top: 24px; }
 .chapterr-student-visual .chapterr-chapter-card--two { right: 18px; top: 94px; }
 .chapterr-student-visual .chapterr-connection { left: 18px; right: 18px; bottom: 18px; }
@@ -1408,10 +1416,12 @@ main.chapterr-student-page {
 @media (max-width: 560px) {
   .chapterr-student-wordmark img { width: 100px; height: 60px; }
   .chapterr-student-hero__lead { margin-top: 22px; font-size: 18px; }
-  .chapterr-student-visual { min-height: 470px; }
-  .chapterr-student-visual .chapterr-lifestyle--main { object-position: 51% center; }
-  .chapterr-student-visual .chapterr-chapter-card--one { left: 14px; right: 14px; top: 14px; }
-  .chapterr-student-visual .chapterr-chapter-card--two { left: 14px; right: 14px; top: 77px; }
+  .chapterr-student-visual { min-height: 390px; }
+  .chapterr-student-visual .chapterr-lifestyle--main { object-position: 52% center; }
+  .chapterr-student-visual .chapterr-chapter-card--one,
+  .chapterr-student-visual .chapterr-chapter-card--two { left:auto; right:14px; width:auto; min-width:176px; }
+  .chapterr-student-visual .chapterr-chapter-card--one { top:14px; }
+  .chapterr-student-visual .chapterr-chapter-card--two { top:77px; }
   .chapterr-student-recognition .chapterr-recognition__grid { grid-template-columns: 1fr; }
   .chapterr-student-recognition .chapterr-recognition__grid article:nth-child(n) { padding: 21px 10px 21px 18px; }
   .chapterr-student-concept .chapterr-concept__visual { min-height: 390px; border-radius: 30px; }
