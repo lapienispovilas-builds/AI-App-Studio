@@ -8,12 +8,18 @@ function quizHref(slug: string) {
 }
 
 function StudentResearchMessages({ messages }: { messages: string[] }) {
-  const initials = ['A', 'M', 'J', 'E']
+  const stories = [
+    { image: '/chapterr/chapter-students-vilnius.jpg', label: 'Pirmakursės patirtis' },
+    { image: '/chapterr/chapter-students-river.jpg', label: 'Persikėlimo į naują miestą patirtis' },
+    { image: '/chapterr/chapter-student-life-collage.jpg', label: 'Studento patirtis' },
+    { image: '/chapterr/chapterr-community-hero.png', label: 'Pirmakursio patirtis' },
+  ]
   return <div className="chapter-student-messages" aria-label="Studentų pokalbiuose pasikartojusios įžvalgos">
     {messages.map((message, index) => <article className={index % 2 === 1 ? 'is-right' : ''} key={message}>
-      <span aria-hidden="true">{initials[index]}</span>
-      <div><p>“{message}”</p><small>Studentų pokalbių įžvalga</small></div>
+      <span className="chapter-student-story-photo" aria-hidden="true"><img src={stories[index].image} alt="" /></span>
+      <div><p>“{message}”</p><small>{stories[index].label}</small></div>
     </article>)}
+    <p className="chapter-student-messages__closing">Tu nesi vienintelis, kuris pradeda iš naujo. Daug studentų jaučiasi taip pat.</p>
   </div>
 }
 

@@ -169,8 +169,6 @@ main.chapterr-student-page {
 .chapterr-student-page .chapterr-recognition { background: #fff1e9; }
 .chapterr-student-page .chapter-student-research-intro span { color: #d94325; }
 .chapterr-student-page .chapter-student-messages article > span { background: #f25735; box-shadow: 0 8px 20px rgba(242,87,53,.22); }
-.chapterr-student-page .chapter-student-messages article:nth-child(2) > span,
-.chapterr-student-page .chapter-student-messages article:nth-child(4) > span { color: #fff; background: #17201f; }
 .chapterr-student-page .chapter-student-messages article > div {
   border-color: #ffd4c5;
   background: #fff;
@@ -1373,12 +1371,17 @@ main.chapterr-student-page {
 .chapter-student-messages { max-width: 940px; margin: 58px auto 0; display: grid; gap: 17px; }
 .chapter-student-messages article { width: min(680px,88%); display: flex; align-items: flex-end; gap: 11px; }
 .chapter-student-messages article.is-right { margin-left: auto; flex-direction: row-reverse; }
-.chapter-student-messages article > span { flex:0 0 auto; width:38px; height:38px; display:grid; place-items:center; border-radius:50%; color:white; background:var(--chapterr-brown); font-size:11px; font-weight:850; box-shadow:0 8px 18px rgba(87,67,52,.14); }
-.chapter-student-messages article:nth-child(2) > span, .chapter-student-messages article:nth-child(4) > span { color:#51483f; background:#d9c8b4; }
+.chapter-student-messages article > span { flex:0 0 auto; width:52px; height:52px; display:grid; place-items:center; overflow:hidden; border:3px solid rgba(255,255,255,.92); border-radius:50%; color:white; background:var(--chapterr-brown); box-shadow:0 8px 18px rgba(87,67,52,.14); }
+.chapter-student-story-photo img { width:100%; height:100%; display:block; object-fit:cover; filter:blur(1.6px) saturate(.9); transform:scale(1.12); }
+.chapter-student-messages article:nth-child(1) .chapter-student-story-photo img { object-position:32% 54%; }
+.chapter-student-messages article:nth-child(2) .chapter-student-story-photo img { object-position:69% 58%; }
+.chapter-student-messages article:nth-child(3) .chapter-student-story-photo img { object-position:50% 42%; }
+.chapter-student-messages article:nth-child(4) .chapter-student-story-photo img { object-position:62% 45%; }
 .chapter-student-messages article > div { padding:17px 20px 13px; border:1px solid #e4d8ca; border-radius:20px 20px 20px 6px; background:rgba(255,255,255,.82); box-shadow:0 12px 28px rgba(74,51,40,.06); }
 .chapter-student-messages article.is-right > div { border-radius:20px 20px 6px 20px; background:#e8ddd0; }
 .chapter-student-messages p { margin:0; color:#403832; font-size:16px; font-weight:670; line-height:1.5; }
 .chapter-student-messages small { display:block; margin-top:7px; color:#95887e; font-size:9px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; }
+.chapter-student-messages__closing { max-width:680px; margin:25px auto 0; color:#17201f; font-size:20px; font-weight:820; line-height:1.45; text-align:center; }
 .chapter-student-meme { min-height:430px; padding:26px; display:grid; gap:14px; align-content:center; border:1px solid #e1d3c7; border-radius:38px; background:linear-gradient(145deg,#efe0d4,#faf5f0); box-shadow:0 24px 55px rgba(74,51,40,.09); }
 .chapter-student-meme__row { min-height:142px; padding:22px; display:grid; grid-template-columns:58px 1fr; align-items:center; gap:18px; border-radius:22px; background:rgba(255,255,255,.82); }
 .chapter-student-meme__row > span { width:52px; height:52px; display:grid; place-items:center; border-radius:16px; }
@@ -1455,7 +1458,7 @@ main.chapterr-student-page {
   .chapterr-student-how .chapterr-steps article { min-height: 0; }
   .chapterr-student-how .chapterr-steps article > p { min-height:0; }
   .chapterr-student-final > p:not(.chapterr-kicker) { font-size: 16px; }
-  .chapter-student-messages { margin-top:40px; }.chapter-student-messages article { width:96%; }.chapter-student-messages article > span { width:32px; height:32px; font-size:9px; }.chapter-student-messages article > div { padding:14px 15px 11px; }.chapter-student-messages p { font-size:14px; }
+  .chapter-student-messages { margin-top:40px; }.chapter-student-messages article { width:98%; align-items:flex-start; }.chapter-student-messages article > span { width:42px; height:42px; margin-top:5px; }.chapter-student-messages article > div { padding:14px 15px 11px; }.chapter-student-messages article p { font-size:14px; }.chapter-student-messages__closing { margin-top:22px; font-size:17px; }
   .chapter-student-meme { order:2; min-height:0; padding:14px; border-radius:28px; }.chapter-student-meme__row { min-height:0; padding:17px; grid-template-columns:44px 1fr; gap:12px; }.chapter-student-meme__row > span { width:42px; height:42px; border-radius:13px; }.chapter-student-meme__row strong { font-size:15px; }
   .chapter-step-product { min-height:210px; margin-top:24px; }
   .chapterr-student-final { min-height:650px; }.chapterr-student-final > img { object-position:38% center; }.chapterr-student-final__overlay { background:linear-gradient(rgba(38,31,27,.68),rgba(38,31,27,.9)); }.chapterr-student-final__content { text-align:center; }.chapterr-student-final__content h2 { font-size:42px; letter-spacing:-1.7px; }.chapterr-student-final__content > p:not(.chapterr-kicker) { margin-inline:auto; font-size:18px; }.chapterr-student-final__content .chapterr-button { width:min(100%,330px); justify-content:center; }
