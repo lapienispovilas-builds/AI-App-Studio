@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, Check, Coffee, GraduationCap, MapPin, Sparkles, UsersRound, X } from 'lucide-react'
+import { ArrowRight, Check, Coffee, GraduationCap, MapPin, MessageCircle, Sparkles, UsersRound, X } from 'lucide-react'
 import type { ChapterrStudentLandingPageConfig } from '../chapterrStudentLandingPageConfig'
 import { ChapterFooter } from './ChapterFooter'
 
@@ -35,9 +35,10 @@ function StudentStepVisual({ index }: { index: number }) {
   if (index === 1) return <div className="chapter-step-product chapter-step-profiles"><small>Ne atsitiktiniai žmonės — jūsų ratas</small>{[
     { image: '/chapterr/chapter-students-vilnius.jpg', name: 'Gabija, VU', studies: 'Psichologija', interests: 'joga · kavinės · kelionės' },
     { image: '/chapterr/chapter-student-life-collage.jpg', name: 'Mantas, MRU', studies: 'Komunikacija', interests: 'sportas · verslas · technologijos' },
+    { image: '/chapterr/chapterr-community-hero.png', name: 'Ieva, VGTU', studies: 'Kūrybinės industrijos', interests: 'muzika · fotografija · renginiai' },
   ].map((profile) => <span key={profile.name}><i><img src={profile.image} alt="" /></i><div><strong>{profile.name}</strong><small>{profile.studies}</small><em>Domisi: {profile.interests}</em></div></span>)}</div>
-  if (index === 2) return <div className="chapter-step-product chapter-step-meet"><small>Nuo pažinties iki tikro susitikimo</small><div><figure><img src="/chapterr/chapterr-community-hero.png" alt="Studentai susitinka kavos" /><figcaption><Coffee size={13}/> Kava kartu</figcaption></figure><figure><img src="/chapterr/chapter-students-vilnius.jpg" alt="Studentai leidžia laiką mieste" /><figcaption><BookOpen size={13}/> Mokslai kartu</figcaption></figure><figure><img src="/chapterr/chapter-students-river.jpg" alt="Studentai tyrinėja Vilnių" /><figcaption><MapPin size={13}/> Miestas kartu</figcaption></figure></div></div>
-  return <div className="chapter-step-product chapter-step-activities"><small>Idėjos jūsų ratui</small><span><MapPin size={18}/><div><strong>Kava po paskaitų Elskoj</strong><small>Penktadienį 18:30 · Vilnius, Coffee Hill</small></div></span><span><MapPin size={18}/><div><strong>Krepšinio varžybos</strong><small>Šeštadienį 14:00 · Saulėtekio sporto aikštynas</small></div></span><span><MapPin size={18}/><div><strong>Study meetup</strong><small>Trečiadienį 17:00 · VU biblioteka</small></div></span></div>
+  if (index === 2) return <div className="chapter-step-product chapter-step-chat"><small>Vilnius · naujas ratas</small><span className="is-theirs"><i><img src="/chapterr/chapter-students-vilnius.jpg" alt="" /></i><p>Gal kas kavos po paskaitų?</p></span><span className="is-mine"><p>Aš už! Žinau jaukią vietą centre ☕</p></span><span className="is-theirs"><i><img src="/chapterr/chapterr-community-hero.png" alt="" /></i><p>Prisijungiu 🙌</p></span><div><span>Parašyk žinutę...</span><MessageCircle size={14}/></div></div>
+  return <div className="chapter-step-product chapter-step-activities"><small>Idėjos jūsų ratui</small><span><MapPin size={18}/><div><strong>Kava po paskaitų Elskoj</strong><small>Penktadienį 18:30 · Vilnius, Coffee Hill</small></div></span><span><i className="chapter-facebook-event-icon" aria-label="Facebook renginys">f</i><div><strong>Krepšinio varžybos</strong><small>Šeštadienį 14:00 · Saulėtekio sporto aikštynas</small></div></span><span><MapPin size={18}/><div><strong>Study meetup</strong><small>Trečiadienį 17:00 · VU biblioteka</small></div></span></div>
 }
 
 function highlightedHeadline(headline: string) {
