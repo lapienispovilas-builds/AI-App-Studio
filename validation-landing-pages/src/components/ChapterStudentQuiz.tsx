@@ -133,12 +133,13 @@ export function ChapterStudentQuiz() {
       if (!contactMethod) return false
       if (contactMethod === 'Instagram') return instagram.trim().length > 1
       if (contactMethod === 'WhatsApp') return phone.trim().length >= 6
+      if (contactMethod === 'Messenger') return messengerName.trim().length > 1
       return true
     }
     const value = answers[question.id]
     if (question.type === 'email') return /\S+@\S+\.\S+/.test(answerAsText(value).trim())
     return Array.isArray(value) ? value.length > 0 : Boolean(value?.trim())
-  }, [answers, contactMethod, instagram, phone, question])
+  }, [answers, contactMethod, instagram, messengerName, phone, question])
 
   function startQuiz() {
     setScreen('questions')
@@ -267,7 +268,7 @@ export function ChapterStudentQuiz() {
         </div>
         {contactMethod === 'Instagram' && <label><span>Instagram username</span><input autoComplete="username" value={instagram} onChange={(event) => setInstagram(event.target.value)} placeholder="@tavo_vardas" /></label>}
         {contactMethod === 'WhatsApp' && <label><span>Telefono numeris</span><input type="tel" inputMode="tel" autoComplete="tel" value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="+370 6..." /></label>}
-        {contactMethod === 'Messenger' && <label><span>Facebook vardas (nebūtina)</span><input autoComplete="name" value={messengerName} onChange={(event) => setMessengerName(event.target.value)} placeholder="Tavo vardas Facebook" /></label>}
+        {contactMethod === 'Messenger' && <label><span>Facebook vardas</span><input required autoComplete="name" value={messengerName} onChange={(event) => setMessengerName(event.target.value)} placeholder="Tavo vardas Facebook" /></label>}
         {contactMethod === 'El. paštas' && <small>Naudosime tavo ankstesniame žingsnyje įvestą universiteto el. paštą.</small>}
       </div>}
 
