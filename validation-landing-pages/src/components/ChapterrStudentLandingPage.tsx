@@ -9,10 +9,10 @@ function quizHref(slug: string) {
 
 function StudentResearchMessages({ messages }: { messages: string[] }) {
   const stories = [
-    { image: '/chapterr/chapter-students-vilnius.jpg', label: 'Pirmakursės patirtis' },
-    { image: '/chapterr/chapter-students-river.jpg', label: 'Persikėlimo į naują miestą patirtis' },
-    { image: '/chapterr/chapter-student-life-collage.jpg', label: 'Studento patirtis' },
-    { image: '/chapterr/chapterr-community-hero.png', label: 'Pirmakursio patirtis' },
+    { image: '/chapterr/chapter-students-vilnius.jpg', label: 'Gustė, buvus pirmakursė iš VU' },
+    { image: '/chapterr/chapter-students-river.jpg', label: 'Gerda, pirmakursė iš MRU' },
+    { image: '/chapterr/chapter-student-life-collage.jpg', label: 'Aivaras, buvęs studentas' },
+    { image: '/chapterr/chapterr-community-hero.png', label: 'Ignas, VGTU studentas' },
   ]
   return <div className="chapter-student-messages" aria-label="Studentų pokalbiuose pasikartojusios įžvalgos">
     {messages.map((message, index) => <article className={index % 2 === 1 ? 'is-right' : ''} key={message}>

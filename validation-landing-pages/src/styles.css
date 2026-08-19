@@ -1382,7 +1382,7 @@ main.chapterr-student-page {
 .chapter-student-messages article.is-right > div { border-radius:20px 20px 6px 20px; background:#e8ddd0; }
 .chapter-student-messages p { margin:0; color:#403832; font-size:16px; font-weight:670; line-height:1.5; }
 .chapter-student-messages small { display:block; margin-top:7px; color:#95887e; font-size:9px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; }
-.chapter-student-messages__closing { max-width:680px; margin:25px auto 0; color:#17201f; font-size:20px; font-weight:820; line-height:1.45; text-align:center; }
+.chapter-student-messages__closing { width:100%; max-width:680px; margin:25px auto 0; color:#d94325; font-size:20px; font-weight:820; line-height:1.45; text-align:center; justify-self:center; }
 .chapter-student-meme { min-height:430px; padding:26px; display:grid; gap:14px; align-content:center; border:1px solid #e1d3c7; border-radius:38px; background:linear-gradient(145deg,#efe0d4,#faf5f0); box-shadow:0 24px 55px rgba(74,51,40,.09); }
 .chapter-student-meme__row { min-height:142px; padding:22px; display:grid; grid-template-columns:58px 1fr; align-items:center; gap:18px; border-radius:22px; background:rgba(255,255,255,.82); }
 .chapter-student-meme__row > span { width:52px; height:52px; display:grid; place-items:center; border-radius:16px; }
