@@ -10,7 +10,7 @@ type Question = {
   id: string
   title: string
   description: string
-  type: 'single' | 'multiple' | 'text' | 'contact' | 'optional'
+  type: 'single' | 'multiple' | 'text' | 'email' | 'contact'
   options?: string[]
   placeholder?: string
 }
@@ -74,16 +74,16 @@ const questions: Question[] = [
     options: ['Pradėti nuo naujų žmonių', 'Prisijungti kartu su jau pažįstamu žmogumi', 'Išplėsti savo dabartinį ratą'],
   },
   {
-    id: 'instagram',
-    title: 'Tavo Instagram (nebūtina)',
-    description: 'Jeigu nori, pridėk Instagram – tai padės lengviau susipažinti su būsimais Chapter žmonėmis prieš pirmą susitikimą.',
-    type: 'optional',
-    placeholder: '@tavo_vardas',
+    id: 'universityEmail',
+    title: 'Tavo universiteto el. paštas',
+    description: 'Norime įsitikinti, kad Chapter ratus kuriame tik studentams. Tavo universiteto el. paštas padės mums suprasti, iš kokių universitetų jungiasi studentai ir geriau suformuoti pirmuosius ratus.',
+    type: 'email',
+    placeholder: 'vardas@universitetas.lt',
   },
   {
     id: 'contacts',
     title: 'Kur galime tau parašyti?',
-    description: 'Pranešime, kai tavo mieste bus suformuotas pirmasis Chapter studentų ratas.',
+    description: 'Kai tavo mieste susiformuos pirmasis Chapter ratas, susisieksime su kvietimu prisijungti.',
     type: 'contact',
   },
 ]
@@ -112,29 +112,33 @@ export function ChapterStudentQuiz() {
   const [interstitial, setInterstitial] = useState<'party' | 'special' | null>(null)
   const [index, setIndex] = useState(0)
   const [answers, setAnswers] = useState<QuizAnswers>(initialAnswers)
-  const [contactMethod, setContactMethod] = useState(() => answerAsText(initialAnswers().contactMethod))
+  const [contactMethod, setContactMethod] = useState(() => {
+    const storedMethod = answerAsText(initialAnswers().contactMethod)
+    return storedMethod === 'Email' ? 'El. paštas' : storedMethod
+  })
   const [phone, setPhone] = useState(() => answerAsText(initialAnswers().phone))
-  const [email, setEmail] = useState(() => answerAsText(initialAnswers().email))
+  const [instagram, setInstagram] = useState(() => answerAsText(initialAnswers().instagram))
+  const [messengerName, setMessengerName] = useState(() => answerAsText(initialAnswers().messengerName))
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState('')
   const hasTrackedLead = useRef(false)
   const question = questions[index]
 
   useEffect(() => {
-    try { window.sessionStorage.setItem(storageKey, JSON.stringify({ ...answers, contactMethod, phone, email })) } catch { /* Keep quiz usable when storage is unavailable. */ }
-  }, [answers, contactMethod, phone, email])
+    try { window.sessionStorage.setItem(storageKey, JSON.stringify({ ...answers, contactMethod, phone, instagram, messengerName })) } catch { /* Keep quiz usable when storage is unavailable. */ }
+  }, [answers, contactMethod, phone, instagram, messengerName])
 
   const canContinue = useMemo(() => {
-    if (question.type === 'optional') return true
     if (question.type === 'contact') {
       if (!contactMethod) return false
-      if (contactMethod === 'Email') return /\S+@\S+\.\S+/.test(email.trim())
-      if (contactMethod === 'Instagram') return answerAsText(answers.instagram).trim().length > 1
+      if (contactMethod === 'Instagram') return instagram.trim().length > 1
+      if (contactMethod === 'WhatsApp') return phone.trim().length >= 6
       return true
     }
     const value = answers[question.id]
+    if (question.type === 'email') return /\S+@\S+\.\S+/.test(answerAsText(value).trim())
     return Array.isArray(value) ? value.length > 0 : Boolean(value?.trim())
-  }, [answers, contactMethod, email, question])
+  }, [answers, contactMethod, instagram, phone, question])
 
   function startQuiz() {
     setScreen('questions')
@@ -165,12 +169,13 @@ export function ChapterStudentQuiz() {
 
     setSubmitting(true)
     setSubmitError('')
-    const finalAnswers: QuizAnswers = { ...answers, contactMethod, phone: phone.trim(), email: email.trim() }
+    const universityEmail = answerAsText(answers.universityEmail).trim()
+    const finalAnswers: QuizAnswers = { ...answers, contactMethod, phone: phone.trim(), instagram: instagram.trim(), messengerName: messengerName.trim() }
     try {
       await submitLead({
         idea: 'Chapter student matching',
         page: '/chapterr-students',
-        email: email.trim(),
+        email: universityEmail,
         answers: Object.fromEntries(Object.entries(finalAnswers).map(([key, value]) => [key, answerAsText(value)])),
       })
       trackMetaEvent('quiz_finished', { quiz_name: 'chapter_student_matching' }, { custom: true, onceKey: 'chapter_quiz_finished' })
@@ -247,22 +252,23 @@ export function ChapterStudentQuiz() {
         })}
       </div>}
 
-      {(question.type === 'text' || question.type === 'optional') && <label className="chapter-quiz__field">
-        <span>{question.type === 'optional' ? 'Instagram username' : 'Studijų kryptis'}</span>
-        <input autoFocus value={answerAsText(answers[question.id])} onChange={(event) => setAnswers((current) => ({ ...current, [question.id]: event.target.value }))} placeholder={question.placeholder} />
+      {(question.type === 'text' || question.type === 'email') && <label className="chapter-quiz__field">
+        <span>{question.type === 'email' ? 'Universiteto el. paštas' : 'Studijų kryptis'}</span>
+        <input type={question.type === 'email' ? 'email' : 'text'} inputMode={question.type === 'email' ? 'email' : 'text'} autoComplete={question.type === 'email' ? 'email' : 'off'} autoFocus value={answerAsText(answers[question.id])} onChange={(event) => setAnswers((current) => ({ ...current, [question.id]: event.target.value }))} placeholder={question.placeholder} />
+        {question.type === 'email' && <small className="chapter-quiz__privacy-note">Šio el. pašto nenaudosime rinkodarai ir nesidalinsime juo su kitais žmonėmis.</small>}
       </label>}
 
       {question.type === 'contact' && <div className="chapter-quiz__contact">
         <p className="chapter-quiz__trust">Naudosime tik tam, kad informuotume apie tavo rato sukūrimą. Tavo kontaktų nesidalinsime su kitais žmonėmis be tavo sutikimo.</p>
         <div className="chapter-quiz__contact-methods">
-          {['Instagram', 'Messenger', 'WhatsApp', 'Email'].map((method) => <button key={method} type="button" className={contactMethod === method ? 'is-selected' : ''} onClick={() => setContactMethod(method)}>
+          {['Instagram', 'Messenger', 'WhatsApp', 'El. paštas'].map((method) => <button key={method} type="button" className={contactMethod === method ? 'is-selected' : ''} onClick={() => setContactMethod(method)}>
             <span>{contactMethod === method && <Check size={17} />}</span>{method}
           </button>)}
         </div>
-        {contactMethod === 'Instagram' && <label><span>Instagram username</span><input autoComplete="username" value={answerAsText(answers.instagram)} onChange={(event) => setAnswers((current) => ({ ...current, instagram: event.target.value }))} placeholder="@tavo_vardas" /></label>}
-        {contactMethod === 'WhatsApp' && <label><span>Telefono numeris (nebūtina)</span><input type="tel" inputMode="tel" autoComplete="tel" value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="+370 6..." /></label>}
-        {contactMethod === 'Email' && <label><span>El. paštas</span><input type="email" inputMode="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="tavo@email.lt" /></label>}
-        {contactMethod === 'Messenger' && <small>Su tavimi susisieksime per Messenger, kai tavo miesto ratas bus paruoštas.</small>}
+        {contactMethod === 'Instagram' && <label><span>Instagram username</span><input autoComplete="username" value={instagram} onChange={(event) => setInstagram(event.target.value)} placeholder="@tavo_vardas" /></label>}
+        {contactMethod === 'WhatsApp' && <label><span>Telefono numeris</span><input type="tel" inputMode="tel" autoComplete="tel" value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="+370 6..." /></label>}
+        {contactMethod === 'Messenger' && <label><span>Facebook vardas (nebūtina)</span><input autoComplete="name" value={messengerName} onChange={(event) => setMessengerName(event.target.value)} placeholder="Tavo vardas Facebook" /></label>}
+        {contactMethod === 'El. paštas' && <small>Naudosime tavo ankstesniame žingsnyje įvestą universiteto el. paštą.</small>}
       </div>}
 
       {submitError && <p className="chapter-quiz__error" role="alert">{submitError}</p>}
@@ -270,7 +276,6 @@ export function ChapterStudentQuiz() {
         <button type="button" className="chapter-quiz__continue" disabled={!canContinue || submitting} onClick={continueQuiz}>
           {submitting ? 'Jungiame…' : index === questions.length - 1 ? 'Prisijungti prie pirmųjų ratų' : 'Tęsti'} {!submitting && <ArrowRight size={20} />}
         </button>
-        {question.type === 'optional' && !answerAsText(answers[question.id]) && <small>Šį klausimą gali praleisti</small>}
       </div>
     </section>
   </main>
