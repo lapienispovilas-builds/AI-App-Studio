@@ -33,7 +33,7 @@ const questions: Question[] = [
   },
   {
     id: 'studies',
-    title: 'Ką studijuosi?',
+    title: 'Ką studijuoji?',
     description: 'Kartais lengviausias būdas pradėti pokalbį yra rasti žmogų, kuris supranta tavo studijų kryptį arba turi panašių interesų.',
     type: 'text',
     placeholder: 'Pvz. marketingas, medicina, programavimas...',
@@ -76,7 +76,7 @@ const questions: Question[] = [
   {
     id: 'universityEmail',
     title: 'Tavo universiteto el. paštas',
-    description: 'Norime įsitikinti, kad Chapter ratus kuriame tik studentams. Tavo universiteto el. paštas padės mums suprasti, iš kokių universitetų jungiasi studentai ir geriau suformuoti pirmuosius ratus.',
+    description: 'Norime įsitikinti, kad Chapter ratus kuriame tik studentams.',
     type: 'email',
     placeholder: 'vardas@universitetas.lt',
   },
