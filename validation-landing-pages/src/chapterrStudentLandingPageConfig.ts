@@ -25,9 +25,9 @@ export const chapterrStudentLandingPage: ChapterrStudentLandingPageConfig = {
   slug: 'chapterr-students',
   brand: 'Chapter',
   headline: 'Naujas miestas. Naujas etapas. Nauji žmonės.',
-  subheadline: 'Tai ne dar viena Facebook ar Messenger grupė.',
-  body: 'Chapter padeda atrasti žmones pagal tavo interesus, gyvenimo būdą ir tai, ko ieškai naujame gyvenimo etape.',
-  heroCta: 'Rask savo žmones',
+  subheadline: 'Tai ne dar viena Facebook ar Messenger grupė, kurioje pasimeti tarp šimtų žmonių.',
+  body: 'Chapter padeda rasti studentus, kurie yra panašiame gyvenimo etape, turi panašių interesų ir taip pat ieško savo rato naujame mieste.',
+  heroCta: 'Rask savo ratą',
   recognitionTitle: 'Kaip kilo idėja?',
   recognitionCards: [
     'Facebook grupėje pilna žmonių, bet vis tiek nežinau kam parašyti.',
