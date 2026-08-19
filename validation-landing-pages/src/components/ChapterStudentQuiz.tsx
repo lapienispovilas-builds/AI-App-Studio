@@ -53,6 +53,13 @@ const questions: Question[] = [
     options: ['Persikeliu į naują miestą ir nieko nepažįstu', 'Persikeliu, bet turiu kelis pažįstamus', 'Esu savo mieste, bet noriu naujo rato', 'Noriu tiesiog sutikti daugiau panašių žmonių'],
   },
   {
+    id: 'startStyle',
+    title: 'Kaip norėtum pradėti savo naują etapą?',
+    description: 'Vieni pradeda visiškai nuo nulio, kiti jau turi kelis pažįstamus. Norime suprasti, koks variantas tau būtų naudingiausias.',
+    type: 'single',
+    options: ['Pradėti nuo naujų žmonių', 'Prisijungti kartu su jau pažįstamu žmogumi', 'Išplėsti savo dabartinį ratą'],
+  },
+  {
     id: 'peopleType',
     title: 'Kokio tipo žmones norėtum sutikti?',
     description: 'Kiekvienas ieško skirtingo savo rato. Tai padeda suprasti, su kuo tau būtų įdomiausia susipažinti. Gali pasirinkti kelis variantus.',
@@ -65,13 +72,6 @@ const questions: Question[] = [
     description: 'Pagal pomėgius lengviau rasti žmones, su kuriais iškart turi apie ką kalbėti. Gali pasirinkti kelis variantus.',
     type: 'multiple',
     options: ['Sportas / gym / aktyvumas', 'Kavinės / brunch / chill', 'Vakarėliai / barai / naktinis gyvenimas', 'Gaming / filmai / serialai', 'Kūryba / fotografija / menas', 'Verslas / startupai / side projects', 'Kelionės', 'Kita'],
-  },
-  {
-    id: 'startStyle',
-    title: 'Kaip norėtum pradėti savo naują etapą?',
-    description: 'Vieni pradeda visiškai nuo nulio, kiti jau turi kelis pažįstamus. Norime suprasti, koks variantas tau būtų naudingiausias.',
-    type: 'single',
-    options: ['Pradėti nuo naujų žmonių', 'Prisijungti kartu su jau pažįstamu žmogumi', 'Išplėsti savo dabartinį ratą'],
   },
   {
     id: 'universityEmail',
