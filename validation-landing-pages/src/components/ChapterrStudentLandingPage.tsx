@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, Check, Coffee, GraduationCap, MapPin, MessageCircle, Music, Sparkles, UsersRound, X } from 'lucide-react'
+import { ArrowRight, BookOpen, Check, Coffee, GraduationCap, MapPin, Sparkles, UsersRound, X } from 'lucide-react'
 import type { ChapterrStudentLandingPageConfig } from '../chapterrStudentLandingPageConfig'
 import { ChapterFooter } from './ChapterFooter'
 
@@ -31,12 +31,13 @@ function StudentMatchComparison() {
 }
 
 function StudentStepVisual({ index }: { index: number }) {
-  if (index === 0) return <div className="chapter-step-product chapter-step-quiz"><div className="chapter-step-product__bar"><span /><span /><span /></div><small>Kas tau įdomu?</small><strong>Pasirink savo interesus</strong><div>{['muzika', 'sportas', 'kelionės', 'knygos', 'chill'].map((item, itemIndex) => <span className={itemIndex < 3 ? 'is-selected' : ''} key={item}>{item}</span>)}</div><button type="button">Tęsti</button></div>
-  if (index === 1) return <div className="chapter-step-product chapter-step-profiles"><small>Jūsų ratas</small>{[
-    ['AK', 'Austėja', 'muzika · kelionės'], ['MT', 'Matas', 'sportas · startupai'], ['IE', 'Ieva', 'kelionės · chill'],
-  ].map(([avatar, name, tags]) => <span key={name}><i>{avatar}</i><div><strong>{name}</strong><small>{tags}</small></div><em>3 bendri</em></span>)}</div>
-  if (index === 2) return <div className="chapter-step-product chapter-step-chat"><small>Vilnius · naujas ratas</small><span className="is-theirs"><i>AK</i><p>Gal kas kavos po paskaitų?</p></span><span className="is-mine"><p>Aš už! Žinau jaukią vietą centre ☕</p></span><span className="is-theirs"><i>MT</i><p>Prisijungiu 🙌</p></span><div><span>Parašyk žinutę...</span><MessageCircle size={14}/></div></div>
-  return <div className="chapter-step-product chapter-step-activities"><small>Idėjos jūsų grupei</small><span><Coffee size={18}/><div><strong>Kava po paskaitų</strong><small>Senamiestis · šiandien</small></div></span><span><UsersRound size={18}/><div><strong>Krepšinis kieme</strong><small>Naujamiestis · trečiadienį</small></div></span><span><Music size={18}/><div><strong>Studentų koncertas</strong><small>Menų fabrikas · penktadienį</small></div></span></div>
+  if (index === 0) return <div className="chapter-step-product chapter-step-quiz"><div className="chapter-step-product__bar"><span /><span /><span /></div><small>Kas tau įdomu?</small><strong>Pasirink savo interesus</strong><div>{['Sportas', 'Kavinės', 'Kelionės', 'Gaming', 'Verslas', 'Muzika', 'Fotografija', 'Kūryba'].map((item, itemIndex) => <span className={itemIndex < 4 ? 'is-selected' : ''} key={item}>{item}</span>)}</div><button type="button">Tęsti</button></div>
+  if (index === 1) return <div className="chapter-step-product chapter-step-profiles"><small>Ne atsitiktiniai žmonės — jūsų ratas</small>{[
+    { image: '/chapterr/chapter-students-vilnius.jpg', name: 'Gabija, VU', studies: 'Psichologija', interests: 'joga · kavinės · kelionės' },
+    { image: '/chapterr/chapter-student-life-collage.jpg', name: 'Mantas, MRU', studies: 'Komunikacija', interests: 'sportas · verslas · technologijos' },
+  ].map((profile) => <span key={profile.name}><i><img src={profile.image} alt="" /></i><div><strong>{profile.name}</strong><small>{profile.studies}</small><em>Domisi: {profile.interests}</em></div></span>)}</div>
+  if (index === 2) return <div className="chapter-step-product chapter-step-meet"><small>Nuo pažinties iki tikro susitikimo</small><div><figure><img src="/chapterr/chapterr-community-hero.png" alt="Studentai susitinka kavos" /><figcaption><Coffee size={13}/> Kava kartu</figcaption></figure><figure><img src="/chapterr/chapter-students-vilnius.jpg" alt="Studentai leidžia laiką mieste" /><figcaption><BookOpen size={13}/> Mokslai kartu</figcaption></figure><figure><img src="/chapterr/chapter-students-river.jpg" alt="Studentai tyrinėja Vilnių" /><figcaption><MapPin size={13}/> Miestas kartu</figcaption></figure></div></div>
+  return <div className="chapter-step-product chapter-step-activities"><small>Idėjos jūsų ratui</small><span><MapPin size={18}/><div><strong>Kava po paskaitų Elskoj</strong><small>Penktadienį 18:30 · Vilnius, Coffee Hill</small></div></span><span><MapPin size={18}/><div><strong>Krepšinio varžybos</strong><small>Šeštadienį 14:00 · Saulėtekio sporto aikštynas</small></div></span><span><MapPin size={18}/><div><strong>Study meetup</strong><small>Trečiadienį 17:00 · VU biblioteka</small></div></span></div>
 }
 
 function highlightedHeadline(headline: string) {
@@ -87,6 +88,23 @@ export function ChapterrStudentLandingPage({ config }: { config: ChapterrStudent
         <StudentResearchMessages messages={config.recognitionCards} />
       </section>
 
+      <section className="chapterr-how chapterr-student-how">
+        <div className="chapterr-section-heading">
+          <p className="chapterr-kicker">Interesai → žmonės → susitikimai → patirtys</p>
+          <h2>Kaip tai veikia?</h2>
+        </div>
+        <div className="chapterr-steps">
+          {config.steps.map((step, index) => (
+            <article key={step.title}>
+              <span className="chapterr-step-number">{String(index + 1).padStart(2, '0')}</span>
+              <h3>{step.title}</h3>
+              <p>{step.description}</p>
+              <StudentStepVisual index={index} />
+            </article>
+          ))}
+        </div>
+      </section>
+
       <section className="chapterr-concept chapterr-student-concept">
         <StudentMatchComparison />
         <div className="chapterr-concept__copy">
@@ -100,23 +118,6 @@ export function ChapterrStudentLandingPage({ config }: { config: ChapterrStudent
         <p className="chapterr-kicker">Tikslas</p>
         <h2>Tinkami žmonės naujam gyvenimo etapui.</h2>
         <p>{config.goalText}</p>
-      </section>
-
-      <section className="chapterr-how chapterr-student-how">
-        <div className="chapterr-section-heading">
-          <p className="chapterr-kicker">Paprasta pradžia</p>
-          <h2>Kaip tai veikia?</h2>
-        </div>
-        <div className="chapterr-steps">
-          {config.steps.map((step, index) => (
-            <article key={step.title}>
-              <span className="chapterr-step-number">{String(index + 1).padStart(2, '0')}</span>
-              <h3>{step.title}</h3>
-              <p>{step.description}</p>
-              <StudentStepVisual index={index} />
-            </article>
-          ))}
-        </div>
       </section>
 
       <section className="chapterr-final chapterr-student-final">
