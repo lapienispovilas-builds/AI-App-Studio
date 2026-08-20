@@ -54,10 +54,12 @@ export function Phase2LandingPage({ config }: { config: Phase2LandingPageConfig 
   const footerRef = useRef<HTMLElement>(null)
 
   function startMaintenanceQuiz() {
-    trackMetaEvent('QuizStarted', { quiz_name: 'evera_maintenance' }, { custom: true, onceKey: 'quiz_started' })
-    // PostHog funnel: the hero/section CTA begins the Evera assessment.
     trackEveraEvent('hero_cta_clicked', { cta_location: 'landing_page' })
-    trackEveraEvent('quiz_started', { quiz_name: 'evera_maintenance' }, 'quiz_started')
+    // Danish visitors first see the quiz intro; quiz_started fires from that intro CTA.
+    if (locale !== 'da') {
+      trackMetaEvent('QuizStarted', { quiz_name: 'evera_maintenance' }, { custom: true, onceKey: 'quiz_started' })
+      trackEveraEvent('quiz_started', { quiz_name: 'evera_maintenance' }, 'quiz_started')
+    }
     setMaintenanceFlow('quiz')
   }
 

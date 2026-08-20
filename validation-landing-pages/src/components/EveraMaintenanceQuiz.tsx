@@ -255,6 +255,11 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question', locale
   }, [locale, questionIndex, view])
 
   useEffect(() => {
+    if (locale !== 'da' || view !== 'intro') return
+    trackEveraEvent('quiz_intro_viewed', { quiz_locale: locale }, `quiz_intro_viewed_${window.location.pathname}`)
+  }, [locale, view])
+
+  useEffect(() => {
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => { document.body.style.overflow = previousOverflow }
@@ -302,6 +307,12 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question', locale
       else if (questionIndex === questions.length - 1) finishQuiz(nextAnswers)
       else setQuestionIndex((current) => current + 1)
     }, 160)
+  }
+
+  function startDanishQuiz() {
+    trackMetaEvent('QuizStarted', { quiz_name: 'evera_maintenance' }, { custom: true, onceKey: 'quiz_started' })
+    trackEveraEvent('quiz_started', { quiz_name: 'evera_maintenance', quiz_locale: locale }, 'quiz_started')
+    setView('question')
   }
 
   function finishQuiz(completedAnswers: Record<number, QuizOption>) {
@@ -488,7 +499,7 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question', locale
             <li><Check size={17} /> Skab vaner der holder</li>
             <li><Check size={17} /> Føl dig tryg efter GLP-1</li>
           </ul>
-          <button className="phase2-button" type="button" onClick={() => setView('question')}>Skab min plan <ArrowRight size={18} /></button>
+          <button className="phase2-button" type="button" onClick={startDanishQuiz}>Skab min plan <ArrowRight size={18} /></button>
         </div>
       </main>}
 
