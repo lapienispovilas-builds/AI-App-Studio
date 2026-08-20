@@ -586,7 +586,7 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question', locale
             <small>{plan.name}</small>
             {plan.promotionLabel && <span className="evera-paywall__promo-badge">{plan.promotionLabel}</span>}
             <div className="evera-paywall__price">{plan.originalPrice && <del>{plan.originalPrice}</del>}<strong>{plan.price}</strong></div>
-            {plan.promotionCopy && <span className="evera-paywall__promo-copy">Limited end-of-summer offer</span>}
+            {plan.promotionCopy && <span className="evera-paywall__promo-copy">{locale === 'da' ? 'Begrænset sensommertilbud' : 'Limited end-of-summer offer'}</span>}
             <span className="evera-paywall__positioning">{plan.positioning}</span><p>{plan.description}</p>
             {plan.promotionCopy && <aside className="evera-paywall__promo-note"><strong>{plan.promotionLabel}</strong><span>{plan.promotionCopy}</span></aside>}
             <ul>{plan.includes.map((item) => <li key={item}><Check size={14} /> {item}</li>)}</ul>
