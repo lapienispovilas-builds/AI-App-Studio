@@ -76,17 +76,18 @@ export function EveraPaymentSuccessPage() {
         })
         setPurchase(verifiedPurchase)
         setEmail(verifiedPurchase.customerEmail || '')
-        const fallbackAmounts = { '7-day': 7.99, '30-day': 14.99, '90-day': 24.99 }
+        const fallbackAmounts = { '7-day': 7.99, '30-day': 9.99, '90-day': 24.99 }
+        const fallbackCurrency = verifiedPurchase.plan === '30-day' ? 'USD' : 'EUR'
         trackMetaEvent('Purchase', {
           value: typeof verifiedPurchase.amountTotal === 'number' ? verifiedPurchase.amountTotal / 100 : fallbackAmounts[verifiedPurchase.plan],
-          currency: (verifiedPurchase.currency || 'EUR').toUpperCase(),
+          currency: (verifiedPurchase.currency || fallbackCurrency).toUpperCase(),
           content_name: planNames[verifiedPurchase.plan],
         }, { onceKey: `purchase_${verifiedPurchase.sessionId}`, scope: 'local' })
         // PostHog funnel: emitted only after the server verifies Stripe's paid session.
         trackEveraEvent('checkout_completed', {
           selected_plan: postHogPlanValue(verifiedPurchase.plan),
           value: typeof verifiedPurchase.amountTotal === 'number' ? verifiedPurchase.amountTotal / 100 : fallbackAmounts[verifiedPurchase.plan],
-          currency: (verifiedPurchase.currency || 'EUR').toUpperCase(),
+          currency: (verifiedPurchase.currency || fallbackCurrency).toUpperCase(),
         }, `checkout_completed_${verifiedPurchase.sessionId}`)
 
         const account = await getEveraAccount()

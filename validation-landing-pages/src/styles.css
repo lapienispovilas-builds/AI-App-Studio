@@ -414,7 +414,15 @@ main.chapterr-student-page {
 .evera-paywall__plans article:focus-visible { outline:3px solid rgba(47,125,99,.28); outline-offset:4px; }
 .evera-paywall__plans em { position:absolute; top:-13px; padding:7px 13px; border-radius:999px; color:#fff; background:#2f7d63; font-size:9px; font-style:normal; font-weight:900; letter-spacing:.7px; text-transform:uppercase; }
 .evera-paywall__plans small { min-height:42px; color:#29473d; font-size:17px; font-weight:850; line-height:1.25; }
-.evera-paywall__plans strong { margin-top:17px; color:#183229; font-size:42px; letter-spacing:-1.4px; }
+.evera-paywall__plans strong { color:#183229; }
+.evera-paywall__price { margin-top:13px; display:flex; align-items:baseline; gap:10px; }
+.evera-paywall__price del { color:#7c8c86; font-size:18px; font-weight:750; }
+.evera-paywall__price strong { color:#183229; font-size:42px; letter-spacing:-1.4px; }
+.evera-paywall__promo-badge { margin-top:10px; padding:7px 10px; border-radius:999px; color:#205f4b; background:#dff3e9; font-size:9px; font-weight:900; letter-spacing:.65px; text-transform:uppercase; }
+.evera-paywall__promo-copy { margin-top:7px; color:#2f7d63; font-size:10px; font-weight:850; }
+.evera-paywall__promo-note { margin:16px 0 0; padding:13px 14px; display:grid; gap:4px; border:1px solid rgba(47,125,99,.2); border-radius:13px; background:rgba(255,255,255,.72); }
+.evera-paywall__promo-note strong { font-size:10px; text-transform:uppercase; letter-spacing:.55px; }
+.evera-paywall__promo-note span { color:#5e716a; font-size:10px; line-height:1.45; }
 .evera-paywall__plans .evera-paywall__positioning { min-height:42px; margin-top:8px; color:#2f7d63; font-size:10px; font-weight:800; line-height:1.45; }
 .evera-paywall__plans article > p { min-height:84px; margin:19px 0 0; color:#687a74; font-size:12px; line-height:1.58; }
 .evera-paywall__plans ul { margin:22px 0 28px; padding:0; display:grid; gap:10px; list-style:none; }

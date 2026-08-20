@@ -435,9 +435,13 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question', locale
       trackMetaEvent('InitiateCheckout', {
         content_name: plan.name,
         value: Number(plan.price.replace(/[^0-9.]/g, '')),
-        currency: 'EUR',
+        currency: plan.currency ?? 'EUR',
       }, { onceKey: `checkout_${account.userId}_${plan.id}` })
-      trackEveraEvent('checkout_started', { selected_plan: postHogPlanValue(plan.id) })
+      trackEveraEvent('checkout_started', {
+        selected_plan: postHogPlanValue(plan.id),
+        price: Number(plan.price.replace(/[^0-9.]/g, '')),
+        currency: plan.currency ?? 'EUR',
+      })
       await beginEveraCheckout(plan, {
         answers: account.answers,
         primaryFocus: account.primaryFocus,
@@ -469,7 +473,7 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question', locale
     trackEveraEvent('plan_selected', {
       selected_plan: postHogPlanValue(plan.id),
       price: Number(plan.price.replace(/[^0-9.]/g, '')),
-      currency: 'EUR',
+      currency: plan.currency ?? 'EUR',
     })
   }
 
@@ -579,7 +583,12 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question', locale
         <div className="evera-paywall__plans">
           {localizedPlans.map((plan) => <article className={`${selectedPlan.id === plan.id ? 'is-selected ' : ''}${plan.id === 'complete-30' ? 'is-recommended' : ''}`} key={plan.id} onClick={() => selectPlan(plan)}>
             {plan.badge && <em>{plan.badge}</em>}
-            <small>{plan.name}</small><strong>{plan.price}</strong><span className="evera-paywall__positioning">{plan.positioning}</span><p>{plan.description}</p>
+            <small>{plan.name}</small>
+            {plan.promotionLabel && <span className="evera-paywall__promo-badge">{plan.promotionLabel}</span>}
+            <div className="evera-paywall__price">{plan.originalPrice && <del>{plan.originalPrice}</del>}<strong>{plan.price}</strong></div>
+            {plan.promotionCopy && <span className="evera-paywall__promo-copy">Limited end-of-summer offer</span>}
+            <span className="evera-paywall__positioning">{plan.positioning}</span><p>{plan.description}</p>
+            {plan.promotionCopy && <aside className="evera-paywall__promo-note"><strong>{plan.promotionLabel}</strong><span>{plan.promotionCopy}</span></aside>}
             <ul>{plan.includes.map((item) => <li key={item}><Check size={14} /> {item}</li>)}</ul>
             <button className={selectedPlan.id === plan.id ? 'evera-paywall__primary' : 'evera-paywall__secondary'} type="button" disabled={saving} onClick={(event) => { event.stopPropagation(); startCheckout(plan) }}>{saving && selectedPlan.id === plan.id ? 'Opening checkout…' : plan.cta} <ArrowRight size={16} /></button>
           </article>)}

@@ -5,6 +5,10 @@ export type EveraPlan = {
   id: 'starter-7' | 'complete-30' | 'journey-90'
   name: string
   price: string
+  originalPrice?: string
+  currency?: 'EUR' | 'USD'
+  promotionLabel?: string
+  promotionCopy?: string
   description: string
   badge?: string
   positioning: string
@@ -26,12 +30,16 @@ export const everaPlans: EveraPlan[] = [
   {
     id: 'complete-30',
     name: '30-Day Maintenance Plan',
-    price: '€14.99',
+    price: '$9.99',
+    originalPrice: '$14.99',
+    currency: 'USD',
+    promotionLabel: 'End of Summer Offer',
+    promotionCopy: 'Start your personalized 30-day plan for $9.99 instead of $14.99.',
     description: 'Your complete GLP-1 maintenance roadmap designed to help you protect your weight loss and build habits that last.',
     badge: 'Most popular',
-    positioning: 'Recommended for most people because building maintenance habits takes consistency.',
+    positioning: 'Your complete personalized GLP-1 maintenance roadmap for less than $0.34/day.',
     includes: ['Personalized 30-day roadmap', 'Weekly maintenance goals', 'Daily habit checklist', 'Nutrition and protein guidance', 'Strength and movement recommendations', 'Progress tracking', 'Guidance for life after GLP-1'],
-    cta: 'Start my 30-day plan',
+    cta: 'Start My 30-Day Plan — $9.99',
   },
   {
     id: 'journey-90',
