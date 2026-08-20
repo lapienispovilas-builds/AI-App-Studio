@@ -228,7 +228,7 @@ export const planPreviews: Record<EveraPlan['id'], { title: string; subtitle: st
   },
 }
 
-type QuizView = 'question' | 'insight' | 'analyzing' | 'result' | 'account' | 'login' | 'paywall' | 'program'
+type QuizView = 'intro' | 'question' | 'insight' | 'analyzing' | 'result' | 'account' | 'login' | 'paywall' | 'program'
 
 export function EveraMaintenanceQuiz({ onClose, initialView = 'question', locale = 'en' }: { onClose: () => void; initialView?: 'question' | 'login'; locale?: EveraLocale }) {
   const questions = locale === 'da' ? danishQuestions : englishQuestions
@@ -236,7 +236,7 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question', locale
   const localizedPlans = locale === 'da' ? danishPlans : everaPlans
   const [questionIndex, setQuestionIndex] = useState(0)
   const [answers, setAnswers] = useState<Record<number, QuizOption>>({})
-  const [view, setView] = useState<QuizView>(initialView)
+  const [view, setView] = useState<QuizView>(locale === 'da' && initialView === 'question' ? 'intro' : initialView)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -340,6 +340,7 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question', locale
 
   function goBack() {
     setError('')
+    if (view === 'intro') { onClose(); return }
     if (view === 'insight') { setView('question'); return }
     if (view === 'result') { setView('question'); setQuestionIndex(questions.length - 1); return }
     if (view === 'account') { setView('result'); return }
@@ -471,10 +472,25 @@ export function EveraMaintenanceQuiz({ onClose, initialView = 'question', locale
         <button type="button" onClick={onClose} aria-label={locale === 'da' ? 'Luk vurdering' : 'Close assessment'}><X size={20} /></button>
       </header>
 
-      {!['program', 'paywall', 'login'].includes(view) && <div className="evera-quiz__progress">
+      {!['intro', 'program', 'paywall', 'login'].includes(view) && <div className="evera-quiz__progress">
         <div><span>{locale === 'da' ? 'Vi skaber din personlige GLP-1-vedligeholdelsesplan' : 'Creating your personalized GLP-1 maintenance plan'}</span><strong>{view === 'question' ? (locale === 'da' ? `Spørgsmål ${questionIndex + 1} af 12` : `Question ${questionIndex + 1} of 12`) : view === 'insight' ? (locale === 'da' ? 'Personlig indsigt' : 'Personal insight') : (locale === 'da' ? 'Din plan' : 'Your plan')}</strong></div>
         <i><span style={{ width: `${Math.max(8, progress)}%` }} /></i>
       </div>}
+
+      {view === 'intro' && locale === 'da' && <main className="evera-quiz-intro">
+        <img src="/assets/evera-maintenance-plan-hero-da.png" alt="Personlig Evera-vedligeholdelsesplan til din GLP-1-rejse" />
+        <div className="evera-quiz-intro__copy">
+          <p className="evera-quiz__eyebrow">Skab din personlige GLP-1-vedligeholdelsesplan</p>
+          <h1>Lad ikke dine resultater forsvinde efter GLP-1</h1>
+          <p>Skab en personlig 30-dages vedligeholdelsesplan baseret på din GLP-1-rejse, dine vaner og dine mål.</p>
+          <ul>
+            <li><Check size={17} /> Bevar dine resultater</li>
+            <li><Check size={17} /> Skab vaner der holder</li>
+            <li><Check size={17} /> Føl dig tryg efter GLP-1</li>
+          </ul>
+          <button className="phase2-button" type="button" onClick={() => setView('question')}>Skab min plan <ArrowRight size={18} /></button>
+        </div>
+      </main>}
 
       {view === 'question' && <main className="evera-quiz__question">
         <p className="evera-quiz__eyebrow">{locale === 'da' ? 'Fortæl os om din rejse' : 'Tell us about your journey'}</p>
