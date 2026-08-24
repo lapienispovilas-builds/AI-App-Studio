@@ -19,6 +19,7 @@ import { createDanishLandingConfig } from './everaDanish'
 import { ChapterStudentQuiz } from './components/ChapterStudentQuiz'
 import { trackEveraPageView } from './lib/posthogAnalytics'
 import { EveraMaintenanceQuiz } from './components/EveraMaintenanceQuiz'
+import { captureChapterAcquisition } from './lib/chapterAcquisition'
 
 const chapterStudentDomains = new Set(['trychapter.lt', 'www.trychapter.lt'])
 
@@ -42,6 +43,10 @@ export function App() {
   useEffect(() => {
     if (isEveraPage) trackEveraPageView(path)
   }, [isEveraPage, path])
+
+  useEffect(() => {
+    if (showChapterStudentHome || showChapterStudentQuiz) captureChapterAcquisition()
+  }, [showChapterStudentHome, showChapterStudentQuiz])
 
   if (showChapterStudentHome) return <ChapterrStudentLandingPage config={chapterrStudentLandingPage} />
   if (showChapterStudentQuiz) return <ChapterStudentQuiz />

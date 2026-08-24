@@ -1,7 +1,7 @@
 import { ArrowLeft, ArrowRight, Check, Star, UsersRound } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { submitLead } from '../lib/submitLead'
 import { trackMetaEvent, trackMetaLead } from '../lib/metaPixel'
+import { getChapterAcquisition } from '../lib/chapterAcquisition'
 
 type QuizAnswer = string | string[]
 type QuizAnswers = Record<string, QuizAnswer>
@@ -89,6 +89,7 @@ const questions: Question[] = [
 ]
 
 const storageKey = 'chapter_student_quiz_answers'
+const submissionIdKey = 'chapter_student_submission_id'
 
 function initialAnswers(): QuizAnswers {
   try {
@@ -105,6 +106,17 @@ function answerAsText(answer: QuizAnswer | undefined) {
 
 function chapterHomeHref() {
   return ['trychapter.lt', 'www.trychapter.lt'].includes(window.location.hostname.toLowerCase()) ? '/' : '/chapterr-students'
+}
+
+function getSubmissionId() {
+  const stored = window.sessionStorage.getItem(submissionIdKey)
+  if (stored) return stored
+  const randomPart = typeof crypto.randomUUID === 'function'
+    ? crypto.randomUUID()
+    : `${Date.now()}_${Math.random().toString(36).slice(2)}`
+  const id = `chapter_${randomPart}`
+  window.sessionStorage.setItem(submissionIdKey, id)
+  return id
 }
 
 export function ChapterStudentQuiz() {
@@ -170,19 +182,33 @@ export function ChapterStudentQuiz() {
 
     setSubmitting(true)
     setSubmitError('')
-    const universityEmail = answerAsText(answers.universityEmail).trim()
     const finalAnswers: QuizAnswers = { ...answers, contactMethod, phone: phone.trim(), instagram: instagram.trim(), messengerName: messengerName.trim() }
+    const contactValue = contactMethod === 'Instagram'
+      ? instagram.trim()
+      : contactMethod === 'WhatsApp'
+        ? phone.trim()
+        : contactMethod === 'Messenger'
+          ? messengerName.trim()
+          : answerAsText(answers.universityEmail).trim()
     try {
-      await submitLead({
-        idea: 'Chapter student matching',
-        page: '/chapterr-students',
-        email: universityEmail,
-        answers: Object.fromEntries(Object.entries(finalAnswers).map(([key, value]) => [key, answerAsText(value)])),
+      const response = await fetch('/api/chapter-submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          submissionId: getSubmissionId(),
+          answers: finalAnswers,
+          contactMethod: contactMethod === 'El. paštas' ? 'Email' : contactMethod,
+          contactValue,
+          acquisition: getChapterAcquisition(),
+        }),
       })
+      const result = await response.json().catch(() => ({})) as { error?: string }
+      if (!response.ok) throw new Error(result.error || 'Nepavyko išsaugoti atsakymų. Bandyk dar kartą.')
       trackMetaEvent('quiz_finished', { quiz_name: 'chapter_student_matching' }, { custom: true, onceKey: 'chapter_quiz_finished' })
       trackMetaEvent('contact_submitted', { quiz_name: 'chapter_student_matching', city: answerAsText(finalAnswers['city']) }, { custom: true, onceKey: 'chapter_contact_submitted' })
       if (!hasTrackedLead.current) hasTrackedLead.current = trackMetaLead()
       try { window.sessionStorage.removeItem(storageKey) } catch { /* Submission still succeeds. */ }
+      try { window.sessionStorage.removeItem(submissionIdKey) } catch { /* Submission still succeeds. */ }
       setScreen('complete')
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : 'Nepavyko išsaugoti atsakymų. Bandyk dar kartą.')
@@ -275,7 +301,7 @@ export function ChapterStudentQuiz() {
       {submitError && <p className="chapter-quiz__error" role="alert">{submitError}</p>}
       <div className="chapter-quiz__actions">
         <button type="button" className="chapter-quiz__continue" disabled={!canContinue || submitting} onClick={continueQuiz}>
-          {submitting ? 'Jungiame…' : index === questions.length - 1 ? 'Prisijungti prie pirmųjų ratų' : 'Tęsti'} {!submitting && <ArrowRight size={20} />}
+          {submitting ? 'Jungiame…' : submitError ? 'Bandyti dar kartą' : index === questions.length - 1 ? 'Prisijungti prie pirmųjų ratų' : 'Tęsti'} {!submitting && <ArrowRight size={20} />}
         </button>
       </div>
     </section>
