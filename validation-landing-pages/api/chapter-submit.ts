@@ -58,6 +58,49 @@ function base64Url(value: string | Buffer) {
   return Buffer.from(value).toString('base64url')
 }
 
+function parseGoogleCredentials() {
+  const rawPrivateKey = process.env.GOOGLE_PRIVATE_KEY?.trim()
+  let serviceAccountEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL?.trim()
+
+  if (!rawPrivateKey) return { serviceAccountEmail, privateKey: '' }
+
+  let privateKey = rawPrivateKey
+
+  // Accept the complete service-account JSON as well as a private key pasted
+  // directly into Vercel. This keeps credentials server-side while avoiding
+  // failures caused by Vercel preserving quotes or escaped line breaks.
+  if (privateKey.startsWith('{')) {
+    try {
+      const serviceAccount = JSON.parse(privateKey) as { private_key?: string; client_email?: string }
+      privateKey = serviceAccount.private_key ?? ''
+      serviceAccountEmail ||= serviceAccount.client_email?.trim()
+    } catch {
+      throw new Error('GOOGLE_PRIVATE_KEY contains invalid service-account JSON.')
+    }
+  } else if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
+    try {
+      privateKey = JSON.parse(privateKey) as string
+    } catch {
+      privateKey = privateKey.slice(1, -1)
+    }
+  } else if (privateKey.startsWith("'") && privateKey.endsWith("'")) {
+    privateKey = privateKey.slice(1, -1)
+  }
+
+  privateKey = privateKey
+    .replace(/^GOOGLE_PRIVATE_KEY=/, '')
+    .replace(/\\n/g, '\n')
+    .replace(/\r\n/g, '\n')
+    .trim()
+
+  if (!privateKey.includes('-----BEGIN PRIVATE KEY-----')
+    || !privateKey.includes('-----END PRIVATE KEY-----')) {
+    throw new Error('GOOGLE_PRIVATE_KEY is not a valid PEM private key.')
+  }
+
+  return { serviceAccountEmail, privateKey }
+}
+
 async function getGoogleAccessToken(email: string, privateKey: string) {
   const now = Math.floor(Date.now() / 1000)
   const unsignedToken = `${base64Url(JSON.stringify({ alg: 'RS256', typ: 'JWT' }))}.${base64Url(JSON.stringify({
@@ -106,8 +149,15 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   }
 
   const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID
-  const serviceAccountEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL
-  const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n')
+  let serviceAccountEmail: string | undefined
+  let privateKey = ''
+  try {
+    ({ serviceAccountEmail, privateKey } = parseGoogleCredentials())
+  } catch (error) {
+    console.error('Chapter Google Sheets configuration failed:', error instanceof Error ? error.message : 'Invalid Google credentials')
+    res.status(503).json({ error: 'Registracija laikinai nepasiekiama. Bandyk dar kartą po kelių minučių.' })
+    return
+  }
   const sheetName = process.env.GOOGLE_SHEETS_SHEET_NAME || 'Chapter Students'
   if (!spreadsheetId || !serviceAccountEmail || !privateKey) {
     res.status(503).json({ error: 'Registracija laikinai nepasiekiama. Bandyk dar kartą po kelių minučių.' })
