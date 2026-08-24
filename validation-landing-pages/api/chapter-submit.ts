@@ -141,6 +141,17 @@ async function sheetsRequest(accessToken: string, spreadsheetId: string, range: 
   })
 }
 
+async function googleSheetsError(response: Response, fallback: string) {
+  let reason = fallback
+  try {
+    const body = await response.json() as { error?: { message?: string; status?: string } }
+    reason = body.error?.message || body.error?.status || fallback
+  } catch {
+    // Google may occasionally return a non-JSON gateway response.
+  }
+  return `${fallback} (${response.status}): ${reason}`
+}
+
 export default async function handler(req: ApiRequest, res: ApiResponse) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST')
@@ -216,22 +227,23 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
 
     const headerResponse = await sheetsRequest(accessToken, spreadsheetId, sheetRange(sheetName, 'A1:W1'))
     const headerData = await headerResponse.json() as { values?: string[][] }
-    if (!headerResponse.ok) throw new Error('Google Sheet could not be read.')
+    if (!headerResponse.ok) {
+      const reason = (headerData as { error?: { message?: string; status?: string } }).error
+      throw new Error(`Google Sheet could not be read (${headerResponse.status}): ${reason?.message || reason?.status || 'Unknown Google error'}`)
+    }
     const existingHeaders = headerData.values?.[0] ?? []
-    if (!existingHeaders.length) {
+    if (!existingHeaders.length || headers.some((header, index) => existingHeaders[index] !== header)) {
       const createHeaderResponse = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}/values/${encodeURIComponent(sheetRange(sheetName, 'A1:W1'))}?valueInputOption=RAW`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ values: [headers] }),
       })
-      if (!createHeaderResponse.ok) throw new Error('Google Sheet headers could not be created.')
-    } else if (headers.some((header, index) => existingHeaders[index] !== header)) {
-      throw new Error('Google Sheet headers do not match the Chapter schema.')
+      if (!createHeaderResponse.ok) throw new Error(await googleSheetsError(createHeaderResponse, 'Google Sheet headers could not be created'))
     }
 
     const idsResponse = await sheetsRequest(accessToken, spreadsheetId, sheetRange(sheetName, 'B2:B'))
     const idsData = await idsResponse.json() as { values?: string[][] }
-    if (!idsResponse.ok) throw new Error('Existing submissions could not be checked.')
+    if (!idsResponse.ok) throw new Error(await googleSheetsError(idsResponse, 'Existing submissions could not be checked'))
     if ((idsData.values ?? []).some(([id]) => id === submissionId)) {
       res.status(200).json({ ok: true, duplicate: true, submissionId })
       return
@@ -241,7 +253,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
       method: 'POST',
       body: JSON.stringify({ values: [row] }),
     })
-    if (!appendResponse.ok) throw new Error('Submission could not be appended.')
+    if (!appendResponse.ok) throw new Error(await googleSheetsError(appendResponse, 'Submission could not be appended'))
 
     res.status(200).json({ ok: true, duplicate: false, submissionId })
   } catch (error) {
