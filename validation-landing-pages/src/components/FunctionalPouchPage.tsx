@@ -5,13 +5,11 @@ import { trackEveraEvent } from '../lib/posthogAnalytics'
 
 function ProductMockup({ config }: { config: FunctionalPouchConfig }) {
   return (
-    <div className="pouch-product" aria-label={`EVERA SHIFT ${config.productLabel} pouch tin mockup`}>
-      <div className="pouch-product__shadow" />
-      <div className="pouch-product__tin" style={{ '--pouch-accent': config.accent } as React.CSSProperties}>
-        <span>EVERA</span><strong>SHIFT</strong><small>{config.productLabel}</small><i>NICOTINE FREE · 20 POUCHES</i>
-      </div>
-      <div className="pouch-product__pouch">SHIFT</div>
-    </div>
+    <div
+      className={`pouch-product pouch-product--${config.positioning}`}
+      role="img"
+      aria-label={`EVERA ${config.productLabel} functional pouch product`}
+    />
   )
 }
 
