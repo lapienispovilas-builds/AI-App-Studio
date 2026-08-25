@@ -14,7 +14,7 @@ export type FunctionalPouchConfig = {
 
 export const functionalPouchPages: Record<string, FunctionalPouchConfig> = {
   '/zyn-alternative': {
-    positioning: 'zyn', heroImage: '/functional-pouch/campaign/hero-zyn.jpg', lifestyleImage: '/functional-pouch/campaign/lifestyle-zyn.jpg', lineupImage: '/functional-pouch/campaign/lineup-zyn.jpg',
+    positioning: 'zyn', heroImage: '/functional-pouch/campaign/hero-zyn.jpg', lifestyleImage: '/functional-pouch/campaign/lifestyle-zyn.jpg', lineupImage: '/functional-pouch/campaign/lineup-zyn-transparent.png',
     eyebrow: 'Ett nikotinfritt ritualbyte', headline: 'Behåll pausen. Skippa nikotinet.',
     subheadline: 'En funktionell prilla för dig som gillar ritualen men vill välja bort nikotin – hemma, på jobbet eller på språng.',
     accent: '#c8ff3d', accentSoft: '#ebffb7',
@@ -38,7 +38,7 @@ export const functionalPouchPages: Record<string, FunctionalPouchConfig> = {
     ], finalTitle: 'Redo för en ny ritual?',
   },
   '/coffee': {
-    positioning: 'coffee', heroImage: '/functional-pouch/campaign/hero-coffee.jpg', lifestyleImage: '/functional-pouch/campaign/lifestyle-coffee.jpg', lineupImage: '/functional-pouch/campaign/lineup-coffee.jpg',
+    positioning: 'coffee', heroImage: '/functional-pouch/campaign/hero-coffee.jpg', lifestyleImage: '/functional-pouch/campaign/lifestyle-coffee.jpg', lineupImage: '/functional-pouch/campaign/lineup-coffee-transparent.png',
     eyebrow: 'Fokus för krävande dagar', headline: 'Fokus utan ännu en kaffe.',
     subheadline: 'En funktionell prilla för långa arbetsdagar, djupjobb och eftermiddagen när nästa kopp känns som fel lösning.',
     accent: '#d9b88f', accentSoft: '#f1e2d1',
@@ -62,7 +62,7 @@ export const functionalPouchPages: Record<string, FunctionalPouchConfig> = {
     ], finalTitle: 'Gör plats för fokus.',
   },
   '/energy': {
-    positioning: 'preworkout', heroImage: '/functional-pouch/campaign/hero-preworkout.jpg', lifestyleImage: '/functional-pouch/campaign/lifestyle-preworkout.jpg', lineupImage: '/functional-pouch/campaign/lineup-preworkout.jpg',
+    positioning: 'preworkout', heroImage: '/functional-pouch/campaign/hero-preworkout.jpg', lifestyleImage: '/functional-pouch/campaign/lifestyle-preworkout.jpg', lineupImage: '/functional-pouch/campaign/lineup-preworkout-transparent.png',
     eyebrow: 'Energi före rörelse', headline: 'Lite mer driv. Utan hela pre-workouten.',
     subheadline: 'En funktionell prilla för löprundan, padelmatchen eller passet efter jobbet – när du vill ha energi, inte maxad känsla.',
     accent: '#c9ff32', accentSoft: '#ebffad',
