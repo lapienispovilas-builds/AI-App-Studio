@@ -30,7 +30,7 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
         </section>
 
         <section id="upplevelsen" className="fp-experience fp-wrap">
-          <div className="fp-product-orbit"><div className="fp-tin"><i /><b>EVERA</b><strong>{config.positioning === 'zyn' ? 'RITUAL' : config.positioning === 'coffee' ? 'FOKUS' : 'MOVE'}</strong><small>20 PRILLOR</small></div></div>
+          <div className="fp-product-orbit"><div className="fp-single-product" role="img" aria-label={`EVERA ${config.flavors[0].name}`} style={{ backgroundImage: `url(${config.lineupImage})` }} /></div>
           <div><p className="fp-kicker">EVERA-UPPLEVELSEN</p><h2>{config.experienceTitle}</h2><p className="fp-intro">{config.experienceIntro}</p><div className="fp-benefit-list">{config.benefits.map((benefit, i) => <article key={benefit.title}><span>0{i + 1}</span><div><h3>{benefit.title}</h3><p>{benefit.copy}</p></div></article>)}</div></div>
         </section>
 
