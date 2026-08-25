@@ -1,94 +1,88 @@
-export type PouchPositioning = 'zyn' | 'energy' | 'coffee'
+export type PouchPositioning = 'zyn' | 'coffee' | 'preworkout'
 
 export type FunctionalPouchConfig = {
-  positioning: PouchPositioning
-  eyebrow: string
-  headline: string
-  subheadline: string
-  accent: string
-  accentSoft: string
-  productLabel: string
+  positioning: PouchPositioning; heroImage: string; lifestyleImage: string
+  eyebrow: string; headline: string; subheadline: string; accent: string; accentSoft: string
+  experienceTitle: string; experienceIntro: string
   benefits: { title: string; copy: string }[]
-  useCases: string[]
-  alternative: string
-  comparison: { alternative: string; evera: string }[]
-  faq: { question: string; answer: string }[]
+  storyTitle: string; storyCopy: string; storyPoints: string[]
+  flavors: { name: string; note: string }[]
+  ingredients: { name: string; dose: string; why: string }[]
+  testimonials: { quote: string; name: string; context: string }[]
+  finalTitle: string
 }
-
-const sharedFaq = [
-  { question: 'Does it contain nicotine?', answer: 'No. EVERA SHIFT is designed as a nicotine-free functional pouch.' },
-  { question: 'How do I use it?', answer: 'Place one pouch under your upper lip when you want a convenient focus or energy moment. Remove and dispose of it after use.' },
-  { question: 'Is it available now?', answer: 'We are preparing the first batch. Tap Buy Now to register genuine interest and get notified when it drops.' },
-]
 
 export const functionalPouchPages: Record<string, FunctionalPouchConfig> = {
   '/zyn-alternative': {
-    positioning: 'zyn',
-    eyebrow: 'The nicotine-free pouch ritual',
-    headline: 'Keep the pouch. Lose the nicotine.',
-    subheadline: 'A functional pouch designed for focus and energy — with the familiar format, without nicotine, smoke, or vapor.',
-    accent: '#d9ff58',
-    accentSoft: '#efffb9',
-    productLabel: 'FOCUS + ENERGY',
+    positioning: 'zyn', heroImage: '/functional-pouch/campaign/hero-zyn.jpg', lifestyleImage: '/functional-pouch/campaign/lifestyle-zyn.jpg',
+    eyebrow: 'Ett nikotinfritt ritualbyte', headline: 'Behåll pausen. Skippa nikotinet.',
+    subheadline: 'En funktionell prilla för dig som gillar ritualen men vill välja bort nikotin – hemma, på jobbet eller på språng.',
+    accent: '#c8ff3d', accentSoft: '#ebffb7',
+    experienceTitle: 'Samma enkla ritual. En annan känsla.', experienceIntro: 'EVERA RITUAL är framtagen för stunderna då handen annars går mot en nikotinprilla eller cigarett.',
     benefits: [
-      { title: 'Zero nicotine', copy: 'A functional pouch made without nicotine or tobacco.' },
-      { title: 'Familiar format', copy: 'The discreet, pocket-ready ritual you already know.' },
-      { title: 'Made for the moment', copy: 'Designed for times you would normally reach for a pouch.' },
-      { title: 'No smoke. No vape.', copy: 'Use it discreetly without lighting up or creating vapor.' },
+      { title: 'Lugn skärpa', copy: 'L-teanin står i centrum för en balanserad stund utan nikotin.' },
+      { title: 'Mild energi', copy: 'En låg dos naturligt koffein – märkbar, men inte byggd för maxpuls.' },
+      { title: 'Diskret ritual', copy: 'Ett välbekant format som fungerar på mötet, tåget och utekvällen.' },
     ],
-    useCases: ['At your desk', 'On the commute', 'After lunch', 'On a night out'],
-    alternative: 'Traditional nicotine pouch',
-    comparison: [
-      { alternative: 'Contains nicotine', evera: 'Nicotine-free' },
-      { alternative: 'Built around a nicotine hit', evera: 'Built around functional focus' },
-      { alternative: 'Familiar pouch ritual', evera: 'The same discreet format' },
+    storyTitle: 'För stunden mellan två saker.', storyCopy: 'När du vill ta en paus utan rök, vape eller ännu en nikotindos. En liten dosa som passar i vardagen – inte tvärtom.',
+    storyPoints: ['0 mg nikotin', 'Ingen rök eller ånga', '20 prillor per dosa'],
+    flavors: [{ name: 'Citrus Mint', note: 'Frisk · balanserad' }, { name: 'Nordic Berry', note: 'Mjuk · syrlig' }, { name: 'Cool Spearmint', note: 'Ren · sval' }],
+    ingredients: [
+      { name: 'Naturligt koffein', dose: '25 mg', why: 'En mild nivå för ritual och vardagsfokus.' }, { name: 'L-teanin', dose: '175 mg', why: 'Huvudingrediensen i den balanserade formuleringen.' },
+      { name: 'Vitamin B12', dose: '150 µg', why: 'Bidrar till normal energiomsättning.' }, { name: 'Rosenrotsextrakt', dose: '75 mg', why: 'Ett växtextrakt i vår nikotinfria blandning.' },
     ],
-    faq: sharedFaq,
-  },
-  '/energy': {
-    positioning: 'energy',
-    eyebrow: 'Pocket-sized functional energy',
-    headline: 'Energy. Without the can.',
-    subheadline: 'A nicotine-free functional pouch for the moments you want energy and focus — without carrying or finishing another drink.',
-    accent: '#ff633d',
-    accentSoft: '#ffd5ca',
-    productLabel: 'CITRUS CHARGE',
-    benefits: [
-      { title: 'Pocket-sized', copy: 'Functional energy that fits where a can never could.' },
-      { title: 'Nothing to drink', copy: 'No large beverage, full stomach, or half-finished can.' },
-      { title: 'No sugar-heavy beverage', copy: 'The energy ritual without a sweet drink attached.' },
-      { title: 'Ready anywhere', copy: 'A discreet option for work, training, study, or the road.' },
-    ],
-    useCases: ['Before the gym', 'Long workdays', 'Gaming sessions', 'On the road'],
-    alternative: 'Energy drink',
-    comparison: [
-      { alternative: 'Bulky can to carry', evera: 'Pocket-sized format' },
-      { alternative: 'A full drink', evera: 'No liquid required' },
-      { alternative: 'Hard to use discreetly', evera: 'Use almost anywhere' },
-    ],
-    faq: sharedFaq,
+    testimonials: [
+      { quote: 'Det jag söker är något som kan ersätta själva ZYN-stunden – utan att kännas som ett stort projekt.', name: 'Johan, 31', context: 'Tidigare daglig prillanvändare' },
+      { quote: 'Formatet känns bekant. Det viktiga för mig är att kunna ta en diskret paus utan nikotin.', name: 'Emelie, 29', context: 'Social rökare' },
+      { quote: 'Jag vill inte ha en quit-produkt. Jag vill ha ett bättre vardagsval som fortfarande känns bra.', name: 'Marcus, 36', context: 'Konceptdeltagare' },
+    ], finalTitle: 'Redo för en ny ritual?',
   },
   '/coffee': {
-    positioning: 'coffee',
-    eyebrow: 'Focus that goes where you go',
-    headline: 'Your 3 PM coffee just became a pouch.',
-    subheadline: 'A nicotine-free functional pouch designed for productive focus — no brewing, queue, cup, or coffee run required.',
-    accent: '#7be7ff',
-    accentSoft: '#cdf6ff',
-    productLabel: 'CLEAR FOCUS',
+    positioning: 'coffee', heroImage: '/functional-pouch/campaign/hero-coffee.jpg', lifestyleImage: '/functional-pouch/campaign/lifestyle-coffee.jpg',
+    eyebrow: 'Fokus för krävande dagar', headline: 'Fokus utan ännu en kaffe.',
+    subheadline: 'En funktionell prilla för långa arbetsdagar, djupjobb och eftermiddagen när nästa kopp känns som fel lösning.',
+    accent: '#d9b88f', accentSoft: '#f1e2d1',
+    experienceTitle: 'När kalendern fortsätter men kaffet inte borde göra det.', experienceIntro: 'EVERA FOKUS ger dig ett portabelt alternativ för produktiva stunder – utan bryggning, kö eller kopp.',
     benefits: [
-      { title: 'No brewing', copy: 'Skip the machine, kettle, and cleanup.' },
-      { title: 'No coffee queue', copy: 'Reach for focus without leaving your workflow.' },
-      { title: 'Works anywhere', copy: 'Portable and easy to use at your desk or on the move.' },
-      { title: 'Productivity-first', copy: 'Designed around the moments when focus starts to fade.' },
+      { title: 'Jämnare arbetsrytm', copy: 'En genomtänkt kombination av naturligt koffein och L-teanin.' },
+      { title: 'Fokus i fickan', copy: 'Redo när du går in i ett möte, en deadline eller ett djupt arbetspass.' },
+      { title: 'Ingen kaffepaus krävs', copy: 'Inget bryggande, ingen kö och ingen kopp som kallnar bredvid datorn.' },
     ],
-    useCases: ['The 3 PM dip', 'Deep work', 'Before a meeting', 'Study sessions'],
-    alternative: 'Coffee',
-    comparison: [
-      { alternative: 'Brew or wait in line', evera: 'Ready in your pocket' },
-      { alternative: 'Cup to carry', evera: 'No drink required' },
-      { alternative: 'Interrupts your flow', evera: 'Use at your desk' },
+    storyTitle: 'Byggd för ambition. Inte för ännu en kopp.', storyCopy: 'För dig som älskar att prestera men är trött på att planera dagen runt kaffe – och på känslan när den tredje koppen slår fel.',
+    storyPoints: ['Naturligt koffein', 'Portabelt format', '20 prillor per dosa'],
+    flavors: [{ name: 'Smooth Mocha', note: 'Rund · mjuk' }, { name: 'Vanilla Oat', note: 'Len · lätt' }, { name: 'Fresh Mint', note: 'Klar · frisk' }],
+    ingredients: [
+      { name: 'Naturligt koffein', dose: '45 mg', why: 'En måttlig dos för fokuserade arbetsstunder.' }, { name: 'L-teanin', dose: '100 mg', why: 'Kombineras med koffein i den balanserade formuleringen.' },
+      { name: 'Citikolin', dose: '62,5 mg', why: 'Ett kolininnehållande ämne i fokusblandningen.' }, { name: 'Vitamin B5, B9 & B12', dose: 'NRV-anpassat', why: 'Utvalda B-vitaminer för vardagens energiomsättning.' },
     ],
-    faq: sharedFaq,
+    testimonials: [
+      { quote: 'Jag vill kunna hålla fokus efter lunch utan att automatiskt gå och köpa dagens tredje kaffe.', name: 'Sofia, 34', context: 'Produktchef' },
+      { quote: 'En diskret prilla känns mycket enklare mellan möten än ännu en kopp jag ändå glömmer bort.', name: 'Alexander, 32', context: 'Konsult' },
+      { quote: 'Jag söker skärpan från min kaffepaus, men med mindre av berg-och-dalbanan runt omkring.', name: 'Linnea, 38', context: 'Kreativ chef' },
+    ], finalTitle: 'Gör plats för fokus.',
+  },
+  '/energy': {
+    positioning: 'preworkout', heroImage: '/functional-pouch/campaign/hero-preworkout.jpg', lifestyleImage: '/functional-pouch/campaign/lifestyle-preworkout.jpg',
+    eyebrow: 'Energi före rörelse', headline: 'Lite mer driv. Utan hela pre-workouten.',
+    subheadline: 'En funktionell prilla för löprundan, padelmatchen eller passet efter jobbet – när du vill ha energi, inte maxad känsla.',
+    accent: '#c9ff32', accentSoft: '#ebffad',
+    experienceTitle: 'Gå från seg till redo.', experienceIntro: 'EVERA MOVE är för vanliga aktiva människor som vill få fart på passet utan shaker, stor burk eller tung pre-workoutkänsla.',
+    benefits: [
+      { title: 'Kontrollerad energi', copy: 'Naturligt koffein i ett litet, enkelt format.' },
+      { title: 'Redo när du är det', copy: 'Passar före löpning, cykling, padel eller ett snabbt pass efter jobbet.' },
+      { title: 'Ingen shaker', copy: 'Ingen blandning, inget pulver och ingen stor dryck före rörelse.' },
+    ],
+    storyTitle: 'Träning behöver inte börja med en stor grej.', storyCopy: 'Du behöver inte jaga personbästa varje gång. Ibland vill du bara byta om, komma ut och känna att kroppen är med.',
+    storyPoints: ['Naturligt koffein', 'Inget pulver eller vätska', '20 prillor per dosa'],
+    flavors: [{ name: 'Icy Lime', note: 'Syrlig · kall' }, { name: 'Berry Rush', note: 'Fruktig · frisk' }, { name: 'Arctic Mint', note: 'Ren · intensiv' }],
+    ingredients: [
+      { name: 'Naturligt koffein', dose: '90 mg', why: 'Den mest energiinriktade formuleringen i serien.' }, { name: 'L-tyrosin', dose: '200 mg', why: 'En aminosyra i blandningen för aktiva stunder.' },
+      { name: 'Taurin', dose: '200 mg', why: 'En välkänd ingrediens i funktionella energiprodukter.' }, { name: 'Vitamin B3, B6 & B12', dose: 'NRV-anpassat', why: 'Utvalda vitaminer som bidrar till normal energiomsättning.' },
+    ],
+    testimonials: [
+      { quote: 'Jag vill ha den lilla knuffen som får mig ut genom dörren – inte känna mig uppskruvad hela kvällen.', name: 'Erik, 35', context: 'Motionslöpare' },
+      { quote: 'Efter jobbet orkar jag inte alltid blanda pre-workout. Ett enkelt format hade passat min vardag bättre.', name: 'Maja, 30', context: 'Padel & gruppträning' },
+      { quote: 'Jag tränar för att må bra, inte för att maxa. Det här är precis den nivå av energi jag letar efter.', name: 'Daniel, 41', context: 'Aktiv småbarnsförälder' },
+    ], finalTitle: 'Gör passet lite enklare att börja.',
   },
 }

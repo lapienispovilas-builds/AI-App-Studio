@@ -1,57 +1,54 @@
-import { useEffect } from 'react'
-import { ArrowRight, Check, Package, Sparkles, Zap } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { ArrowRight, Check } from 'lucide-react'
 import type { FunctionalPouchConfig } from '../functionalPouchConfig'
 import { trackEveraEvent } from '../lib/posthogAnalytics'
 
-function ProductMockup({ config }: { config: FunctionalPouchConfig }) {
-  return (
-    <div
-      className={`pouch-product pouch-product--${config.positioning}`}
-      role="img"
-      aria-label={`EVERA ${config.productLabel} functional pouch product`}
-    />
-  )
-}
-
 export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig }) {
+  const [flavor, setFlavor] = useState(config.flavors[0].name)
+
   useEffect(() => {
-    document.title = `${config.headline} | EVERA SHIFT`
+    document.documentElement.lang = 'sv'
+    document.title = `${config.headline} | EVERA`
     document.querySelector('meta[name="description"]')?.setAttribute('content', config.subheadline)
     trackEveraEvent('landing_page_viewed', { positioning: config.positioning }, `pouch_landing_${config.positioning}_${window.location.search}`)
   }, [config])
 
-  const buyNow = (location: string) => {
-    trackEveraEvent('buy_now_clicked', { positioning: config.positioning, cta_location: location })
+  const orderNow = (location: string) => {
+    trackEveraEvent('buy_now_clicked', { positioning: config.positioning, cta_location: location, flavor })
     window.location.assign(`/coming-soon?source=${config.positioning}`)
   }
 
   return (
-    <div className={`pouch-page pouch-page--${config.positioning}`} style={{ '--pouch-accent': config.accent, '--pouch-soft': config.accentSoft } as React.CSSProperties}>
-      <header className="pouch-nav"><a href="#top" className="pouch-logo">EVERA <b>SHIFT</b></a><span>NICOTINE FREE</span><button onClick={() => buyNow('nav')}>BUY NOW</button></header>
+    <div className={`fp-page fp-page--${config.positioning}`} style={{ '--fp-accent': config.accent, '--fp-soft': config.accentSoft } as React.CSSProperties}>
+      <div className="fp-announcement">FRI FRAKT VID LANSERING · 0 MG NIKOTIN</div>
+      <header className="fp-nav"><a href="#top" className="fp-brand"><i />EVERA</a><nav><a href="#upplevelsen">Upplevelsen</a><a href="#produkt">Produkten</a><a href="#ingredienser">Ingredienser</a></nav><button onClick={() => orderNow('nav')}>BESTÄLL NU</button></header>
+
       <main id="top">
-        <section className="pouch-hero">
-          <div className="pouch-hero__copy"><p className="pouch-kicker">{config.eyebrow}</p><h1>{config.headline}</h1><p className="pouch-lead">{config.subheadline}</p><button className="pouch-cta" onClick={() => buyNow('hero')}>BUY NOW <ArrowRight /></button><small>First batch coming soon · No payment taken today</small></div>
-          <ProductMockup config={config} />
+        <section className="fp-hero" style={{ backgroundImage: `url(${config.heroImage})` }}>
+          <div className="fp-hero__shade" />
+          <div className="fp-hero__copy"><p>{config.eyebrow}</p><h1>{config.headline}</h1><span>{config.subheadline}</span><button onClick={() => orderNow('hero')}>BESTÄLL NU <ArrowRight /></button><small>Första släppet kommer snart · Ingen betalning idag</small></div>
         </section>
 
-        <section className="pouch-strip" aria-label="Product highlights"><span>0 MG NICOTINE</span><span>POCKET READY</span><span>FUNCTIONAL FOCUS</span><span>NO SMOKE OR VAPOR</span></section>
+        <section id="upplevelsen" className="fp-experience fp-wrap">
+          <div className="fp-product-orbit"><div className="fp-tin"><i /><b>EVERA</b><strong>{config.positioning === 'zyn' ? 'RITUAL' : config.positioning === 'coffee' ? 'FOKUS' : 'MOVE'}</strong><small>20 PRILLOR</small></div></div>
+          <div><p className="fp-kicker">EVERA-UPPLEVELSEN</p><h2>{config.experienceTitle}</h2><p className="fp-intro">{config.experienceIntro}</p><div className="fp-benefit-list">{config.benefits.map((benefit, i) => <article key={benefit.title}><span>0{i + 1}</span><div><h3>{benefit.title}</h3><p>{benefit.copy}</p></div></article>)}</div></div>
+        </section>
 
-        <section className="pouch-section pouch-benefits"><div className="pouch-heading"><p className="pouch-kicker">A smaller ritual</p><h2>Everything you need. Nothing you don’t.</h2></div><div className="pouch-grid">{config.benefits.map((benefit, index) => <article key={benefit.title}><i>{[<Zap />, <Package />, <Sparkles />, <Check />][index]}</i><h3>{benefit.title}</h3><p>{benefit.copy}</p></article>)}</div></section>
+        <section className="fp-story"><img src={config.lifestyleImage} alt="Svensk livsstil med EVERA" loading="lazy" /><div><p className="fp-kicker">GJORD FÖR DIN VARDAG</p><h2>{config.storyTitle}</h2><p>{config.storyCopy}</p><ul>{config.storyPoints.map(point => <li key={point}><Check />{point}</li>)}</ul></div></section>
 
-        <section className="pouch-mid-cta"><p>ENERGY + FOCUS · ZERO NICOTINE</p><h2>{config.headline}</h2><button className="pouch-cta pouch-cta--light" onClick={() => buyNow('middle')}>BUY NOW <ArrowRight /></button></section>
+        <section id="produkt" className="fp-offer fp-wrap"><div className="fp-section-head"><p className="fp-kicker">HITTA DIN SMAK</p><h2>En dosa. Tre sätt att göra den din.</h2></div><div className="fp-flavors">{config.flavors.map((item, i) => <button key={item.name} className={flavor === item.name ? 'is-active' : ''} onClick={() => setFlavor(item.name)}><span className={`fp-mini-tin fp-mini-tin--${i}`}><i /><b>EVERA</b><small>{item.name}</small></span><strong>{item.name}</strong><em>{item.note}</em></button>)}</div><div className="fp-orderbar"><div><small>VALD SMAK</small><strong>{flavor}</strong><span>20 prillor · Första släppet snart</span></div><button onClick={() => orderNow('product')}>BESTÄLL NU <ArrowRight /></button></div></section>
 
-        <section className="pouch-section pouch-how"><div><p className="pouch-kicker">How it works</p><h2>Open. Place. Get on with it.</h2><p>Take one soft pouch, place it under your upper lip, and use it when you want a convenient focus or energy moment. No drink, smoke, or vapor.</p></div><ol><li><b>01</b><span><strong>Open</strong>Pop the pocket-sized tin.</span></li><li><b>02</b><span><strong>Place</strong>Tuck one pouch under your lip.</span></li><li><b>03</b><span><strong>Shift</strong>Carry on with your day.</span></li></ol></section>
+        <section id="ingredienser" className="fp-formula"><div className="fp-wrap"><div className="fp-section-head"><p className="fp-kicker">VAD FINNS I?</p><h2>En tydlig formula. Inget hemligt “blend”.</h2><p>Planerad mängd per prilla. Slutlig formula och märkning fastställs före lansering.</p></div><div className="fp-ingredients"><div className="fp-ingredients__head"><span>Ingrediens</span><span>Mängd</span><span>Varför den finns med</span></div>{config.ingredients.map(item => <div key={item.name}><strong>{item.name}</strong><b>{item.dose}</b><span>{item.why}</span></div>)}</div><button className="fp-dark-cta" onClick={() => orderNow('ingredients')}>BESTÄLL NU <ArrowRight /></button></div></section>
 
-        <section className="pouch-section pouch-use"><div className="pouch-heading"><p className="pouch-kicker">Made for real life</p><h2>One tin. More options.</h2></div><div>{config.useCases.map((item, index) => <article key={item}><span>0{index + 1}</span><strong>{item}</strong></article>)}</div></section>
+        <section className="fp-quotes fp-wrap"><div className="fp-section-head"><p className="fp-kicker">MÅLGRUPPENS ORD</p><h2>Det här är känslan vi bygger för.</h2><p>Illustrativa konceptcitat – inte kundrecensioner eller verifierade köp.</p></div><div className="fp-quote-grid">{config.testimonials.map(item => <article key={item.name}><div>★★★★★</div><blockquote>“{item.quote}”</blockquote><footer><strong>{item.name}</strong><span>{item.context}</span></footer></article>)}</div></section>
 
-        <section className="pouch-section pouch-compare"><div className="pouch-heading"><p className="pouch-kicker">A simple switch</p><h2>{config.alternative} vs. EVERA SHIFT</h2></div><div className="pouch-compare__table"><div className="pouch-compare__head"><span>{config.alternative}</span><strong>EVERA SHIFT</strong></div>{config.comparison.map(row => <div className="pouch-compare__row" key={row.alternative}><span>{row.alternative}</span><strong><Check />{row.evera}</strong></div>)}</div></section>
+        <section className="fp-photo-break"><img src={config.lifestyleImage} alt="EVERA i en svensk vardag" loading="lazy" /><div><p>FUNKTION I ETT FORMAT SOM FÖLJER MED</p><h2>{config.finalTitle}</h2><button onClick={() => orderNow('final_photo')}>BESTÄLL NU <ArrowRight /></button></div></section>
 
-        <section className="pouch-section pouch-faq"><div className="pouch-heading"><p className="pouch-kicker">Good to know</p><h2>Questions, answered.</h2></div><div>{config.faq.map(item => <details key={item.question}><summary>{item.question}<span>+</span></summary><p>{item.answer}</p></details>)}</div></section>
-
-        <section className="pouch-final"><p className="pouch-kicker">The first drop is coming</p><h2>Ready to make the shift?</h2><p>Be first in line for EVERA SHIFT.</p><button className="pouch-cta pouch-cta--light" onClick={() => buyNow('final')}>BUY NOW <ArrowRight /></button><small>No payment taken today</small></section>
+        <section className="fp-final"><i className="fp-final__mark" /><p className="fp-kicker">FÖRSTA SLÄPPET</p><h2>{config.finalTitle}</h2><p>Visa ditt intresse idag och få besked när den första batchen släpps.</p><button onClick={() => orderNow('final')}>BESTÄLL NU <ArrowRight /></button></section>
       </main>
-      <footer className="pouch-footer"><span>EVERA SHIFT</span><small>© 2026 EVERA · Functional pouch concept</small></footer>
-      <button className="pouch-sticky" onClick={() => buyNow('mobile_sticky')}>BUY NOW <ArrowRight /></button>
+
+      <footer className="fp-footer"><div className="fp-footer__top"><a href="#top" className="fp-brand"><i />EVERA</a><p>Funktionella prillor för en modern svensk vardag.</p></div><div className="fp-footer__links"><div><strong>SHOPPA</strong><a href="#produkt">Smaker</a><a href="#ingredienser">Ingredienser</a></div><div><strong>HJÄLP</strong><a href="#">Kontakt</a><a href="#">FAQ</a><a href="#">Leverans & returer</a></div><div><strong>JURIDISKT</strong><a href="#">Integritetspolicy</a><a href="#">Köpvillkor</a><a href="#">Cookiepolicy</a></div></div><small>© 2026 EVERA · Koncept för marknadsvalidering</small></footer>
+      <button className="fp-sticky" onClick={() => orderNow('mobile_sticky')}>BESTÄLL NU <ArrowRight /></button>
     </div>
   )
 }
