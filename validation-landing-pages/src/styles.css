@@ -137,6 +137,31 @@ fieldset { padding: 0; margin: 25px 0; border: 0; }
 @media (max-width:800px) { .pouch-product { min-height:560px; border-radius:26px; background-size:300% auto; } }
 @media (max-width:420px) { .pouch-product { min-height:500px; } }
 
+/* Lifestyle hero treatment: the supplied image becomes the hero canvas. */
+.pouch-page .pouch-hero { width:100%; max-width:none; min-height:720px; padding:86px max(40px,calc((100vw - 1180px)/2)); position:relative; isolation:isolate; overflow:hidden; grid-template-columns:minmax(0,610px) 1fr; background-image:url('/functional-pouch/evera-positioning-heroes.png'); background-repeat:no-repeat; background-size:auto 300%; background-position-x:center; }
+.pouch-page .pouch-hero::before { content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(90deg,rgba(7,9,8,.88) 0%,rgba(7,9,8,.7) 38%,rgba(7,9,8,.16) 72%,rgba(7,9,8,.06) 100%); }
+.pouch-page--zyn .pouch-hero { background-position-y:top; }
+.pouch-page--energy .pouch-hero { background-position-y:center; }
+.pouch-page--coffee .pouch-hero { background-position-y:bottom; }
+.pouch-hero__copy { position:relative; z-index:1; align-self:center; }
+.pouch-page .pouch-hero h1 { color:#fff; text-shadow:0 3px 30px rgba(0,0,0,.24); }
+.pouch-page .pouch-hero .pouch-kicker { color:var(--pouch-accent); }
+.pouch-page .pouch-hero .pouch-lead { color:rgba(255,255,255,.82); }
+.pouch-page .pouch-hero .pouch-cta { color:#101211; background:#fff; }
+.pouch-page .pouch-hero__copy>small { color:rgba(255,255,255,.62); }
+.pouch-page .pouch-hero .pouch-product { min-height:0; align-self:stretch; border-radius:0; background:none; box-shadow:none; }
+@media (max-width:800px) {
+  .pouch-page .pouch-hero { min-height:790px; padding:66px 24px 76px; display:flex; align-items:flex-start; background-size:auto 300%; background-position-x:66%; }
+  .pouch-page .pouch-hero::before { background:linear-gradient(180deg,rgba(7,9,8,.9) 0%,rgba(7,9,8,.72) 44%,rgba(7,9,8,.14) 78%,rgba(7,9,8,.08) 100%); }
+  .pouch-page .pouch-hero__copy { width:100%; max-width:520px; }
+  .pouch-page .pouch-hero .pouch-product { display:none; }
+}
+@media (max-width:420px) {
+  .pouch-page .pouch-hero { width:100%; min-height:760px; padding-inline:15px; background-position-x:68%; }
+  .pouch-page .pouch-hero h1 { font-size:51px; }
+  .pouch-page .pouch-hero .pouch-lead { max-width:350px; }
+}
+
 /* Chapter students — energetic university launch visual refresh */
 main.chapterr-student-page {
   --chapterr-ink: #17201f;
