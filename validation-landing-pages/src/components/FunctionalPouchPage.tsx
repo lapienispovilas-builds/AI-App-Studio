@@ -33,14 +33,14 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
         </section>
 
         <section id="upplevelsen" className="fp-experience fp-wrap">
-          <div className="fp-product-orbit"><img className="fp-experience-lineup" src={config.lineupImage} alt={`Tre smaker av EVERA ${config.positioning}`} /></div>
+          <div className="fp-product-orbit"><div className="fp-floating-puck" role="img" aria-label={`EVERA ${config.flavors[0].name}`} style={{ backgroundImage: `url(${config.lineupImage})` }} /></div>
           <div><p className="fp-kicker">EVERA-UPPLEVELSEN</p><h2>{config.experienceTitle}</h2><p className="fp-intro">{config.experienceIntro}</p><div className="fp-benefit-list">{config.benefits.map((benefit, i) => { const Icon = benefitIcons[i]; return <article key={benefit.title}><span><Icon /></span><div><h3>{benefit.title}</h3><p>{benefit.copy}</p></div></article> })}</div></div>
         </section>
 
         <section className="fp-story"><img src={config.lifestyleImage} alt="Svensk livsstil med EVERA" loading="lazy" /><div><p className="fp-kicker">GJORD FÖR DIN VARDAG</p><h2>{config.storyTitle}</h2><p>{config.storyCopy}</p><ul>{config.storyPoints.map(point => <li key={point}><Check />{point}</li>)}</ul></div></section>
 
         <section id="produkt" className="fp-product-buy fp-wrap">
-          <div className="fp-product-buy__visual"><div className="fp-lineup-selector"><img src={config.lineupImage} alt={`Tre smaker av EVERA ${config.positioning}`} /><span aria-label={`${flavor} vald`} style={{ left: `${config.flavors.findIndex(item => item.name === flavor) * 33.333}%` }} /></div></div>
+          <div className="fp-product-buy__visual"><div className="fp-lineup-selector" aria-label={`Tre smaker av EVERA ${config.positioning}`}>{config.flavors.map((item, index) => <div key={item.name} className={flavor === item.name ? 'is-selected' : ''}><span role="img" aria-label={item.name} style={{ backgroundImage: `url(${config.lineupImage})`, backgroundPosition: `${index * 50}% center` }} /></div>)}</div></div>
           <div className="fp-product-buy__panel">
             <p className="fp-kicker">EVERA FUNCTIONAL POUCHES</p>
             <h2>EVERA {config.positioning === 'zyn' ? 'RITUAL' : config.positioning === 'coffee' ? 'FOKUS' : 'MOVE'}</h2>
@@ -60,7 +60,7 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
           </div>
         </section>
 
-        <section className="fp-photo-break"><img src={config.lifestyleImage} alt="EVERA i en svensk vardag" loading="lazy" /><div><p>FUNKTION I ETT FORMAT SOM FÖLJER MED</p><h2>{config.finalTitle}</h2><button onClick={() => orderNow('final_photo')}>LÄGG I VARUKORG <ArrowRight /></button></div></section>
+        <section className="fp-photo-break"><img src={config.secondaryImage} alt="EVERA i en svensk vardag" loading="lazy" /><div><p>FUNKTION I ETT FORMAT SOM FÖLJER MED</p><h2>{config.finalTitle}</h2><button onClick={() => orderNow('final_photo')}>LÄGG I VARUKORG <ArrowRight /></button></div></section>
 
       </main>
 
