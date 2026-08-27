@@ -8,6 +8,7 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
   const [strength, setStrength] = useState<'original' | 'strong'>('original')
   const [packSize, setPackSize] = useState<1 | 5>(5)
   const [showStickyCta, setShowStickyCta] = useState(false)
+  const flavorBackgroundPosition = (index: number) => config.positioning === 'zyn' ? ['0%', '56%', '100%'][index] : `${index * 50}%`
   const benefitIcons = config.positioning === 'zyn' ? [Leaf, Zap, Eye] : config.positioning === 'coffee' ? [Brain, BriefcaseBusiness, Coffee] : [Gauge, Activity, Clock3]
   const faqs = [
     { question: 'Kan jag använda EVERA varje dag?', answer: 'Följ alltid den rekommenderade dagsdosen på förpackningen och räkna in koffein från kaffe, energidryck och andra källor. Produkten rekommenderas inte för barn, gravida, ammande eller personer som är känsliga för koffein. Rådgör med vården om du har ett medicinskt tillstånd eller använder läkemedel.' },
@@ -49,7 +50,7 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
   return (
     <div className={`fp-page fp-page--${config.positioning}`} style={{ '--fp-accent': config.accent, '--fp-soft': config.accentSoft } as React.CSSProperties}>
       <div className="fp-announcement">FRI FRAKT PÅ 5-PACK · 0 MG NIKOTIN</div>
-      <header className="fp-nav"><a href="#top" className="fp-brand"><i />EVERA</a><nav><details className="fp-nav-shop"><summary>KÖP NU <ChevronDown /></summary><div className="fp-nav-flavors">{config.flavors.map((item, index) => <button key={item.name} onClick={(event) => { setFlavor(item.name); (event.currentTarget.closest('details') as HTMLDetailsElement).open = false; document.getElementById('produkt')?.scrollIntoView({ behavior: 'smooth' }) }}><span style={{ backgroundImage: `url(${config.lineupImage})`, backgroundPosition: `${index * 50}% center` }} /><strong>{item.name}</strong></button>)}</div></details><a href="#formula" onClick={(event) => { const menu = event.currentTarget.closest('header')?.querySelector('.fp-nav-shop') as HTMLDetailsElement | null; if (menu) menu.open = false }}>INGREDIENSER</a><a href="#faq" onClick={(event) => { const menu = event.currentTarget.closest('header')?.querySelector('.fp-nav-shop') as HTMLDetailsElement | null; if (menu) menu.open = false }}>FAQ</a></nav><button className="fp-cart" onClick={() => orderNow('nav_cart')}><ShoppingBag /> VARUKORG</button></header>
+      <header className="fp-nav"><a href="#top" className="fp-brand"><i />EVERA</a><nav><details className="fp-nav-shop"><summary>KÖP NU <ChevronDown /></summary><div className="fp-nav-flavors">{config.flavors.map((item, index) => <button key={item.name} onClick={(event) => { setFlavor(item.name); (event.currentTarget.closest('details') as HTMLDetailsElement).open = false; document.getElementById('produkt')?.scrollIntoView({ behavior: 'smooth' }) }}><span style={{ backgroundImage: `url(${config.lineupImage})`, backgroundPosition: `${flavorBackgroundPosition(index)} center` }} /><strong>{item.name}</strong></button>)}</div></details><a href="#formula" onClick={(event) => { const menu = event.currentTarget.closest('header')?.querySelector('.fp-nav-shop') as HTMLDetailsElement | null; if (menu) menu.open = false }}>INGREDIENSER</a><a href="#faq" onClick={(event) => { const menu = event.currentTarget.closest('header')?.querySelector('.fp-nav-shop') as HTMLDetailsElement | null; if (menu) menu.open = false }}>FAQ</a></nav><button className="fp-cart" onClick={() => orderNow('nav_cart')}><ShoppingBag /> VARUKORG</button></header>
 
       <main id="top">
         <section className="fp-hero" style={{ '--fp-hero-desktop': `url(${config.heroImage})`, '--fp-hero-mobile': `url(${config.mobileHeroImage})` } as React.CSSProperties}>
@@ -63,7 +64,7 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
         </section>
 
         <section id="produkt" className="fp-product-buy fp-wrap">
-          <div className="fp-product-buy__visual"><div className="fp-lineup-selector" aria-label={`Tre smaker av EVERA ${config.positioning}`}>{config.flavors.map((item, index) => <div key={item.name} className={flavor === item.name ? 'is-selected' : ''}><span role="img" aria-label={item.name} style={{ backgroundImage: `url(${config.lineupImage})`, backgroundPosition: `${index * 50}% center` }} /></div>)}</div></div>
+          <div className="fp-product-buy__visual"><div className="fp-lineup-selector" aria-label={`Tre smaker av EVERA ${config.positioning}`}>{config.flavors.map((item, index) => <div key={item.name} className={flavor === item.name ? 'is-selected' : ''}><span role="img" aria-label={item.name} style={{ backgroundImage: `url(${config.lineupImage})`, backgroundPosition: `${flavorBackgroundPosition(index)} center` }} /></div>)}</div></div>
           <div className="fp-product-buy__panel">
             <p className="fp-kicker">EVERA FUNCTIONAL POUCHES</p>
             <h2>EVERA {config.positioning === 'zyn' ? 'RITUAL' : config.positioning === 'coffee' ? 'FOKUS' : 'MOVE'}</h2>
