@@ -7,6 +7,7 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
   const [flavor, setFlavor] = useState(config.flavors[0].name)
   const [strength, setStrength] = useState<'original' | 'strong'>('original')
   const [packSize, setPackSize] = useState<1 | 5>(5)
+  const [showStickyCta, setShowStickyCta] = useState(false)
   const benefitIcons = config.positioning === 'zyn' ? [Leaf, Zap, Eye] : config.positioning === 'coffee' ? [Brain, BriefcaseBusiness, Coffee] : [Gauge, Activity, Clock3]
   const faqs = [
     { question: 'Kan jag använda EVERA varje dag?', answer: 'Följ alltid den rekommenderade dagsdosen på förpackningen och räkna in koffein från kaffe, energidryck och andra källor. Produkten rekommenderas inte för barn, gravida, ammande eller personer som är känsliga för koffein. Rådgör med vården om du har ett medicinskt tillstånd eller använder läkemedel.' },
@@ -24,6 +25,21 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
     document.querySelector('meta[name="description"]')?.setAttribute('content', config.subheadline)
     trackEveraEvent('landing_page_viewed', { positioning: config.positioning }, `pouch_landing_${config.positioning}_${window.location.search}`)
   }, [config])
+
+  useEffect(() => {
+    const updateStickyCta = () => {
+      const productSection = document.getElementById('produkt')
+      setShowStickyCta(Boolean(productSection && productSection.getBoundingClientRect().bottom <= 0))
+    }
+
+    updateStickyCta()
+    window.addEventListener('scroll', updateStickyCta, { passive: true })
+    window.addEventListener('resize', updateStickyCta)
+    return () => {
+      window.removeEventListener('scroll', updateStickyCta)
+      window.removeEventListener('resize', updateStickyCta)
+    }
+  }, [])
 
   const orderNow = (location: string) => {
     trackEveraEvent('buy_now_clicked', { positioning: config.positioning, cta_location: location, flavor, strength, pack_size: packSize })
@@ -78,7 +94,7 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
       </main>
 
       <footer className="fp-footer"><div className="fp-footer__top"><a href="#top" className="fp-brand"><i />EVERA</a><p>Funktionella prillor för en modern svensk vardag.</p></div><div className="fp-footer__links"><div><strong>SHOPPA</strong><a href="#produkt">Smaker</a><a href="#formula">Ingredienser</a></div><div><strong>HJÄLP</strong><a href="#">Kontakt</a><a href="#faq">FAQ</a><a href="#">Leverans & returer</a></div><div><strong>JURIDISKT</strong><a href="#">Integritetspolicy</a><a href="#">Köpvillkor</a><a href="#">Cookiepolicy</a></div></div><small>© 2026 EVERA · Koncept för marknadsvalidering</small></footer>
-      <button className="fp-sticky" onClick={() => orderNow('mobile_sticky')}>LÄGG I VARUKORG <ArrowRight /></button>
+      <button className={`fp-sticky${showStickyCta ? ' is-visible' : ''}`} onClick={() => orderNow('mobile_sticky')} aria-hidden={!showStickyCta} tabIndex={showStickyCta ? 0 : -1}>LÄGG I VARUKORG <ArrowRight /></button>
     </div>
   )
 }
