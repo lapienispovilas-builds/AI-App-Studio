@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ArrowRight, Check, ChevronDown } from 'lucide-react'
+import { Activity, ArrowRight, Brain, BriefcaseBusiness, Check, ChevronDown, Clock3, Coffee, Eye, Gauge, Leaf, Zap } from 'lucide-react'
 import type { FunctionalPouchConfig } from '../functionalPouchConfig'
 import { trackEveraEvent } from '../lib/posthogAnalytics'
 
@@ -7,6 +7,7 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
   const [flavor, setFlavor] = useState(config.flavors[0].name)
   const [strength, setStrength] = useState<'original' | 'strong'>('original')
   const [packSize, setPackSize] = useState<1 | 5>(5)
+  const benefitIcons = config.positioning === 'zyn' ? [Leaf, Zap, Eye] : config.positioning === 'coffee' ? [Brain, BriefcaseBusiness, Coffee] : [Gauge, Activity, Clock3]
 
   useEffect(() => {
     document.documentElement.lang = 'sv'
@@ -22,27 +23,26 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
 
   return (
     <div className={`fp-page fp-page--${config.positioning}`} style={{ '--fp-accent': config.accent, '--fp-soft': config.accentSoft } as React.CSSProperties}>
-      <div className="fp-announcement">FRI FRAKT VID LANSERING · 0 MG NIKOTIN</div>
+      <div className="fp-announcement">FRI FRAKT PÅ 5-PACK · 0 MG NIKOTIN</div>
       <header className="fp-nav"><a href="#top" className="fp-brand"><i />EVERA</a><nav><a href="#upplevelsen">Upplevelsen</a><a href="#produkt">Produkten</a><a href="#ingredienser">Ingredienser</a></nav><button onClick={() => orderNow('nav')}>LÄGG I VARUKORG</button></header>
 
       <main id="top">
         <section className="fp-hero" style={{ backgroundImage: `url(${config.heroImage})` }}>
           <div className="fp-hero__shade" />
-          <div className="fp-hero__copy"><p>{config.eyebrow}</p><h1>{config.headline}</h1><span>{config.subheadline}</span><button onClick={() => orderNow('hero')}>LÄGG I VARUKORG <ArrowRight /></button><small>Första släppet kommer snart · Ingen betalning idag</small></div>
+          <div className="fp-hero__copy"><p>{config.eyebrow}</p><h1>{config.headline}</h1><span>{config.subheadline}</span><button onClick={() => orderNow('hero')}>LÄGG I VARUKORG <ArrowRight /></button></div>
         </section>
 
         <section id="upplevelsen" className="fp-experience fp-wrap">
-          <div className="fp-product-orbit"><div className="fp-single-product" role="img" aria-label={`EVERA ${config.flavors[0].name}`} style={{ backgroundImage: `url(${config.lineupImage})` }} /></div>
-          <div><p className="fp-kicker">EVERA-UPPLEVELSEN</p><h2>{config.experienceTitle}</h2><p className="fp-intro">{config.experienceIntro}</p><div className="fp-benefit-list">{config.benefits.map((benefit, i) => <article key={benefit.title}><span>0{i + 1}</span><div><h3>{benefit.title}</h3><p>{benefit.copy}</p></div></article>)}</div></div>
+          <div className="fp-product-orbit"><img className="fp-experience-lineup" src={config.lineupImage} alt={`Tre smaker av EVERA ${config.positioning}`} /></div>
+          <div><p className="fp-kicker">EVERA-UPPLEVELSEN</p><h2>{config.experienceTitle}</h2><p className="fp-intro">{config.experienceIntro}</p><div className="fp-benefit-list">{config.benefits.map((benefit, i) => { const Icon = benefitIcons[i]; return <article key={benefit.title}><span><Icon /></span><div><h3>{benefit.title}</h3><p>{benefit.copy}</p></div></article> })}</div></div>
         </section>
 
         <section className="fp-story"><img src={config.lifestyleImage} alt="Svensk livsstil med EVERA" loading="lazy" /><div><p className="fp-kicker">GJORD FÖR DIN VARDAG</p><h2>{config.storyTitle}</h2><p>{config.storyCopy}</p><ul>{config.storyPoints.map(point => <li key={point}><Check />{point}</li>)}</ul></div></section>
 
         <section id="produkt" className="fp-product-buy fp-wrap">
-          <div className="fp-product-buy__visual"><div className="fp-selected-puck" role="img" aria-label={`EVERA ${flavor}`} style={{ backgroundImage: `url(${config.lineupImage})`, backgroundPosition: `${config.flavors.findIndex(item => item.name === flavor) * 50}% center` }} /></div>
+          <div className="fp-product-buy__visual"><div className="fp-lineup-selector"><img src={config.lineupImage} alt={`Tre smaker av EVERA ${config.positioning}`} /><span aria-label={`${flavor} vald`} style={{ left: `${config.flavors.findIndex(item => item.name === flavor) * 33.333}%` }} /></div></div>
           <div className="fp-product-buy__panel">
-            <p className="fp-kicker">BEGRÄNSAT FÖRSTA SLÄPP</p>
-            <div className="fp-product-status">★★★★★ <span>Nyhet · första släppet snart</span></div>
+            <p className="fp-kicker">EVERA FUNCTIONAL POUCHES</p>
             <h2>EVERA {config.positioning === 'zyn' ? 'RITUAL' : config.positioning === 'coffee' ? 'FOKUS' : 'MOVE'}</h2>
             <p className="fp-buy-lead">Funktionella prillor i ett diskret format. Välj smak, styrka och antal.</p>
 
