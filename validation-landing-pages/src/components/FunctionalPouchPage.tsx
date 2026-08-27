@@ -86,9 +86,9 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
 
         <section className="fp-story"><img src={config.lifestyleImage} alt="Svensk livsstil med EVERA" loading="lazy" /><div><p className="fp-kicker">GJORD FÖR DIN VARDAG</p><h2>{config.storyTitle}</h2><p>{config.storyCopy}</p><ul>{config.storyPoints.map(point => <li key={point}><Check />{point}</li>)}</ul></div></section>
 
-        <section className="fp-photo-break fp-risk-free"><img src={config.secondaryImage} alt="EVERA i en svensk vardag" loading="lazy" /><div><h2>PROVA RISKFRITT</h2><p>30 DAGARS NÖJDHETSGARANTI</p><button onClick={() => orderNow('final_photo')}>PROVA NU <ArrowRight /></button></div></section>
-
         <section id="formula" className="fp-formula-cards"><div className="fp-formula-heading"><p>VAD FINNS I?</p><h2>Formulan</h2><span>Utvalda ingredienser för varje EVERA-positionering. Mängd per prilla:</span></div><div className="fp-formula-grid">{config.ingredients.map((item, index) => <article key={item.name}><div><b>{item.dose}</b><span>0{index + 1}</span></div><h3>{item.name}</h3><p>{item.why}</p></article>)}</div></section>
+
+        <section className="fp-photo-break fp-risk-free"><img src={config.secondaryImage} alt="EVERA i en svensk vardag" loading="lazy" /><div><h2>PROVA RISKFRITT</h2><p>30 DAGARS NÖJDHETSGARANTI</p><button onClick={() => orderNow('final_photo')}>PROVA NU <ArrowRight /></button></div></section>
 
         <section id="faq" className="fp-faq fp-wrap"><div className="fp-faq__heading"><p>VILL DU VETA MER?</p><h2>Vanliga frågor</h2><span>Det viktigaste om användning, koffein och nikotininnehåll.</span></div><div className="fp-faq__list">{faqs.map(item => <details key={item.question}><summary>{item.question}<Plus /></summary><p>{item.answer}</p></details>)}</div></section>
 
