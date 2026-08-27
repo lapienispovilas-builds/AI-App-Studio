@@ -27,7 +27,7 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
       <header className="fp-nav"><a href="#top" className="fp-brand"><i />EVERA</a><nav><a href="#upplevelsen">Upplevelsen</a><a href="#produkt">Produkten</a><a href="#ingredienser">Ingredienser</a></nav><button onClick={() => orderNow('nav')}>LÄGG I VARUKORG</button></header>
 
       <main id="top">
-        <section className="fp-hero" style={{ backgroundImage: `url(${config.heroImage})` }}>
+        <section className="fp-hero" style={{ '--fp-hero-desktop': `url(${config.heroImage})`, '--fp-hero-mobile': `url(${config.mobileHeroImage})` } as React.CSSProperties}>
           <div className="fp-hero__shade" />
           <div className="fp-hero__copy"><p>{config.eyebrow}</p><h1>{config.headline}</h1><span>{config.subheadline}</span><button onClick={() => orderNow('hero')}>LÄGG I VARUKORG <ArrowRight /></button></div>
         </section>
