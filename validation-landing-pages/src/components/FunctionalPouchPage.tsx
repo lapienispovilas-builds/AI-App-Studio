@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Activity, ArrowRight, Brain, BriefcaseBusiness, Check, ChevronDown, Clock3, Coffee, Eye, Gauge, Leaf, Zap } from 'lucide-react'
+import { Activity, ArrowRight, Brain, BriefcaseBusiness, Check, ChevronDown, Clock3, Coffee, Eye, Gauge, Leaf, Plus, ShoppingBag, Zap } from 'lucide-react'
 import type { FunctionalPouchConfig } from '../functionalPouchConfig'
 import { trackEveraEvent } from '../lib/posthogAnalytics'
 
@@ -8,6 +8,15 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
   const [strength, setStrength] = useState<'original' | 'strong'>('original')
   const [packSize, setPackSize] = useState<1 | 5>(5)
   const benefitIcons = config.positioning === 'zyn' ? [Leaf, Zap, Eye] : config.positioning === 'coffee' ? [Brain, BriefcaseBusiness, Coffee] : [Gauge, Activity, Clock3]
+  const faqs = [
+    { question: 'Kan jag använda EVERA varje dag?', answer: 'Följ alltid den rekommenderade dagsdosen på förpackningen och räkna in koffein från kaffe, energidryck och andra källor. Produkten rekommenderas inte för barn, gravida, ammande eller personer som är känsliga för koffein. Rådgör med vården om du har ett medicinskt tillstånd eller använder läkemedel.' },
+    { question: 'Hur använder jag en funktionell prilla?', answer: 'Placera en prilla under överläppen. Tugga eller svälj inte prillan. Ta ut den efter användning och släng den på ett lämpligt sätt.' },
+    { question: 'Hur länge ska prillan vara inne?', answer: 'Använd den i upp till 30 minuter. Smak och ingredienser frigörs gradvis, och du kan ta ut prillan tidigare om det känns bättre.' },
+    { question: 'Kan jag ta fler än den rekommenderade mängden?', answer: 'Nej. Överskrid inte dagsdosen på förpackningen och var uppmärksam på ditt totala koffeinintag under dagen.' },
+    { question: 'Innehåller EVERA nikotin?', answer: 'Nej. Samtliga EVERA-prillor i den här serien innehåller 0 mg nikotin.' },
+    { question: 'När märker jag effekten?', answer: 'Det varierar mellan personer och påverkas bland annat av koffeinkänslighet, mat och övrigt koffeinintag. Använd produkten enligt anvisningarna och utvärdera hur den passar dig.' },
+    { question: 'Kan prillan irritera tandköttet?', answer: 'Vissa kan uppleva lokal irritation, särskilt i början. Variera placeringen och sluta använda produkten om obehaget kvarstår.' },
+  ]
 
   useEffect(() => {
     document.documentElement.lang = 'sv'
@@ -24,7 +33,7 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
   return (
     <div className={`fp-page fp-page--${config.positioning}`} style={{ '--fp-accent': config.accent, '--fp-soft': config.accentSoft } as React.CSSProperties}>
       <div className="fp-announcement">FRI FRAKT PÅ 5-PACK · 0 MG NIKOTIN</div>
-      <header className="fp-nav"><a href="#top" className="fp-brand"><i />EVERA</a><nav><a href="#upplevelsen">Upplevelsen</a><a href="#produkt">Produkten</a><a href="#ingredienser">Ingredienser</a></nav><button onClick={() => orderNow('nav')}>LÄGG I VARUKORG</button></header>
+      <header className="fp-nav"><a href="#top" className="fp-brand"><i />EVERA</a><nav><details className="fp-nav-shop"><summary>KÖP NU <ChevronDown /></summary><div className="fp-nav-flavors">{config.flavors.map((item, index) => <button key={item.name} onClick={(event) => { setFlavor(item.name); (event.currentTarget.closest('details') as HTMLDetailsElement).open = false; document.getElementById('produkt')?.scrollIntoView({ behavior: 'smooth' }) }}><span style={{ backgroundImage: `url(${config.lineupImage})`, backgroundPosition: `${index * 50}% center` }} /><strong>{item.name}</strong></button>)}</div></details><a href="#formula" onClick={(event) => { const menu = event.currentTarget.closest('header')?.querySelector('.fp-nav-shop') as HTMLDetailsElement | null; if (menu) menu.open = false }}>INGREDIENSER</a><a href="#faq" onClick={(event) => { const menu = event.currentTarget.closest('header')?.querySelector('.fp-nav-shop') as HTMLDetailsElement | null; if (menu) menu.open = false }}>FAQ</a></nav><button className="fp-cart" onClick={() => orderNow('nav_cart')}><ShoppingBag /> VARUKORG</button></header>
 
       <main id="top">
         <section className="fp-hero" style={{ '--fp-hero-desktop': `url(${config.heroImage})`, '--fp-hero-mobile': `url(${config.mobileHeroImage})` } as React.CSSProperties}>
@@ -60,11 +69,15 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
           </div>
         </section>
 
-        <section className="fp-photo-break fp-risk-free"><img src={config.secondaryImage} alt="EVERA i en svensk vardag" loading="lazy" /><div><h2>TRY RISK FREE</h2><p>30-DAY SATISFACTION GUARANTEE</p><button onClick={() => orderNow('final_photo')}>TRY IT NOW <ArrowRight /></button></div></section>
+        <section className="fp-photo-break fp-risk-free"><img src={config.secondaryImage} alt="EVERA i en svensk vardag" loading="lazy" /><div><h2>PROVA RISKFRITT</h2><p>30 DAGARS NÖJDHETSGARANTI</p><button onClick={() => orderNow('final_photo')}>PROVA NU <ArrowRight /></button></div></section>
+
+        <section id="formula" className="fp-formula-cards"><div className="fp-formula-heading"><p>VAD FINNS I?</p><h2>Formulan</h2><span>Utvalda ingredienser för varje EVERA-positionering. Mängd per prilla:</span></div><div className="fp-formula-grid">{config.ingredients.map((item, index) => <article key={item.name}><div><b>{item.dose}</b><span>0{index + 1}</span></div><h3>{item.name}</h3><p>{item.why}</p></article>)}</div></section>
+
+        <section id="faq" className="fp-faq fp-wrap"><div className="fp-faq__heading"><p>VILL DU VETA MER?</p><h2>Vanliga frågor</h2><span>Det viktigaste om användning, koffein och nikotininnehåll.</span></div><div className="fp-faq__list">{faqs.map(item => <details key={item.question}><summary>{item.question}<Plus /></summary><p>{item.answer}</p></details>)}</div></section>
 
       </main>
 
-      <footer className="fp-footer"><div className="fp-footer__top"><a href="#top" className="fp-brand"><i />EVERA</a><p>Funktionella prillor för en modern svensk vardag.</p></div><div className="fp-footer__links"><div><strong>SHOPPA</strong><a href="#produkt">Smaker</a><a href="#ingredienser">Ingredienser</a></div><div><strong>HJÄLP</strong><a href="#">Kontakt</a><a href="#">FAQ</a><a href="#">Leverans & returer</a></div><div><strong>JURIDISKT</strong><a href="#">Integritetspolicy</a><a href="#">Köpvillkor</a><a href="#">Cookiepolicy</a></div></div><small>© 2026 EVERA · Koncept för marknadsvalidering</small></footer>
+      <footer className="fp-footer"><div className="fp-footer__top"><a href="#top" className="fp-brand"><i />EVERA</a><p>Funktionella prillor för en modern svensk vardag.</p></div><div className="fp-footer__links"><div><strong>SHOPPA</strong><a href="#produkt">Smaker</a><a href="#formula">Ingredienser</a></div><div><strong>HJÄLP</strong><a href="#">Kontakt</a><a href="#faq">FAQ</a><a href="#">Leverans & returer</a></div><div><strong>JURIDISKT</strong><a href="#">Integritetspolicy</a><a href="#">Köpvillkor</a><a href="#">Cookiepolicy</a></div></div><small>© 2026 EVERA · Koncept för marknadsvalidering</small></footer>
       <button className="fp-sticky" onClick={() => orderNow('mobile_sticky')}>LÄGG I VARUKORG <ArrowRight /></button>
     </div>
   )
