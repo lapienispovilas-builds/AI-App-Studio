@@ -60,7 +60,7 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
           </div>
         </section>
 
-        <section className="fp-photo-break"><img src={config.secondaryImage} alt="EVERA i en svensk vardag" loading="lazy" /><div><p>FUNKTION I ETT FORMAT SOM FÖLJER MED</p><h2>{config.finalTitle}</h2><button onClick={() => orderNow('final_photo')}>LÄGG I VARUKORG <ArrowRight /></button></div></section>
+        <section className="fp-photo-break fp-risk-free"><img src={config.secondaryImage} alt="EVERA i en svensk vardag" loading="lazy" /><div><h2>TRY RISK FREE</h2><p>30-DAY SATISFACTION GUARANTEE</p><button onClick={() => orderNow('final_photo')}>TRY IT NOW <ArrowRight /></button></div></section>
 
       </main>
 
