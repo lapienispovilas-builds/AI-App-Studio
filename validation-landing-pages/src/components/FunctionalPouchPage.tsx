@@ -3,11 +3,19 @@ import { Activity, ArrowRight, Brain, BriefcaseBusiness, Check, ChevronDown, Clo
 import type { FunctionalPouchConfig } from '../functionalPouchConfig'
 import { trackEveraEvent } from '../lib/posthogAnalytics'
 
+const pouchArtwork = {
+  zyn: { width: 1672, height: 941, crops: ['90 155 450 620', '600 155 500 620', '1125 155 525 620'] },
+  coffee: { width: 1672, height: 941, crops: ['40 175 480 590', '590 175 530 590', '1150 175 520 590'] },
+  preworkout: { width: 1905, height: 825, crops: ['30 85 545 630', '675 85 560 630', '1255 85 635 630'] },
+} as const
+
 export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig }) {
   const [flavor, setFlavor] = useState(config.flavors[0].name)
   const [strength, setStrength] = useState<'original' | 'strong'>('original')
   const [packSize, setPackSize] = useState<1 | 5>(5)
   const [showStickyCta, setShowStickyCta] = useState(false)
+  const selectedFlavorIndex = Math.max(0, config.flavors.findIndex(item => item.name === flavor))
+  const selectedArtwork = pouchArtwork[config.positioning]
   const benefitIcons = config.positioning === 'zyn' ? [Leaf, Zap, Eye] : config.positioning === 'coffee' ? [Brain, BriefcaseBusiness, Coffee] : [Gauge, Activity, Clock3]
   const faqs = [
     { question: 'Kan jag använda EVERA varje dag?', answer: 'Följ alltid den rekommenderade dagsdosen på förpackningen och räkna in koffein från kaffe, energidryck och andra källor. Produkten rekommenderas inte för barn, gravida, ammande eller personer som är känsliga för koffein. Rådgör med vården om du har ett medicinskt tillstånd eller använder läkemedel.' },
@@ -63,7 +71,7 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
         </section>
 
         <section id="produkt" className="fp-product-buy fp-wrap">
-          <div className="fp-product-buy__visual"><div className="fp-lineup-selector"><img src={config.lineupImage} alt={`Tre smaker av EVERA ${config.positioning}`} /></div></div>
+          <div className="fp-product-buy__visual"><svg className="fp-selected-flavor" viewBox={selectedArtwork.crops[selectedFlavorIndex]} role="img" aria-label={`EVERA ${flavor}`} preserveAspectRatio="xMidYMid meet"><image href={config.lineupImage} width={selectedArtwork.width} height={selectedArtwork.height} /></svg></div>
           <div className="fp-product-buy__panel">
             <p className="fp-kicker">EVERA FUNCTIONAL POUCHES</p>
             <h2>EVERA {config.positioning === 'zyn' ? 'RITUAL' : config.positioning === 'coffee' ? 'FOKUS' : 'MOVE'}</h2>
