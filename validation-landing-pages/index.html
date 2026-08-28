@@ -25,6 +25,11 @@
             'content',
             'Build a personalized 30-day GLP-1 maintenance plan with Evera.'
           );
+          var everaFavicon = document.createElement('link');
+          everaFavicon.rel = 'icon';
+          everaFavicon.type = 'image/png';
+          everaFavicon.href = '/functional-pouch/triangle-eye-logo.png';
+          document.head.appendChild(everaFavicon);
         }
 
         if (!showChapterMetadata) return;

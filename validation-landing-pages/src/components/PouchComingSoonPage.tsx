@@ -1,9 +1,10 @@
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 import { ArrowRight, Check } from 'lucide-react'
 import { submitLead } from '../lib/submitLead'
 import { trackEveraEvent } from '../lib/posthogAnalytics'
+import { trackMetaEvent } from '../lib/metaPixel'
 
-const validSources = new Set(['zyn', 'preworkout', 'coffee'])
+const validSources = new Set(['zyn', 'energy', 'coffee'])
 
 export function PouchComingSoonPage() {
   const querySource = new URLSearchParams(window.location.search).get('source') || ''
@@ -12,20 +13,23 @@ export function PouchComingSoonPage() {
   const [submitted, setSubmitted] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
+  const submittedRef = useRef(false)
 
   useEffect(() => {
     document.documentElement.lang = 'sv'
     document.title = 'Nästan där | EVERA'
     document.querySelector('meta[name="description"]')?.setAttribute('content', 'Vi förbereder den första batchen av EVERA.')
-    trackEveraEvent('coming_soon_viewed', { positioning: source, source }, `coming_soon_${source}`)
+    const robots = document.querySelector<HTMLMetaElement>('meta[name="robots"]') ?? document.head.appendChild(document.createElement('meta'))
+    robots.name = 'robots'
+    robots.content = 'noindex, nofollow'
+    trackEveraEvent('coming_soon_viewed', { positioning: source, source }, `coming_soon_${window.location.search}`)
   }, [source])
 
   const submit = async (event: FormEvent) => {
     event.preventDefault()
-    if (!email || busy) return
+    if (!email || busy || submittedRef.current) return
     setBusy(true)
     setError('')
-    trackEveraEvent('coming_soon_email_submitted', { positioning: source, source })
     try {
       await submitLead({ idea: 'evera-shift', page: `/coming-soon?source=${source}`, email, answers: { positioning: source } })
     } catch {
@@ -33,6 +37,10 @@ export function PouchComingSoonPage() {
       setBusy(false)
       return
     }
+    submittedRef.current = true
+    const normalizedEmail = email.trim().toLowerCase()
+    trackEveraEvent('coming_soon_email_submitted', { positioning: source, source }, `pouch_lead_${source}_${normalizedEmail}`)
+    trackMetaEvent('Lead', { positioning: source, source, page_path: window.location.pathname }, { onceKey: `pouch_lead_${source}_${normalizedEmail}` })
     setSubmitted(true)
     setBusy(false)
   }

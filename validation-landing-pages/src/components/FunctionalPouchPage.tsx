@@ -1,20 +1,24 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Activity, ArrowRight, Brain, BriefcaseBusiness, Check, ChevronDown, Clock3, Coffee, Eye, Gauge, Leaf, Plus, ShoppingBag, Zap } from 'lucide-react'
 import type { FunctionalPouchConfig } from '../functionalPouchConfig'
 import { trackEveraEvent } from '../lib/posthogAnalytics'
+import { trackMetaEvent } from '../lib/metaPixel'
+import { comingSoonUrl, experimentPositioning } from '../lib/pouchAttribution'
 
 const pouchArtwork = {
-  zyn: { width: 1672, height: 941, crops: ['90 155 450 620', '600 155 500 620', '1125 155 525 620'] },
-  coffee: { width: 1672, height: 941, crops: ['40 175 480 590', '590 175 530 590', '1150 175 520 590'] },
-  preworkout: { width: 1905, height: 825, crops: ['30 85 545 630', '675 85 560 630', '1255 85 635 630'] },
+  zyn: { width: 1672, height: 941, crops: ['100 150 540 620', '600 150 540 620', '1100 150 540 620'] },
+  coffee: { width: 1672, height: 941, crops: ['30 170 560 620', '560 170 560 620', '1080 170 560 620'] },
+  preworkout: { width: 1905, height: 825, crops: ['40 90 620 640', '650 90 640 640', '1260 90 640 640'] },
 } as const
 
 export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig }) {
-  const [flavor, setFlavor] = useState(config.flavors[0].name)
+  const [flavor, setFlavor] = useState<string | null>(null)
   const [strength, setStrength] = useState<'original' | 'strong'>('original')
   const [packSize, setPackSize] = useState<1 | 5>(5)
   const [showStickyCta, setShowStickyCta] = useState(false)
-  const selectedFlavorIndex = Math.max(0, config.flavors.findIndex(item => item.name === flavor))
+  const navigationStarted = useRef(false)
+  const analyticsPositioning = experimentPositioning(config.positioning)
+  const selectedFlavorIndex = flavor ? Math.max(0, config.flavors.findIndex(item => item.name === flavor)) : 0
   const selectedArtwork = pouchArtwork[config.positioning]
   const benefitIcons = config.positioning === 'zyn' ? [Leaf, Zap, Eye] : config.positioning === 'coffee' ? [Brain, BriefcaseBusiness, Coffee] : [Gauge, Activity, Clock3]
   const faqs = [
@@ -31,8 +35,10 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
     document.documentElement.lang = 'sv'
     document.title = `${config.headline} | EVERA`
     document.querySelector('meta[name="description"]')?.setAttribute('content', config.subheadline)
-    trackEveraEvent('landing_page_viewed', { positioning: config.positioning }, `pouch_landing_${config.positioning}_${window.location.search}`)
-  }, [config])
+    const robots = document.querySelector<HTMLMetaElement>('meta[name="robots"]') ?? document.head.appendChild(document.createElement('meta'))
+    robots.name = 'robots'
+    robots.content = 'noindex, nofollow'
+  }, [analyticsPositioning, config])
 
   useEffect(() => {
     const updateStickyCta = () => {
@@ -50,8 +56,12 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
   }, [])
 
   const orderNow = (location: string) => {
-    trackEveraEvent('buy_now_clicked', { positioning: config.positioning, cta_location: location, flavor, strength, pack_size: packSize })
-    window.location.assign(`/coming-soon?source=${config.positioning}`)
+    if (navigationStarted.current) return
+    navigationStarted.current = true
+    const destination = comingSoonUrl(analyticsPositioning)
+    trackEveraEvent('buy_now_clicked', { positioning: analyticsPositioning, cta_location: location, flavor: flavor ?? config.flavors[0].name, strength, pack_size: packSize })
+    trackMetaEvent('BuyNowClicked', { positioning: analyticsPositioning, page_path: window.location.pathname }, { custom: true })
+    window.setTimeout(() => window.location.assign(destination), 80)
   }
 
   return (
@@ -71,7 +81,7 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
         </section>
 
         <section id="produkt" className="fp-product-buy fp-wrap">
-          <div className="fp-product-buy__visual"><svg className="fp-selected-flavor" viewBox={selectedArtwork.crops[selectedFlavorIndex]} role="img" aria-label={`EVERA ${flavor}`} preserveAspectRatio="xMidYMid meet"><image href={config.lineupImage} width={selectedArtwork.width} height={selectedArtwork.height} /></svg></div>
+          <div className="fp-product-buy__visual">{flavor ? <svg className="fp-selected-flavor" viewBox={selectedArtwork.crops[selectedFlavorIndex]} role="img" aria-label={`EVERA ${flavor}`} preserveAspectRatio="xMidYMid meet"><image href={config.lineupImage} width={selectedArtwork.width} height={selectedArtwork.height} /></svg> : <img className="fp-product-lineup" src={config.lineupImage} alt={`Alla tre smaker av EVERA ${config.positioning === 'zyn' ? 'RITUAL' : config.positioning === 'coffee' ? 'FOKUS' : 'MOVE'}`} />}</div>
           <div className="fp-product-buy__panel">
             <p className="fp-kicker">EVERA FUNCTIONAL POUCHES</p>
             <h2>EVERA {config.positioning === 'zyn' ? 'RITUAL' : config.positioning === 'coffee' ? 'FOKUS' : 'MOVE'}</h2>
@@ -81,7 +91,7 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
             <fieldset><legend>STYRKA</legend><div className="fp-choice-row"><button type="button" className={strength === 'original' ? 'is-active' : ''} onClick={() => setStrength('original')}>ORIGINAL</button><button type="button" className={strength === 'strong' ? 'is-active' : ''} onClick={() => setStrength('strong')}>STARK · 15 % STARKARE</button></div></fieldset>
             <fieldset><legend>VÄLJ PAKET</legend><div className="fp-pack-grid"><button type="button" className={packSize === 5 ? 'is-active' : ''} onClick={() => setPackSize(5)}><span>MEST VÄRDE</span><strong>5-PACK</strong><b>199 kr</b><small>39,80 kr / dosa · spara 33 %</small></button><button type="button" className={packSize === 1 ? 'is-active' : ''} onClick={() => setPackSize(1)}><strong>1-PACK</strong><b>59 kr</b><small>59 kr / dosa</small></button></div></fieldset>
 
-            <div className="fp-purchase-summary"><div><strong>{packSize}-PACK EVERA</strong><span>{flavor} · {strength === 'strong' ? 'Stark' : 'Original'}</span></div><b>{packSize === 5 ? '199 kr' : '59 kr'}</b></div>
+            <div className="fp-purchase-summary"><div><strong>{packSize}-PACK EVERA</strong><span>{flavor ?? 'Välj smak'} · {strength === 'strong' ? 'Stark' : 'Original'}</span></div><b>{packSize === 5 ? '199 kr' : '59 kr'}</b></div>
             <button className="fp-add-cart" onClick={() => orderNow('product')}>LÄGG I VARUKORG <ArrowRight /></button>
             <p className="fp-shipping-note">Fri frakt på 5-pack · 20 prillor per dosa</p>
             <div className="fp-product-details">
@@ -101,7 +111,7 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
 
       </main>
 
-      <footer className="fp-footer"><div className="fp-footer__top"><a href="#top" className="fp-brand"><i />EVERA</a><p>Funktionella prillor för en modern svensk vardag.</p></div><div className="fp-footer__links"><div><strong>SHOPPA</strong><a href="#produkt">Smaker</a><a href="#formula">Ingredienser</a></div><div><strong>HJÄLP</strong><a href="#">Kontakt</a><a href="#faq">FAQ</a><a href="#">Leverans & returer</a></div><div><strong>JURIDISKT</strong><a href="#">Integritetspolicy</a><a href="#">Köpvillkor</a><a href="#">Cookiepolicy</a></div></div><small>© 2026 EVERA · Koncept för marknadsvalidering</small></footer>
+      <footer className="fp-footer"><div className="fp-footer__top"><a href="#top" className="fp-brand"><i />EVERA</a><p>Funktionella prillor för en modern svensk vardag.</p></div><div className="fp-footer__links"><div><strong>SHOPPA</strong><a href="#produkt">Smaker</a><a href="#formula">Ingredienser</a></div><div><strong>HJÄLP</strong><a href="#faq">FAQ</a></div></div><small>© 2026 EVERA · Koncept för marknadsvalidering</small></footer>
       <button className={`fp-sticky${showStickyCta ? ' is-visible' : ''}`} onClick={() => orderNow('mobile_sticky')} aria-hidden={!showStickyCta} tabIndex={showStickyCta ? 0 : -1}>LÄGG I VARUKORG <ArrowRight /></button>
     </div>
   )

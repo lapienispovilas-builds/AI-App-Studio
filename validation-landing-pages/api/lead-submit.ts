@@ -13,6 +13,7 @@ type LeadSubmission = {
   utmMedium?: string
   utmCampaign?: string
   utmContent?: string
+  utmTerm?: string
 }
 
 type ApiRequest = { method?: string; body?: LeadSubmission }
@@ -37,6 +38,7 @@ const headers = [
   'UTM Medium',
   'UTM Campaign',
   'UTM Content',
+  'UTM Term',
   'Status',
 ] as const
 
@@ -153,12 +155,13 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     safeText(body.utmMedium, 250),
     safeText(body.utmCampaign, 250),
     safeText(body.utmContent, 250),
+    safeText(body.utmTerm, 250),
     'New',
   ]
 
   try {
     const token = await getGoogleAccessToken(serviceAccountEmail, privateKey)
-    const headerRange = sheetRange(sheetName, 'A1:N1')
+    const headerRange = sheetRange(sheetName, 'A1:O1')
     const headerResponse = await sheetsFetch(token, spreadsheetId, headerRange)
     const headerData = await headerResponse.json() as { values?: string[][] }
     if (!headerResponse.ok) throw new Error(`Google Sheet could not be read (${headerResponse.status}).`)
@@ -177,7 +180,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     if (!existingResponse.ok) throw new Error(`Existing leads could not be checked (${existingResponse.status}).`)
     const duplicate = (existingData.values ?? []).some(existing => safeText(existing[0], 320).toLowerCase() === email && safeText(existing[2], 500) === page)
     if (!duplicate) {
-      const appendResponse = await sheetsFetch(token, spreadsheetId, sheetRange(sheetName, 'A:N'), {
+      const appendResponse = await sheetsFetch(token, spreadsheetId, sheetRange(sheetName, 'A:O'), {
         method: 'POST',
         body: JSON.stringify({ values: [row] }),
       })

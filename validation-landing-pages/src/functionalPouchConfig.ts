@@ -14,7 +14,7 @@ export type FunctionalPouchConfig = {
 
 export const functionalPouchPages: Record<string, FunctionalPouchConfig> = {
   '/zyn-alternative': {
-    positioning: 'zyn', heroImage: '/functional-pouch/campaign/hero-zyn.jpg', mobileHeroImage: '/functional-pouch/campaign/hero-zyn-mobile-v2.png', lifestyleImage: '/functional-pouch/campaign/lifestyle-zyn.jpg', secondaryImage: '/functional-pouch/campaign/secondary-zyn.jpg', lineupImage: '/functional-pouch/campaign/lineup-zyn-transparent.png',
+    positioning: 'zyn', heroImage: '/functional-pouch/campaign/hero-zyn.jpg', mobileHeroImage: '/functional-pouch/campaign/hero-zyn-mobile-v2.jpg', lifestyleImage: '/functional-pouch/campaign/lifestyle-zyn.jpg', secondaryImage: '/functional-pouch/campaign/secondary-zyn.jpg', lineupImage: '/functional-pouch/campaign/lineup-zyn-transparent.png',
     eyebrow: 'Ett nikotinfritt ritualbyte', headline: 'Behåll pausen. Skippa nikotinet.',
     subheadline: 'En funktionell prilla för dig som gillar ritualen men vill välja bort nikotin – hemma, på jobbet eller på språng.',
     accent: '#e3f59f', accentSoft: '#f1f6d7',
@@ -38,7 +38,7 @@ export const functionalPouchPages: Record<string, FunctionalPouchConfig> = {
     ], finalTitle: 'Redo för en ny ritual?',
   },
   '/coffee': {
-    positioning: 'coffee', heroImage: '/functional-pouch/campaign/hero-coffee.jpg', mobileHeroImage: '/functional-pouch/campaign/hero-coffee-mobile-v2.png', lifestyleImage: '/functional-pouch/campaign/lifestyle-coffee.jpg', secondaryImage: '/functional-pouch/campaign/secondary-coffee.jpg', lineupImage: '/functional-pouch/campaign/lineup-coffee-transparent.png',
+    positioning: 'coffee', heroImage: '/functional-pouch/campaign/hero-coffee.jpg', mobileHeroImage: '/functional-pouch/campaign/hero-coffee-mobile-v2.jpg', lifestyleImage: '/functional-pouch/campaign/lifestyle-coffee.jpg', secondaryImage: '/functional-pouch/campaign/secondary-coffee.jpg', lineupImage: '/functional-pouch/campaign/lineup-coffee-transparent.png',
     eyebrow: 'Fokus för krävande dagar', headline: 'Fokus utan ännu en kaffe.',
     subheadline: 'En funktionell prilla för långa arbetsdagar, djupjobb och eftermiddagen när nästa kopp känns som fel lösning.',
     accent: '#d9b88f', accentSoft: '#f1e2d1',
@@ -62,7 +62,7 @@ export const functionalPouchPages: Record<string, FunctionalPouchConfig> = {
     ], finalTitle: 'Gör plats för fokus.',
   },
   '/energy': {
-    positioning: 'preworkout', heroImage: '/functional-pouch/campaign/hero-preworkout.jpg', mobileHeroImage: '/functional-pouch/campaign/hero-preworkout-mobile-v2.png', lifestyleImage: '/functional-pouch/campaign/lifestyle-preworkout.jpg', secondaryImage: '/functional-pouch/campaign/secondary-preworkout.jpg', lineupImage: '/functional-pouch/campaign/lineup-preworkout-transparent.png',
+    positioning: 'preworkout', heroImage: '/functional-pouch/campaign/hero-preworkout.jpg', mobileHeroImage: '/functional-pouch/campaign/hero-preworkout-mobile-v2.jpg', lifestyleImage: '/functional-pouch/campaign/lifestyle-preworkout.jpg', secondaryImage: '/functional-pouch/campaign/secondary-preworkout.jpg', lineupImage: '/functional-pouch/campaign/lineup-preworkout-transparent.png',
     eyebrow: 'Energi före rörelse', headline: 'Lite mer driv. Utan hela pre-workouten.',
     subheadline: 'En funktionell prilla för löprundan, padelmatchen eller passet efter jobbet – när du vill ha energi, inte maxad känsla.',
     accent: '#e3f59f', accentSoft: '#f1f6d7',

@@ -7,6 +7,7 @@ const token = import.meta.env.VITE_POSTHOG_PROJECT_TOKEN?.trim()
 const host = import.meta.env.VITE_POSTHOG_HOST?.trim() || 'https://eu.i.posthog.com'
 const debugEnabled = import.meta.env.VITE_POSTHOG_DEBUG === 'true'
 let initialized = false
+const capturedPageViews = new Set<string>()
 
 const ATTRIBUTION_KEY = 'evera_posthog_attribution_v1'
 
@@ -67,16 +68,27 @@ export function trackEveraEvent(event: string, properties: AnalyticsProperties =
     if (window.sessionStorage.getItem(key)) return false
     window.sessionStorage.setItem(key, '1')
   }
-  posthog.capture(event, properties)
+  posthog.capture(event, {
+    current_url: window.location.href,
+    pathname: window.location.pathname,
+    referrer: document.referrer || '',
+    ...readAttribution(),
+    ...properties,
+  })
   return true
 }
 
 export function trackEveraPageView(path: string) {
-  return trackEveraEvent('page_view', {
+  const pageViewKey = `${path}${window.location.search}`
+  if (capturedPageViews.has(pageViewKey)) return false
+  const captured = trackEveraEvent('$pageview', {
     $current_url: window.location.href,
+    $pathname: path,
     path,
     page_title: document.title,
-  }, `page_view_${path}_${window.location.search}`)
+  })
+  if (captured) capturedPageViews.add(pageViewKey)
+  return captured
 }
 
 export function identifyEveraUser(userId: string, selectedProgram?: string) {

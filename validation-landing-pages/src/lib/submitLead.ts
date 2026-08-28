@@ -20,6 +20,7 @@ export async function submitLead(submission: LeadSubmission) {
       utmMedium: searchParams.get('utm_medium') || '',
       utmCampaign: searchParams.get('utm_campaign') || '',
       utmContent: searchParams.get('utm_content') || '',
+      utmTerm: searchParams.get('utm_term') || '',
     }),
   })
   if (!response.ok) throw new Error('Lead could not be saved.')

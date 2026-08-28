@@ -41,6 +41,8 @@ export function App() {
   const pouchConfig = functionalPouchPages[path]
   const danishEveraConfig = createDanishLandingConfig(phase2LandingPagesByPath['/glp1-tracker-maintenance'])
   const isEveraPage = isEveraDomain(window.location.hostname)
+    || Boolean(pouchConfig)
+    || path === '/coming-soon'
     || path === '/glp1-tracker-maintenance'
     || ['/dk', '/dk/quiz', '/dk/plan-preview', '/dk/pricing', '/dashboard', '/plan-preview', '/pricing', '/payment-success', '/create-account'].includes(path)
 
