@@ -41,6 +41,12 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
   }, [analyticsPositioning, config])
 
   useEffect(() => {
+    const restoreCtas = () => { navigationStarted.current = false }
+    window.addEventListener('pageshow', restoreCtas)
+    return () => window.removeEventListener('pageshow', restoreCtas)
+  }, [])
+
+  useEffect(() => {
     const updateStickyCta = () => {
       const productSection = document.getElementById('produkt')
       setShowStickyCta(Boolean(productSection && productSection.getBoundingClientRect().bottom <= 0))
