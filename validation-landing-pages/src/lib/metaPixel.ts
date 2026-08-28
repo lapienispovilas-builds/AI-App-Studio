@@ -1,6 +1,6 @@
 type MetaPixel = (...args: unknown[]) => void
 
-type MetaParameters = Record<string, string | number | boolean>
+type MetaParameters = Record<string, string | number | boolean | string[]>
 
 declare global {
   interface Window {

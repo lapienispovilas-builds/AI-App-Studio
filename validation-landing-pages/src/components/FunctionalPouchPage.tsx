@@ -61,7 +61,16 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
     const destination = comingSoonUrl(analyticsPositioning)
     try {
       trackEveraEvent('buy_now_clicked', { positioning: analyticsPositioning, cta_location: location, flavor: flavor ?? config.flavors[0].name, strength, pack_size: packSize })
-      trackMetaEvent('BuyNowClicked', { positioning: analyticsPositioning, page_path: window.location.pathname }, { custom: true })
+      trackMetaEvent('AddToCart', {
+        positioning: analyticsPositioning,
+        page_path: window.location.pathname,
+        content_name: `EVERA ${analyticsPositioning}`,
+        content_category: 'functional_pouches',
+        content_ids: [`${analyticsPositioning}_${flavor ?? config.flavors[0].name}`.toLowerCase().replace(/\s+/g, '_')],
+        content_type: 'product',
+        value: packSize === 5 ? 199 : 59,
+        currency: 'SEK',
+      })
     } catch {
       // Navigation remains reliable even if a browser blocks analytics.
     } finally {
