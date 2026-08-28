@@ -59,12 +59,13 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
     if (navigationStarted.current) return
     navigationStarted.current = true
     const destination = comingSoonUrl(analyticsPositioning)
-    window.setTimeout(() => window.location.assign(destination), 100)
     try {
       trackEveraEvent('buy_now_clicked', { positioning: analyticsPositioning, cta_location: location, flavor: flavor ?? config.flavors[0].name, strength, pack_size: packSize })
       trackMetaEvent('BuyNowClicked', { positioning: analyticsPositioning, page_path: window.location.pathname }, { custom: true })
     } catch {
-      // Navigation remains reliable even if a browser blocks an analytics call.
+      // Navigation remains reliable even if a browser blocks analytics.
+    } finally {
+      window.location.assign(destination)
     }
   }
 
