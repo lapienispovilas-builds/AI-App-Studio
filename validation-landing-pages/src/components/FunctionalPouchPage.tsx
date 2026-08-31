@@ -3,7 +3,7 @@ import { Activity, ArrowRight, Brain, BriefcaseBusiness, Check, ChevronDown, Clo
 import type { FunctionalPouchConfig } from '../functionalPouchConfig'
 import { trackEveraEvent } from '../lib/posthogAnalytics'
 import { trackMetaEvent } from '../lib/metaPixel'
-import { comingSoonUrl, experimentPositioning } from '../lib/pouchAttribution'
+import { analyticsOfferProperties, checkoutUrl, experimentPositioning, normalizePurchaseType, offerPrice, type PouchOffer, type PurchaseType } from '../lib/pouchAttribution'
 
 const pouchArtwork = {
   zyn: { width: 1672, height: 941, crops: ['100 150 540 620', '600 150 540 620', '1100 150 540 620'] },
@@ -15,11 +15,26 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
   const [flavor, setFlavor] = useState<string | null>(null)
   const [strength, setStrength] = useState<'original' | 'strong'>('original')
   const [packSize, setPackSize] = useState<1 | 5>(5)
+  const [purchaseType, setPurchaseType] = useState<PurchaseType>('one-time')
   const [showStickyCta, setShowStickyCta] = useState(false)
   const navigationStarted = useRef(false)
   const analyticsPositioning = experimentPositioning(config.positioning)
   const selectedFlavorIndex = flavor ? Math.max(0, config.flavors.findIndex(item => item.name === flavor)) : 0
   const selectedArtwork = pouchArtwork[config.positioning]
+  const selectedFlavor = flavor ?? config.flavors[0].name
+  const makeOffer = (nextPack = packSize, nextPurchaseType = purchaseType, nextFlavor = selectedFlavor): PouchOffer => {
+    const packageName = nextPack === 5 ? '5-pack' : '1-pack'
+    const normalizedPurchaseType = normalizePurchaseType(packageName, nextPurchaseType)
+    return {
+      positioning: analyticsPositioning,
+      flavor: nextFlavor,
+      package: packageName,
+      purchase_type: normalizedPurchaseType,
+      price: offerPrice(packageName, normalizedPurchaseType),
+      strength,
+    }
+  }
+  const currentOffer = makeOffer()
   const benefitIcons = config.positioning === 'zyn' ? [Leaf, Zap, Eye] : config.positioning === 'coffee' ? [Brain, BriefcaseBusiness, Coffee] : [Gauge, Activity, Clock3]
   const faqs = [
     { question: 'Kan jag använda EVERA varje dag?', answer: 'Följ alltid den rekommenderade dagsdosen på förpackningen och räkna in koffein från kaffe, energidryck och andra källor. Produkten rekommenderas inte för barn, gravida, ammande eller personer som är känsliga för koffein. Rådgör med vården om du har ett medicinskt tillstånd eller använder läkemedel.' },
@@ -38,6 +53,7 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
     const robots = document.querySelector<HTMLMetaElement>('meta[name="robots"]') ?? document.head.appendChild(document.createElement('meta'))
     robots.name = 'robots'
     robots.content = 'noindex, nofollow'
+    trackEveraEvent('landing_page_viewed', { positioning: analyticsPositioning }, `pouch_landing_${analyticsPositioning}_${window.location.search}`)
   }, [analyticsPositioning, config])
 
   useEffect(() => {
@@ -64,17 +80,17 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
   const orderNow = (location: string) => {
     if (navigationStarted.current) return
     navigationStarted.current = true
-    const destination = comingSoonUrl(analyticsPositioning)
+    const destination = checkoutUrl(currentOffer)
     try {
-      trackEveraEvent('buy_now_clicked', { positioning: analyticsPositioning, cta_location: location, flavor: flavor ?? config.flavors[0].name, strength, pack_size: packSize })
+      trackEveraEvent('buy_now_clicked', { ...analyticsOfferProperties(currentOffer), cta_location: location })
       trackMetaEvent('AddToCart', {
-        positioning: analyticsPositioning,
+        ...analyticsOfferProperties(currentOffer),
         page_path: window.location.pathname,
         content_name: `EVERA ${analyticsPositioning}`,
         content_category: 'functional_pouches',
-        content_ids: [`${analyticsPositioning}_${flavor ?? config.flavors[0].name}`.toLowerCase().replace(/\s+/g, '_')],
+        content_ids: [`${analyticsPositioning}_${selectedFlavor}`.toLowerCase().replace(/\s+/g, '_')],
         content_type: 'product',
-        value: packSize === 5 ? 199 : 59,
+        value: currentOffer.price,
         currency: 'SEK',
       })
     } catch {
@@ -84,10 +100,27 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
     }
   }
 
+  const selectFlavor = (nextFlavor: string) => {
+    setFlavor(nextFlavor)
+    trackEveraEvent('offer_selected', analyticsOfferProperties(makeOffer(packSize, purchaseType, nextFlavor)))
+  }
+
+  const selectPackage = (nextPack: 1 | 5) => {
+    const nextPurchaseType = nextPack === 1 ? 'one-time' : purchaseType
+    setPackSize(nextPack)
+    setPurchaseType(nextPurchaseType)
+    trackEveraEvent('offer_selected', analyticsOfferProperties(makeOffer(nextPack, nextPurchaseType)))
+  }
+
+  const selectPurchaseType = (nextPurchaseType: PurchaseType) => {
+    setPurchaseType(nextPurchaseType)
+    trackEveraEvent('offer_selected', analyticsOfferProperties(makeOffer(5, nextPurchaseType)))
+  }
+
   return (
     <div className={`fp-page fp-page--${config.positioning}`} style={{ '--fp-accent': config.accent, '--fp-soft': config.accentSoft } as React.CSSProperties}>
       <div className="fp-announcement">FRI FRAKT PÅ 5-PACK · 0 MG NIKOTIN</div>
-      <header className="fp-nav"><a href="#top" className="fp-brand"><i />EVERA</a><nav><details className="fp-nav-shop"><summary>KÖP NU <ChevronDown /></summary><div className="fp-nav-flavors"><img src={config.lineupImage} alt="" aria-hidden="true" />{config.flavors.map(item => <button key={item.name} onClick={(event) => { setFlavor(item.name); (event.currentTarget.closest('details') as HTMLDetailsElement).open = false; document.getElementById('produkt')?.scrollIntoView({ behavior: 'smooth' }) }}><strong>{item.name}</strong></button>)}</div></details><a href="#formula" onClick={(event) => { const menu = event.currentTarget.closest('header')?.querySelector('.fp-nav-shop') as HTMLDetailsElement | null; if (menu) menu.open = false }}>INGREDIENSER</a><a href="#faq" onClick={(event) => { const menu = event.currentTarget.closest('header')?.querySelector('.fp-nav-shop') as HTMLDetailsElement | null; if (menu) menu.open = false }}>FAQ</a></nav><button className="fp-cart" onClick={() => orderNow('nav_cart')}><ShoppingBag /> VARUKORG</button></header>
+      <header className="fp-nav"><a href="#top" className="fp-brand"><i />EVERA</a><nav><details className="fp-nav-shop"><summary>KÖP NU <ChevronDown /></summary><div className="fp-nav-flavors"><img src={config.lineupImage} alt="" aria-hidden="true" />{config.flavors.map(item => <button key={item.name} onClick={(event) => { selectFlavor(item.name); (event.currentTarget.closest('details') as HTMLDetailsElement).open = false; document.getElementById('produkt')?.scrollIntoView({ behavior: 'smooth' }) }}><strong>{item.name}</strong></button>)}</div></details><a href="#formula" onClick={(event) => { const menu = event.currentTarget.closest('header')?.querySelector('.fp-nav-shop') as HTMLDetailsElement | null; if (menu) menu.open = false }}>INGREDIENSER</a><a href="#faq" onClick={(event) => { const menu = event.currentTarget.closest('header')?.querySelector('.fp-nav-shop') as HTMLDetailsElement | null; if (menu) menu.open = false }}>FAQ</a></nav><button className="fp-cart" onClick={() => orderNow('nav_cart')}><ShoppingBag /> VARUKORG</button></header>
 
       <main id="top">
         <section className="fp-hero" style={{ '--fp-hero-desktop': `url(${config.heroImage})`, '--fp-hero-mobile': `url(${config.mobileHeroImage})` } as React.CSSProperties}>
@@ -107,11 +140,13 @@ export function FunctionalPouchPage({ config }: { config: FunctionalPouchConfig 
             <h2>EVERA {config.positioning === 'zyn' ? 'RITUAL' : config.positioning === 'coffee' ? 'FOKUS' : 'MOVE'}</h2>
             <p className="fp-buy-lead">Funktionella prillor i ett diskret format. Välj smak, styrka och antal.</p>
 
-            <fieldset><legend>SMAK</legend><div className="fp-choice-row fp-choice-row--flavors">{config.flavors.map(item => <button type="button" key={item.name} className={flavor === item.name ? 'is-active' : ''} onClick={() => setFlavor(item.name)}><i style={{ background: item.name.includes('Berry') ? '#b65778' : item.name.includes('Mint') || item.name.includes('Spearmint') ? '#769b91' : '#d2a755' }} />{item.name}</button>)}</div></fieldset>
+            <fieldset><legend>SMAK</legend><div className="fp-choice-row fp-choice-row--flavors">{config.flavors.map(item => <button type="button" key={item.name} className={selectedFlavor === item.name ? 'is-active' : ''} onClick={() => selectFlavor(item.name)}><i style={{ background: item.name.includes('Berry') ? '#b65778' : item.name.includes('Mint') || item.name.includes('Spearmint') ? '#769b91' : '#d2a755' }} />{item.name}</button>)}</div></fieldset>
             <fieldset><legend>STYRKA</legend><div className="fp-choice-row"><button type="button" className={strength === 'original' ? 'is-active' : ''} onClick={() => setStrength('original')}>ORIGINAL</button><button type="button" className={strength === 'strong' ? 'is-active' : ''} onClick={() => setStrength('strong')}>STARK · 15 % STARKARE</button></div></fieldset>
-            <fieldset><legend>VÄLJ PAKET</legend><div className="fp-pack-grid"><button type="button" className={packSize === 5 ? 'is-active' : ''} onClick={() => setPackSize(5)}><span>MEST VÄRDE</span><strong>5-PACK</strong><b>199 kr</b><small>39,80 kr / dosa · spara 33 %</small></button><button type="button" className={packSize === 1 ? 'is-active' : ''} onClick={() => setPackSize(1)}><strong>1-PACK</strong><b>59 kr</b><small>59 kr / dosa</small></button></div></fieldset>
+            <fieldset><legend>PAKET</legend><div className="fp-pack-grid"><button type="button" className={packSize === 5 ? 'is-active' : ''} onClick={() => selectPackage(5)}><span>MEST POPULÄR</span><strong>5-PACK</strong><b>279 kr</b><small>55.80 kr / box</small></button><button type="button" className={packSize === 1 ? 'is-active' : ''} onClick={() => selectPackage(1)}><strong>1-PACK</strong><b>89 kr</b><small>89 kr / box</small></button></div></fieldset>
 
-            <div className="fp-purchase-summary"><div><strong>{packSize}-PACK EVERA</strong><span>{flavor ?? 'Välj smak'} · {strength === 'strong' ? 'Stark' : 'Original'}</span></div><b>{packSize === 5 ? '199 kr' : '59 kr'}</b></div>
+            {packSize === 5 && <fieldset><legend>KÖPTYP</legend><div className="fp-purchase-type"><button type="button" className={purchaseType === 'one-time' ? 'is-active' : ''} onClick={() => selectPurchaseType('one-time')}><span><strong>ENGÅNGSKÖP</strong><small>Betala en gång</small></span><b>279 kr</b></button><button type="button" className={purchaseType === 'subscription' ? 'is-active' : ''} onClick={() => selectPurchaseType('subscription')}><span><em>SPARA 15 %</em><strong>PRENUMERERA & SPARA</strong><small>47.80 kr / box</small></span><b><del>279 kr</del> 239 kr</b></button></div></fieldset>}
+
+            <div className="fp-purchase-summary"><div><strong>{packSize}-PACK EVERA</strong><span>{selectedFlavor} · {strength === 'strong' ? 'Stark' : 'Original'} · {currentOffer.purchase_type === 'subscription' ? 'Prenumeration' : 'Engångsköp'}</span></div><b>{currentOffer.price} kr</b></div>
             <button className="fp-add-cart" onClick={() => orderNow('product')}>LÄGG I VARUKORG <ArrowRight /></button>
             <p className="fp-shipping-note">Fri frakt på 5-pack · 20 prillor per dosa</p>
             <div className="fp-product-details">

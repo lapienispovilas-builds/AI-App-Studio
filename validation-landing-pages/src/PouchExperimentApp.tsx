@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { FunctionalPouchPage } from './components/FunctionalPouchPage'
 import { PouchComingSoonPage } from './components/PouchComingSoonPage'
+import { PouchCheckoutPage } from './components/PouchCheckoutPage'
 import { functionalPouchPages } from './functionalPouchConfig'
 import { trackEveraPageView } from './lib/posthogAnalytics'
 
@@ -13,6 +14,7 @@ export function PouchExperimentApp() {
   }, [path])
 
   if (config) return <FunctionalPouchPage config={config} />
+  if (path === '/checkout') return <PouchCheckoutPage />
   return <PouchComingSoonPage />
 }
 

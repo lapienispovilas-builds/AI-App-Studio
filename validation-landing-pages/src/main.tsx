@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './styles.css'
 import { initializePostHog } from './lib/posthogAnalytics'
 
-const pouchPaths = new Set(['/zyn-alternative', '/energy', '/coffee', '/coming-soon'])
+const pouchPaths = new Set(['/zyn-alternative', '/energy', '/coffee', '/checkout', '/coming-soon'])
 const path = window.location.pathname.replace(/\/$/, '') || '/'
 
 async function start() {

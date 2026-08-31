@@ -23,6 +23,7 @@ import { captureChapterAcquisition } from './lib/chapterAcquisition'
 import { functionalPouchPages } from './functionalPouchConfig'
 import { FunctionalPouchPage } from './components/FunctionalPouchPage'
 import { PouchComingSoonPage } from './components/PouchComingSoonPage'
+import { PouchCheckoutPage } from './components/PouchCheckoutPage'
 
 const chapterStudentDomains = new Set(['trychapter.lt', 'www.trychapter.lt'])
 
@@ -43,6 +44,7 @@ export function App() {
   const isEveraPage = isEveraDomain(window.location.hostname)
     || Boolean(pouchConfig)
     || path === '/coming-soon'
+    || path === '/checkout'
     || path === '/glp1-tracker-maintenance'
     || ['/dk', '/dk/quiz', '/dk/plan-preview', '/dk/pricing', '/dashboard', '/plan-preview', '/pricing', '/payment-success', '/create-account'].includes(path)
 
@@ -57,6 +59,7 @@ export function App() {
   if (showChapterStudentHome) return <ChapterrStudentLandingPage config={chapterrStudentLandingPage} />
   if (showChapterStudentQuiz) return <ChapterStudentQuiz />
   if (pouchConfig) return <FunctionalPouchPage config={pouchConfig} />
+  if (path === '/checkout') return <PouchCheckoutPage />
   if (path === '/coming-soon') return <PouchComingSoonPage />
   if (showEveraHome) return <Phase2LandingPage config={phase2LandingPagesByPath['/glp1-tracker-maintenance']} />
   if (path === '/dk') return <Phase2LandingPage config={danishEveraConfig} />
