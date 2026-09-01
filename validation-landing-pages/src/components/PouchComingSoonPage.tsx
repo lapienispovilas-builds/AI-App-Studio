@@ -24,12 +24,14 @@ export function PouchComingSoonPage({ initialEmail = '', completedOrderIntentOve
     purchase_type: query.get('purchase_type') || 'unknown',
     flavor: resolvedFlavor,
     price: Number(query.get('price')) || 0,
+    strength: query.get('strength') === 'strong' ? 'strong' : 'original',
   }
   const [email, setEmail] = useState(initialEmail)
   const [submitted, setSubmitted] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const submittedRef = useRef(false)
+  const submissionStartedRef = useRef(false)
 
   useEffect(() => {
     document.documentElement.lang = 'sv'
@@ -43,7 +45,8 @@ export function PouchComingSoonPage({ initialEmail = '', completedOrderIntentOve
 
   const submit = async (event: FormEvent) => {
     event.preventDefault()
-    if (!email || busy || submittedRef.current) return
+    if (!email || busy || submittedRef.current || submissionStartedRef.current) return
+    submissionStartedRef.current = true
     setBusy(true)
     setError('')
     try {
@@ -57,6 +60,7 @@ export function PouchComingSoonPage({ initialEmail = '', completedOrderIntentOve
         ...attribution,
       } })
     } catch {
+      submissionStartedRef.current = false
       setError('Det gick inte att spara din e-post. Försök igen om en stund.')
       setBusy(false)
       return

@@ -124,7 +124,6 @@ export function PouchCheckoutPage() {
     const revealUrl = comingSoonUrl(offer, true)
     window.history.replaceState({}, '', revealUrl)
     trackEveraPageView('/coming-soon')
-    trackMetaEvent('PageView', { positioning: offer.positioning, page_path: '/coming-soon' }, { onceKey: `pouch_reveal_pageview_${window.location.search}` })
     setShowReveal(true)
   }
 

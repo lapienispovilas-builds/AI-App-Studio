@@ -30,6 +30,7 @@ function readAttribution(): AnalyticsProperties {
     for (const key of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) {
       if (current.get(key)) next[key] = current.get(key)
     }
+    if (current.has('test')) next.is_test_traffic = current.get('test') === 'true'
 
     if (!next.traffic_source) {
       next.traffic_source = current.get('utm_source')

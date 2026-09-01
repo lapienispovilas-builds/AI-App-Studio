@@ -14,6 +14,7 @@ export type PouchOffer = {
 }
 
 export const utmKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'] as const
+const funnelQueryKeys = [...utmKeys, 'test'] as const
 
 export function experimentPositioning(positioning: PouchPositioning): ExperimentPositioning {
   return positioning === 'preworkout' ? 'energy' : positioning
@@ -38,7 +39,7 @@ export function attributionFromSearch(search = window.location.search) {
 }
 
 function appendAttribution(next: URLSearchParams, current = new URLSearchParams(window.location.search)) {
-  for (const key of utmKeys) {
+  for (const key of funnelQueryKeys) {
     const value = current.get(key)
     if (value) next.set(key, value)
   }
@@ -79,5 +80,6 @@ export function analyticsOfferProperties(offer: PouchOffer) {
     purchase_type: offer.purchase_type,
     flavor: offer.flavor,
     price: offer.price,
+    strength: offer.strength ?? 'original',
   }
 }
