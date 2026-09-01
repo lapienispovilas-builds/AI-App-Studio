@@ -35,9 +35,9 @@ const sourcePaths: Record<ExperimentPositioning, string> = {
 }
 
 const checkoutPackshots = {
-  zyn: { path: '/zyn-alternative', width: 1672, height: 941, crops: ['100 150 540 620', '600 150 540 620', '1100 150 540 620'] },
-  coffee: { path: '/coffee', width: 1672, height: 941, crops: ['30 170 560 620', '560 170 560 620', '1080 170 560 620'] },
-  energy: { path: '/energy', width: 1905, height: 825, crops: ['40 90 620 640', '650 90 640 640', '1260 90 640 640'] },
+  zyn: '/functional-pouch/checkout/evera-ritual.png',
+  coffee: '/functional-pouch/checkout/evera-fokus.png',
+  energy: '/functional-pouch/checkout/evera-move.png',
 } as const
 
 function checkoutOffer(): PouchOffer {
@@ -130,8 +130,6 @@ export function PouchCheckoutPage() {
 
   const purchaseLabel = offer.purchase_type === 'subscription' ? 'Prenumerera & spara 15 %' : 'Engångsköp'
   const packshot = checkoutPackshots[offer.positioning]
-  const productConfig = functionalPouchPages[packshot.path]
-  const flavorIndex = Math.max(0, productConfig.flavors.findIndex(item => item.name === offer.flavor))
 
   if (showReveal) return <PouchComingSoonPage initialEmail={details.email.trim()} completedOrderIntentOverride />
 
@@ -164,7 +162,7 @@ export function PouchCheckoutPage() {
 
       <aside className="pouch-checkout__summary">
         <p>DIN BESTÄLLNING</p><h2>EVERA</h2>
-        <div className="pouch-checkout__item"><svg className="pouch-checkout__packshot" viewBox={packshot.crops[flavorIndex]} role="img" aria-label={`EVERA ${offer.flavor}`} preserveAspectRatio="xMidYMid meet"><image href={productConfig.lineupImage} width={packshot.width} height={packshot.height} /></svg><div><strong>{offer.package.toUpperCase()}</strong><span>{offer.flavor}</span><span>{offer.strength === 'strong' ? 'Stark · 15 % starkare' : 'Original'}</span><span>{purchaseLabel}</span></div><b>{offer.price} kr</b></div>
+        <div className="pouch-checkout__item"><img className="pouch-checkout__packshot" src={packshot} alt={`EVERA ${offer.positioning === 'zyn' ? 'RITUAL' : offer.positioning === 'coffee' ? 'FOKUS' : 'MOVE'}`} /><div><strong>{offer.package.toUpperCase()}</strong><span>{offer.flavor}</span><span>{offer.strength === 'strong' ? 'Stark · 15 % starkare' : 'Original'}</span><span>{purchaseLabel}</span></div><b>{offer.price} kr</b></div>
         <dl><div><dt>Delsumma</dt><dd>{offer.price} kr</dd></div><div><dt>Frakt</dt><dd>GRATIS</dd></div><div><dt>Totalt</dt><dd>{offer.price} kr</dd></div></dl>
         <ul><li><Check /> Fri frakt</li><li><Check /> 30 dagars nöjdhetsgaranti</li></ul>
       </aside>

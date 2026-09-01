@@ -226,7 +226,7 @@ fieldset { padding: 0; margin: 25px 0; border: 0; }
 .pouch-checkout input[aria-invalid="true"],.pouch-checkout select[aria-invalid="true"]{border-color:#a43a32;background:#fffafa}
 .pouch-checkout input[aria-invalid="true"]:focus,.pouch-checkout select[aria-invalid="true"]:focus{box-shadow:0 0 0 2px rgba(164,58,50,.2)}
 .pouch-checkout__error{color:#96342e;font-size:11px;font-weight:700}
-.pouch-checkout__packshot{width:88px;height:88px;display:block;overflow:hidden;filter:drop-shadow(0 10px 12px rgba(17,20,17,.2));transform:rotate(-4deg)}
+.pouch-checkout__packshot{width:96px;height:96px;display:block;object-fit:contain;background:#fff}
 .pouch-checkout__review{padding:26px!important;border:1px solid #c9ccc4!important;border-radius:4px;background:#fff;box-shadow:0 14px 35px rgba(26,28,25,.06)}
 .pouch-checkout__review>div{margin-bottom:22px;padding:18px 0;display:grid;grid-template-columns:1fr auto;gap:7px 18px;border-block:1px solid #d8dad4}
 .pouch-checkout__review>div span{color:#626760;font-size:12px}
@@ -238,8 +238,8 @@ fieldset { padding: 0; margin: 25px 0; border: 0; }
 .pouch-coming form.pouch-coming__early-access{display:grid;grid-template-columns:1fr auto;align-items:center;gap:14px}
 .pouch-coming__early-access p{margin:0;color:#555b54;font-size:14px;text-align:left}
 .pouch-coming__early-access button{white-space:nowrap}
-@media(max-width:800px){.pouch-checkout__layout{padding-bottom:90px}.pouch-checkout__form section{scroll-margin-bottom:140px}.pouch-checkout__review{padding:20px!important}.pouch-checkout__packshot{width:72px;height:72px}.pouch-coming form.pouch-coming__early-access{grid-template-columns:1fr}.pouch-coming__early-access p{text-align:center}}
-@media(max-width:390px){.pouch-checkout__review>div{grid-template-columns:1fr}.pouch-checkout__review>div strong{grid-column:1;grid-row:auto}.pouch-checkout__packshot{width:64px;height:64px}}
+@media(max-width:800px){.pouch-checkout__layout{padding-bottom:90px}.pouch-checkout__form section{scroll-margin-bottom:140px}.pouch-checkout__review{padding:20px!important}.pouch-checkout__packshot{width:76px;height:76px}.pouch-coming form.pouch-coming__early-access{grid-template-columns:1fr}.pouch-coming__early-access p{text-align:center}}
+@media(max-width:390px){.pouch-checkout__review>div{grid-template-columns:1fr}.pouch-checkout__review>div strong{grid-column:1;grid-row:auto}.pouch-checkout__packshot{width:68px;height:68px}}
 
 /* Chapter students — energetic university launch visual refresh */
 main.chapterr-student-page {
