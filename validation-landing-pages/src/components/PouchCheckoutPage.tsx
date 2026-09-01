@@ -2,8 +2,9 @@ import { FormEvent, useEffect, useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight, Check, LockKeyhole } from 'lucide-react'
 import { functionalPouchPages } from '../functionalPouchConfig'
 import { trackMetaEvent } from '../lib/metaPixel'
-import { trackEveraEvent } from '../lib/posthogAnalytics'
+import { trackEveraEvent, trackEveraPageView } from '../lib/posthogAnalytics'
 import { analyticsOfferProperties, comingSoonUrl, normalizePurchaseType, offerPrice, slugifyFlavor, type ExperimentPositioning, type PouchOffer, type PouchPackage, type PurchaseType } from '../lib/pouchAttribution'
+import { PouchComingSoonPage } from './PouchComingSoonPage'
 
 type CheckoutDetails = {
   email: string
@@ -13,6 +14,18 @@ type CheckoutDetails = {
   city: string
   postalCode: string
   country: string
+}
+
+type CheckoutField = keyof CheckoutDetails
+
+const fieldErrors: Record<CheckoutField, string> = {
+  email: 'Ange en giltig e-postadress.',
+  firstName: 'Ange ditt förnamn.',
+  lastName: 'Ange ditt efternamn.',
+  address: 'Ange din leveransadress.',
+  city: 'Ange din stad.',
+  postalCode: 'Ange ett giltigt svenskt postnummer.',
+  country: 'Välj land.',
 }
 
 const sourcePaths: Record<ExperimentPositioning, string> = {
@@ -39,15 +52,20 @@ export function PouchCheckoutPage() {
   const offer = checkoutOffer()
   const analyticsProperties = analyticsOfferProperties(offer)
   const [details, setDetails] = useState<CheckoutDetails>({ email: '', firstName: '', lastName: '', address: '', city: '', postalCode: '', country: 'Sverige' })
+  const [touched, setTouched] = useState<Partial<Record<CheckoutField, boolean>>>({})
+  const [showReveal, setShowReveal] = useState(false)
   const detailsTracked = useRef(false)
   const submitting = useRef(false)
-  const detailsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(details.email.trim())
-    && details.firstName.trim().length >= 2
-    && details.lastName.trim().length >= 2
-    && details.address.trim().length >= 4
-    && details.city.trim().length >= 2
-    && /^\d{3}\s?\d{2}$/.test(details.postalCode.trim())
-    && details.country === 'Sverige'
+  const fieldValid: Record<CheckoutField, boolean> = {
+    email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(details.email.trim()),
+    firstName: details.firstName.trim().length >= 2,
+    lastName: details.lastName.trim().length >= 2,
+    address: details.address.trim().length >= 4,
+    city: details.city.trim().length >= 2,
+    postalCode: /^\d{3}\s?\d{2}$/.test(details.postalCode.trim()),
+    country: details.country === 'Sverige',
+  }
+  const detailsValid = Object.values(fieldValid).every(Boolean)
 
   useEffect(() => {
     document.documentElement.lang = 'sv'
@@ -76,6 +94,13 @@ export function PouchCheckoutPage() {
   }, [detailsValid])
 
   const update = (key: keyof CheckoutDetails, value: string) => setDetails(current => ({ ...current, [key]: value }))
+  const touch = (key: CheckoutField) => setTouched(current => ({ ...current, [key]: true }))
+  const inputState = (key: CheckoutField) => ({
+    'aria-invalid': touched[key] && !fieldValid[key] ? true : undefined,
+    'aria-describedby': touched[key] && !fieldValid[key] ? `${key}-error` : undefined,
+    onBlur: () => touch(key),
+  })
+  const errorFor = (key: CheckoutField) => touched[key] && !fieldValid[key] ? <small className="pouch-checkout__error" id={`${key}-error`}>{fieldErrors[key]}</small> : null
 
   const completeOrder = (event: FormEvent) => {
     event.preventDefault()
@@ -90,10 +115,16 @@ export function PouchCheckoutPage() {
       value: offer.price,
       currency: 'SEK',
     }, { custom: true })
-    window.location.assign(comingSoonUrl(offer, true))
+    const revealUrl = comingSoonUrl(offer, true)
+    window.history.replaceState({}, '', revealUrl)
+    trackEveraPageView('/coming-soon')
+    trackMetaEvent('PageView', { positioning: offer.positioning, page_path: '/coming-soon' }, { onceKey: `pouch_reveal_pageview_${window.location.search}` })
+    setShowReveal(true)
   }
 
   const purchaseLabel = offer.purchase_type === 'subscription' ? 'Prenumerera & spara 15 %' : 'Engångsköp'
+
+  if (showReveal) return <PouchComingSoonPage initialEmail={details.email.trim()} completedOrderIntentOverride />
 
   return <main className="pouch-checkout">
     <header className="pouch-checkout__header"><a href={sourcePaths[offer.positioning]}><ArrowLeft /> TILLBAKA</a><strong>EVERA</strong><span><LockKeyhole /> SÄKER KASSA</span></header>
@@ -102,36 +133,31 @@ export function PouchCheckoutPage() {
         <section>
           <p className="pouch-checkout__step">01 · KONTAKT</p>
           <h1>Slutför din beställning</h1>
-          <label><span>E-post</span><input type="email" inputMode="email" autoComplete="email" value={details.email} onChange={event => update('email', event.target.value)} placeholder="du@exempel.se" required /></label>
+          <label><span>E-post</span><input type="email" inputMode="email" autoComplete="email" value={details.email} onChange={event => update('email', event.target.value)} placeholder="du@exempel.se" required {...inputState('email')} />{errorFor('email')}</label>
         </section>
 
         <section>
           <p className="pouch-checkout__step">02 · LEVERANS</p>
           <h2>Leveransuppgifter</h2>
-          <div className="pouch-checkout__two"><label><span>Förnamn</span><input autoComplete="given-name" value={details.firstName} onChange={event => update('firstName', event.target.value)} required /></label><label><span>Efternamn</span><input autoComplete="family-name" value={details.lastName} onChange={event => update('lastName', event.target.value)} required /></label></div>
-          <label><span>Adress</span><input autoComplete="street-address" value={details.address} onChange={event => update('address', event.target.value)} required /></label>
-          <div className="pouch-checkout__two"><label><span>Postnummer</span><input inputMode="numeric" autoComplete="postal-code" value={details.postalCode} onChange={event => update('postalCode', event.target.value)} placeholder="123 45" required /></label><label><span>Stad</span><input autoComplete="address-level2" value={details.city} onChange={event => update('city', event.target.value)} required /></label></div>
-          <label><span>Land</span><select autoComplete="country-name" value={details.country} onChange={event => update('country', event.target.value)}><option>Sverige</option></select></label>
+          <div className="pouch-checkout__two"><label><span>Förnamn</span><input autoComplete="given-name" value={details.firstName} onChange={event => update('firstName', event.target.value)} required {...inputState('firstName')} />{errorFor('firstName')}</label><label><span>Efternamn</span><input autoComplete="family-name" value={details.lastName} onChange={event => update('lastName', event.target.value)} required {...inputState('lastName')} />{errorFor('lastName')}</label></div>
+          <label><span>Adress</span><input autoComplete="street-address" value={details.address} onChange={event => update('address', event.target.value)} required {...inputState('address')} />{errorFor('address')}</label>
+          <div className="pouch-checkout__two"><label><span>Postnummer</span><input inputMode="numeric" autoComplete="postal-code" value={details.postalCode} onChange={event => update('postalCode', event.target.value)} placeholder="123 45" required {...inputState('postalCode')} />{errorFor('postalCode')}</label><label><span>Stad</span><input autoComplete="address-level2" value={details.city} onChange={event => update('city', event.target.value)} required {...inputState('city')} />{errorFor('city')}</label></div>
+          <label><span>Land</span><select autoComplete="country-name" value={details.country} onChange={event => update('country', event.target.value)} {...inputState('country')}><option>Sverige</option></select>{errorFor('country')}</label>
         </section>
 
-        <section>
-          <p className="pouch-checkout__step">03 · BETALNING</p>
-          <h2>Betalning</h2>
-          <div className="pouch-checkout__payment" aria-label="Simulerad kortbetalning">
-            <div><span>Kortnummer</span><b>•••• •••• •••• ••••</b></div><div><span>MM / ÅÅ</span><b>•• / ••</b></div><div><span>CVC</span><b>•••</b></div>
-          </div>
-          <p className="pouch-checkout__security"><LockKeyhole /> Kortuppgifter efterfrågas eller behandlas inte i detta valideringstest.</p>
+        <section className="pouch-checkout__review">
+          <p className="pouch-checkout__step">03 · BESTÄLLNING</p>
+          <h2>Slutlig översikt</h2>
+          <div><span>{offer.package.toUpperCase()} · {offer.flavor}</span><span>{purchaseLabel}</span><strong>{offer.price} kr</strong></div>
+          <button className="pouch-checkout__complete" disabled={!detailsValid} type="submit">SLUTFÖR BESTÄLLNING — {offer.price} kr <ArrowRight /></button>
         </section>
-
-        <button className="pouch-checkout__complete" disabled={!detailsValid} type="submit">SLUTFÖR BESTÄLLNING <ArrowRight /></button>
-        <p className="pouch-checkout__button-note">Du debiteras inte när du fortsätter.</p>
       </form>
 
       <aside className="pouch-checkout__summary">
         <p>DIN BESTÄLLNING</p><h2>EVERA</h2>
         <div className="pouch-checkout__item"><div className={`pouch-checkout__tin pouch-checkout__tin--${offer.positioning}`}><span>EVERA</span><small>{offer.positioning === 'zyn' ? 'RITUAL' : offer.positioning === 'coffee' ? 'FOKUS' : 'MOVE'}</small></div><div><strong>{offer.package.toUpperCase()}</strong><span>{offer.flavor}</span><span>{offer.strength === 'strong' ? 'Stark · 15 % starkare' : 'Original'}</span><span>{purchaseLabel}</span></div><b>{offer.price} kr</b></div>
         <dl><div><dt>Delsumma</dt><dd>{offer.price} kr</dd></div><div><dt>Frakt</dt><dd>GRATIS</dd></div><div><dt>Totalt</dt><dd>{offer.price} kr</dd></div></dl>
-        <ul><li><Check /> Fri frakt</li><li><Check /> 30 dagars nöjdhetsgaranti</li><li><Check /> Ingen betalning tas i detta test</li></ul>
+        <ul><li><Check /> Fri frakt</li><li><Check /> 30 dagars nöjdhetsgaranti</li></ul>
       </aside>
     </div>
   </main>
