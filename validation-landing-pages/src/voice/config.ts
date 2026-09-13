@@ -2,6 +2,7 @@ export const voiceBrand = { name: 'Voice AI' }
 export const voicePaths = ['/saas-payment-recovery', '/demo-recovery', '/fitness', '/ecommerce', '/invoice-follow-up', '/moving', '/restoration', '/commercial-contractors', '/distributors', '/medspa', '/auto-repair'] as const
 export interface VoicePageConfig {
   path: typeof voicePaths[number]
+  preview: { emphasis: string[]; context: string; messages: { speaker: string; text: string }[]; status: string; detail: string; need: string; recorded: string; owner: string }
   buyer: string
   eyebrow: string
   headline: string
@@ -121,7 +122,36 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
       }
     ],
     "finalTitle": "Let’s talk about your\nsubscription payment follow-up.",
-    "channel": "Email"
+    "channel": "Email",
+    "preview": {
+      "emphasis": [
+        "payments that retries and reminders have not resolved"
+      ],
+      "context": "Payment still unresolved after reminders.",
+      "messages": [
+        {
+          "speaker": "AI assistant",
+          "text": "I’m the AI billing assistant. Would a secure payment-update link help?"
+        },
+        {
+          "speaker": "Billing contact",
+          "text": "Our finance team handles the company card."
+        },
+        {
+          "speaker": "AI assistant",
+          "text": "May I send it to your approved billing address?"
+        },
+        {
+          "speaker": "Billing contact",
+          "text": "Yes, please. I’ll ask finance to review it."
+        }
+      ],
+      "status": "Secure link prepared",
+      "detail": "For the approved billing email address.",
+      "need": "Finance needs the secure update link.",
+      "recorded": "Billing contact requested the link for finance.",
+      "owner": "Finance updates the details; your team checks payment status."
+    }
   },
   "/demo-recovery": {
     "path": "/demo-recovery",
@@ -217,7 +247,37 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
       }
     ],
     "finalTitle": "Let’s talk about your\nmissed demo follow-up.",
-    "channel": "Email"
+    "channel": "Email",
+    "preview": {
+      "emphasis": [
+        "demo no-shows",
+        "more time for sales conversations"
+      ],
+      "context": "Qualified prospect missed a demo.",
+      "messages": [
+        {
+          "speaker": "AI assistant",
+          "text": "I’m the AI assistant for the sales team. Would you like to rearrange your demo?"
+        },
+        {
+          "speaker": "Prospect",
+          "text": "Yes, our meeting ran over."
+        },
+        {
+          "speaker": "AI assistant",
+          "text": "Would you like the team to find an afternoon slot?"
+        },
+        {
+          "speaker": "Prospect",
+          "text": "Yes, and email me the details."
+        }
+      ],
+      "status": "Rescheduling requested",
+      "detail": "Afternoon preference recorded for the sales team.",
+      "need": "Another opportunity to see the demo.",
+      "recorded": "Afternoon meeting preferred; email confirmation requested.",
+      "owner": "The sales team confirms a suitable slot and meeting details."
+    }
   },
   "/fitness": {
     "path": "/fitness",
@@ -313,7 +373,36 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
       }
     ],
     "finalTitle": "Let’s talk about your\nmissed tour follow-up.",
-    "channel": "SMS"
+    "channel": "SMS",
+    "preview": {
+      "emphasis": [
+        "missed tours and trial visits"
+      ],
+      "context": "Tour missed; no new visit arranged.",
+      "messages": [
+        {
+          "speaker": "AI assistant",
+          "text": "I’m the club’s AI assistant. Would you like to rearrange your tour?"
+        },
+        {
+          "speaker": "Prospect",
+          "text": "Yes, I couldn’t make it after work."
+        },
+        {
+          "speaker": "AI assistant",
+          "text": "Would a weekend visit be easier?"
+        },
+        {
+          "speaker": "Prospect",
+          "text": "Yes, please send me the details once it’s arranged."
+        }
+      ],
+      "status": "Visit preference recorded",
+      "detail": "Weekend request ready for the membership team.",
+      "need": "A visit that fits around work.",
+      "recorded": "Weekend tour preferred; visit details requested.",
+      "owner": "The membership team confirms a suitable time."
+    }
   },
   "/ecommerce": {
     "path": "/ecommerce",
@@ -409,7 +498,36 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
       }
     ],
     "finalTitle": "Let’s talk about your\nincomplete checkout follow-up.",
-    "channel": "SMS"
+    "channel": "SMS",
+    "preview": {
+      "emphasis": [
+        "questions holding up a purchase"
+      ],
+      "context": "Eligible checkout awaiting completion.",
+      "messages": [
+        {
+          "speaker": "AI assistant",
+          "text": "I’m the store’s AI assistant. Is there a product question I can help with?"
+        },
+        {
+          "speaker": "Shopper",
+          "text": "I need to check whether it will fit."
+        },
+        {
+          "speaker": "AI assistant",
+          "text": "I can share the approved dimensions and your checkout link."
+        },
+        {
+          "speaker": "Shopper",
+          "text": "Yes, please send them so I can measure."
+        }
+      ],
+      "status": "Product details prepared",
+      "detail": "Approved dimensions and checkout link ready to share.",
+      "need": "Check the product fits before purchasing.",
+      "recorded": "Dimensions and checkout link requested.",
+      "owner": "The shopper reviews the information and decides whether to order."
+    }
   },
   "/invoice-follow-up": {
     "path": "/invoice-follow-up",
@@ -505,7 +623,37 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
       }
     ],
     "finalTitle": "Let’s talk about your\noverdue invoice follow-up.",
-    "channel": "Email"
+    "channel": "Email",
+    "preview": {
+      "emphasis": [
+        "undisputed overdue invoices",
+        "less chasing"
+      ],
+      "context": "Undisputed invoice is overdue.",
+      "messages": [
+        {
+          "speaker": "AI assistant",
+          "text": "I’m the AI assistant for the accounts team. Have you received the invoice?"
+        },
+        {
+          "speaker": "Finance contact",
+          "text": "Yes, it’s waiting for our next payment run."
+        },
+        {
+          "speaker": "AI assistant",
+          "text": "When do you expect that to be?"
+        },
+        {
+          "speaker": "Finance contact",
+          "text": "Next week. Please email me another copy."
+        }
+      ],
+      "status": "Payment timing recorded",
+      "detail": "Invoice copy requested; expected timing noted.",
+      "need": "Another invoice copy for the payment run.",
+      "recorded": "Payment expected next week, as reported by the contact.",
+      "owner": "Your finance team sends the copy and checks receipt of payment."
+    }
   },
   "/moving": {
     "path": "/moving",
@@ -601,7 +749,37 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
       }
     ],
     "finalTitle": "Let’s talk about your\nmoving estimate follow-up.",
-    "channel": "SMS"
+    "channel": "SMS",
+    "preview": {
+      "emphasis": [
+        "Automate estimate follow-up",
+        "less chasing"
+      ],
+      "context": "Estimate sent; customer has not booked.",
+      "messages": [
+        {
+          "speaker": "AI assistant",
+          "text": "Hi Alex, I’m the AI assistant for your moving team. Did you have any questions about the estimate?"
+        },
+        {
+          "speaker": "Customer",
+          "text": "We may need to move on Friday instead."
+        },
+        {
+          "speaker": "AI assistant",
+          "text": "I can ask your moving consultant to check Friday. Would you like a callback?"
+        },
+        {
+          "speaker": "Customer",
+          "text": "Yes, this afternoon would work."
+        }
+      ],
+      "status": "Callback requested",
+      "detail": "Preferred time shared with the moving team.",
+      "need": "A different moving date.",
+      "recorded": "Friday requested; afternoon callback preferred.",
+      "owner": "Your moving consultant checks availability and calls back."
+    }
   },
   "/restoration": {
     "path": "/restoration",
@@ -697,7 +875,37 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
       }
     ],
     "finalTitle": "Let’s talk about your\noverflow damage-call intake.",
-    "channel": "SMS"
+    "channel": "SMS",
+    "preview": {
+      "emphasis": [
+        "overflow call intake",
+        "on-call team"
+      ],
+      "context": "Inbound overflow damage inquiry.",
+      "messages": [
+        {
+          "speaker": "AI assistant",
+          "text": "I’m the AI intake assistant. What damage are you calling about?"
+        },
+        {
+          "speaker": "Caller",
+          "text": "A pipe leaked and there’s water across the kitchen floor."
+        },
+        {
+          "speaker": "AI assistant",
+          "text": "I can record the property address and callback number for the on-call team."
+        },
+        {
+          "speaker": "Caller",
+          "text": "Yes, I’ll give you those details."
+        }
+      ],
+      "status": "On-call alert prepared",
+      "detail": "Reported damage and contact details ready for review.",
+      "need": "Help with reported water damage.",
+      "recorded": "Reported leak, property details and callback number.",
+      "owner": "The on-call contact reviews and acknowledges the request."
+    }
   },
   "/commercial-contractors": {
     "path": "/commercial-contractors",
@@ -793,7 +1001,36 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
       }
     ],
     "finalTitle": "Let’s talk about your\nopen repair proposal follow-up.",
-    "channel": "Email"
+    "channel": "Email",
+    "preview": {
+      "emphasis": [
+        "open repair proposals"
+      ],
+      "context": "Repair proposal awaiting a decision.",
+      "messages": [
+        {
+          "speaker": "AI assistant",
+          "text": "I’m the AI assistant for the service team. Is anything holding up the repair proposal?"
+        },
+        {
+          "speaker": "Customer",
+          "text": "Purchasing needs to review it first."
+        },
+        {
+          "speaker": "AI assistant",
+          "text": "Would it help if I shared the issued proposal for their review?"
+        },
+        {
+          "speaker": "Customer",
+          "text": "Yes, please send it over."
+        }
+      ],
+      "status": "Proposal copy requested",
+      "detail": "Purchasing review noted for the service team.",
+      "need": "Purchasing needs the issued proposal.",
+      "recorded": "Internal approval is pending; proposal copy requested.",
+      "owner": "Your service team shares the proposal and handles scope questions."
+    }
   },
   "/distributors": {
     "path": "/distributors",
@@ -889,7 +1126,36 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
       }
     ],
     "finalTitle": "Let’s talk about your\nopen quote follow-up.",
-    "channel": "Email"
+    "channel": "Email",
+    "preview": {
+      "emphasis": [
+        "less quote chasing"
+      ],
+      "context": "Open quote awaiting buyer response.",
+      "messages": [
+        {
+          "speaker": "AI assistant",
+          "text": "I’m the AI assistant for your supplier. Are you ready to revisit the open quote?"
+        },
+        {
+          "speaker": "Buyer",
+          "text": "We’re waiting for the project to be approved."
+        },
+        {
+          "speaker": "AI assistant",
+          "text": "Would you like your rep to follow up next week?"
+        },
+        {
+          "speaker": "Buyer",
+          "text": "Yes, that would be useful."
+        }
+      ],
+      "status": "Follow-up requested",
+      "detail": "Project approval pending; next week preferred.",
+      "need": "More time for project approval.",
+      "recorded": "Quote remains open; next-week follow-up requested.",
+      "owner": "The inside sales rep follows up with the buyer."
+    }
   },
   "/medspa": {
     "path": "/medspa",
@@ -985,7 +1251,36 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
       }
     ],
     "finalTitle": "Let’s talk about your\nmissed consultation follow-up.",
-    "channel": "SMS"
+    "channel": "SMS",
+    "preview": {
+      "emphasis": [
+        "missed consultations"
+      ],
+      "context": "Missed consultation; follow-up agreed.",
+      "messages": [
+        {
+          "speaker": "AI assistant",
+          "text": "I’m the clinic’s AI assistant. Would you like help rearranging your consultation?"
+        },
+        {
+          "speaker": "Patient",
+          "text": "Yes, an afternoon would be better."
+        },
+        {
+          "speaker": "AI assistant",
+          "text": "May the front desk contact you with an afternoon option?"
+        },
+        {
+          "speaker": "Patient",
+          "text": "Yes, please send the appointment details once confirmed."
+        }
+      ],
+      "status": "Rescheduling requested",
+      "detail": "Afternoon preference shared discreetly with the front desk.",
+      "need": "An afternoon consultation.",
+      "recorded": "Scheduling preference and request for discreet details.",
+      "owner": "The front desk confirms the appointment; clinical questions stay with clinicians."
+    }
   },
   "/auto-repair": {
     "path": "/auto-repair",
@@ -1081,6 +1376,35 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
       }
     ],
     "finalTitle": "Let’s talk about your\ndeclined repair follow-up.",
-    "channel": "SMS"
+    "channel": "SMS",
+    "preview": {
+      "emphasis": [
+        "declined and deferred repairs"
+      ],
+      "context": "Previously deferred repair estimate.",
+      "messages": [
+        {
+          "speaker": "AI assistant",
+          "text": "I’m the workshop’s AI assistant. Would you like to revisit the repair work discussed earlier?"
+        },
+        {
+          "speaker": "Customer",
+          "text": "Possibly. I’d like to review the estimate first."
+        },
+        {
+          "speaker": "AI assistant",
+          "text": "Would you like a callback from your service advisor?"
+        },
+        {
+          "speaker": "Customer",
+          "text": "Yes, tomorrow morning would suit me."
+        }
+      ],
+      "status": "Advisor callback requested",
+      "detail": "Preferred callback time recorded for the workshop.",
+      "need": "Review the earlier repair estimate.",
+      "recorded": "Tomorrow morning preferred for an advisor callback.",
+      "owner": "Your service advisor reviews the work and answers technical questions."
+    }
   }
 }

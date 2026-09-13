@@ -5,8 +5,8 @@ Local preview: http://127.0.0.1:5173/moving
 ## Edit points
 
 - `src/voice/config.ts`: central `voiceBrand`, typed industry content and metadata. All eleven routes use the final supplied hero subheads and industry-specific workflows.
-- `src/voice/VoiceApp.tsx`: shared header, workflow illustration, sections, accessible preview form, FAQ, footer, and explicit unavailable page.
-- `src/voice/voice.css`: shared responsive visual system and semantic color tokens in the opening `:root` block. All eleven pages use the same warm-white, forest-green and sage palette. Input borders use a darker token for control contrast.
+- `src/voice/VoiceApp.tsx`: shared header, animated ConversationPreview, handoff summary, sections, accessible preview form, FAQ, footer, and explicit unavailable page.
+- `src/voice/voice.css`: shared responsive visual system and semantic color tokens in the opening `:root` block. All eleven pages use the same white, navy and pale-blue palette. Input borders use a darker token for control contrast.
 - `src/main.tsx`: chooses the voice entry point before the older experiments; legacy styles and analytics initialization are skipped for the eleven reserved voice routes.
 - `index.html`: skips the legacy Meta pixel on voice routes. The unconditional no-JavaScript tracking image was removed so the preview cannot send that request.
 
@@ -47,6 +47,8 @@ git push
 
 No commit, push or deployment was performed.
 
-## Copy update verification
+## Final visual refinement verification
 
-All eleven routes were inspected at 1280px desktop, 768px tablet and 390px mobile widths with no horizontal overflow. Exact final subheads, headings, niche conversations, FAQ copy, labels and anchor destinations were reviewed. The common palette replaces all former blue values. Sample measured contrast: button text 7.23:1, hero body text 6.25:1, preview notice 6.54:1. The local form still prevents delivery and reports that no information was sent. Restoration remains inbound overflow intake, with team acceptance required after an alert. Bracketed message placeholders were replaced with clearly labeled illustrative message content.
+All eleven hero and conversation previews were inspected at 1280px desktop and 390px mobile with no horizontal overflow. Four complete turns reveal once, followed by an accurate next-step card. Keyboard replay was verified; the moving panel height remained 613.375px before and after replay on mobile. Waveform animation has a finite iteration count. Reduced-motion CSS disables every sequence animation and displays complete content immediately; OS reduced-motion emulation was not available in the browser tool.
+
+Shared navigation, mobile menu, anchor links, keyboard FAQ operation and required-field form validation were checked. Valid form submission still explicitly says no information was sent. The build and whitespace check pass. No former green tokens or long-dash punctuation remain in voice source. The later example is a handoff summary rather than a duplicate transcript. Restoration stays inbound and ends with an alert prepared for review.

@@ -1,15 +1,16 @@
 :root {
-  --v-bg:#FAFAF7;
+  --v-button:#19153B;
+  --v-bg:#F7F9FC;
   --v-card:#FFFFFF;
-  --v-text:#172B24;
-  --v-muted:#526159;
-  --v-accent:#176344;
-  --v-hover:#114C34;
-  --v-soft:#EDF3EC;
-  --v-border:#D7E1D8;
-  --v-highlight:#D8EDAD;
-  --v-input-border:#7C8D82;
-  --v-shadow:rgba(23,43,36,.04);
+  --v-text:#161638;
+  --v-muted:#526078;
+  --v-accent:#075ED1;
+  --v-hover:#292351;
+  --v-soft:#EFF6FD;
+  --v-border:#DCE3EE;
+  --v-highlight:#67BAF7;
+  --v-input-border:#7A879D;
+  --v-shadow:rgba(22,22,56,.06);
 }
 :root { font-family: Arial, Helvetica, sans-serif; font-synthesis: none; background: var(--v-bg); color: var(--v-text); }
 * { box-sizing: border-box; } body { margin: 0; min-width: 320px; } html { scroll-behavior: smooth; } button,input,textarea { font: inherit; }
@@ -98,3 +99,57 @@
 .v-form-card input,.v-form-card textarea { border-color:var(--v-input-border); }
 @media(max-width:1000px) { .v-hero { gap:32px; } }
 @media(max-width:760px) { .v-hero { grid-template-columns:1fr; gap:30px; } }
+
+/* Conversation-led identity. Semantic tokens above control every niche. */
+.voice-page,.v-header { background:var(--v-card); }
+.voice-page h1,.voice-page h2 { font-weight:700; }
+.voice-page h3 { font-weight:600; }
+.voice-page .v-button { background:var(--v-button); }
+.voice-page .v-button:hover { background:var(--v-hover); }
+.v-lead strong { color:var(--v-text); font-weight:600; }
+.v-hero { grid-template-columns:1.12fr 1fr; gap:56px; padding-block:64px; }
+.v-workflow-band { background:var(--v-soft); }
+.v-example-band,.v-closing-band { background:var(--v-card); }
+.v-faq-band { background:var(--v-bg); border-block:1px solid var(--v-border); margin-top:72px; }
+.v-pilot-band { background:var(--v-text); color:var(--v-card); border-color:var(--v-text); }
+.v-pilot .v-label,.v-pilot li svg { color:var(--v-highlight); }
+.v-pilot .v-lead-small,.v-pilot .v-compatibility { color:var(--v-border); }
+.v-pilot .v-button { color:var(--v-text); background:var(--v-card); }
+.v-pilot .v-button:hover { background:var(--v-soft); }
+.v-pilot :focus-visible { outline-color:var(--v-highlight); }
+.v-conversation { margin:0; border:1px solid var(--v-border); border-radius:12px; background:var(--v-card); box-shadow:0 12px 36px var(--v-shadow); overflow:hidden; }
+.v-conversation figcaption { display:flex; flex-direction:column; gap:3px; padding:18px 22px; border-bottom:1px solid var(--v-border); }
+.v-conversation figcaption strong { font-size:14px; }
+.v-conversation figcaption span,.v-preview-context { font-size:11px; color:var(--v-muted); }
+.v-preview-context { display:flex; align-items:center; gap:9px; padding:13px 22px 0; }
+.v-preview-context svg { flex-shrink:0; color:var(--v-accent); }
+.v-sequence { padding:0 22px 18px; }
+.v-preview-wave { display:flex; align-items:center; gap:4px; height:30px; margin:7px 0; }
+.v-preview-wave i { width:3px; background:var(--v-accent); border-radius:2px; animation:v-wave-pulse .55s ease-in-out 7 alternate; }
+.v-preview-wave i:nth-child(3n) { background:var(--v-highlight); }
+.v-preview-messages { display:flex; flex-direction:column; gap:10px; }
+.v-preview-message { max-width:94%; padding:10px 13px; border-radius:7px; animation:v-reveal .45s both; background:var(--v-soft); }
+.v-preview-message small { display:block; font-size:10px; color:var(--v-muted); margin-bottom:3px; }
+.v-preview-message p { font-size:13px; line-height:1.5; }
+.v-person { background:var(--v-bg); align-self:flex-end; }
+.v-preview-result { display:flex; gap:10px; border-top:1px solid var(--v-border); margin-top:16px; padding-top:14px; animation:v-reveal .45s 4.6s both; }
+.v-preview-result svg { flex-shrink:0; color:var(--v-accent); margin-top:2px; }
+.v-preview-result strong { font-size:13px; }
+.v-preview-result p { font-size:11px; color:var(--v-muted); line-height:1.5; margin-top:3px; }
+.v-replay { width:100%; background:var(--v-bg); border:0; border-top:1px solid var(--v-border); color:var(--v-accent); font-size:12px; padding:12px 22px; text-align:left; display:flex; justify-content:space-between; }
+.v-replay:hover { background:var(--v-soft); }
+.v-conversation .v-replay:focus-visible { outline-offset:-4px; }
+.v-handoff { border:1px solid var(--v-border); border-radius:8px; overflow:hidden; }
+.v-handoff-heading { display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--v-soft); padding:20px 24px; font-size:14px; }
+.v-handoff-heading svg { color:var(--v-accent); }
+.v-handoff-heading span { font-size:11px; color:var(--v-muted); margin-left:auto; }
+.v-handoff dl { margin:0; padding:0 24px; }
+.v-handoff dl>div { padding:20px 0; border-bottom:1px solid var(--v-border); }
+.v-handoff dl>div:last-child { border:0; }
+.v-handoff dt { font-size:11px; color:var(--v-muted); margin-bottom:5px; }
+.v-handoff dd { font-size:15px; margin:0; }
+@keyframes v-reveal { from { opacity:0; } to { opacity:1; } }
+@keyframes v-wave-pulse { from { transform:scaleY(.45); } to { transform:scaleY(1); } }
+@media(max-width:1000px) { .v-hero { gap:30px; } }
+@media(max-width:760px) { .v-hero { grid-template-columns:1fr; padding-block:40px; } .v-conversation { width:100%; max-width:520px; margin:auto; } .v-faq-band { margin-top:48px; } .v-sequence { padding-inline:16px; } .v-conversation figcaption { padding:16px; } .v-preview-context { padding-inline:16px; } .v-preview-message { max-width:96%; } }
+@media(prefers-reduced-motion:reduce) { .v-sequence * { animation:none!important; opacity:1!important; } }
