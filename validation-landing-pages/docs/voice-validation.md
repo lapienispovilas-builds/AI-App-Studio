@@ -4,9 +4,9 @@ Local preview: http://127.0.0.1:5173/moving
 
 ## Edit points
 
-- `src/voice/config.ts`: central `voiceBrand`, typed industry content, metadata, and accent/soft colors. All eleven voice routes have niche-specific content from the supplied COPY-BRIEFS.md.
+- `src/voice/config.ts`: central `voiceBrand`, typed industry content and metadata. All eleven routes use the final supplied hero subheads and industry-specific workflows.
 - `src/voice/VoiceApp.tsx`: shared header, workflow illustration, sections, accessible preview form, FAQ, footer, and explicit unavailable page.
-- `src/voice/voice.css`: shared responsive visual system; `--v-accent` and `--v-soft` are supplied by each niche config.
+- `src/voice/voice.css`: shared responsive visual system and semantic color tokens in the opening `:root` block. All eleven pages use the same warm-white, forest-green and sage palette. Input borders use a darker token for control contrast.
 - `src/main.tsx`: chooses the voice entry point before the older experiments; legacy styles and analytics initialization are skipped for the eleven reserved voice routes.
 - `index.html`: skips the legacy Meta pixel on voice routes. The unconditional no-JavaScript tracking image was removed so the preview cannot send that request.
 
@@ -41,7 +41,7 @@ cd /Users/povilaslapienis/Documents/AI-App-Studio/validation-landing-pages
 git add src/voice/config.ts src/voice/VoiceApp.tsx src/voice/voice.css src/main.tsx index.html docs/voice-validation.md
 git diff --cached --stat
 git diff --cached
-git commit -m "Add reusable voice AI moving pilot page"
+git commit -m "Finalize all eleven voice AI landing pages"
 git push
 ```
 
@@ -49,4 +49,4 @@ No commit, push or deployment was performed.
 
 ## Copy update verification
 
-All eleven routes were inspected at 1280px desktop and 390px mobile widths. Headline wrapping, overflow, niche conversations and FAQs, form labels, anchor targets and mobile menu behavior were checked. The supplied headlines, subheads, problem paragraphs, workflows and illustration labels were compared against the configuration. The local form still prevents delivery and reports that no information was sent. Restoration is inbound overflow intake with a handoff awaiting acceptance. Theme colors remain unchanged.
+All eleven routes were inspected at 1280px desktop, 768px tablet and 390px mobile widths with no horizontal overflow. Exact final subheads, headings, niche conversations, FAQ copy, labels and anchor destinations were reviewed. The common palette replaces all former blue values. Sample measured contrast: button text 7.23:1, hero body text 6.25:1, preview notice 6.54:1. The local form still prevents delivery and reports that no information was sent. Restoration remains inbound overflow intake, with team acceptance required after an alert. Bracketed message placeholders were replaced with clearly labeled illustrative message content.

@@ -2,8 +2,6 @@ export const voiceBrand = { name: 'Voice AI' }
 export const voicePaths = ['/saas-payment-recovery', '/demo-recovery', '/fitness', '/ecommerce', '/invoice-follow-up', '/moving', '/restoration', '/commercial-contractors', '/distributors', '/medspa', '/auto-repair'] as const
 export interface VoicePageConfig {
   path: typeof voicePaths[number]
-  accent: string
-  soft: string
   buyer: string
   eyebrow: string
   headline: string
@@ -31,16 +29,14 @@ export interface VoicePageConfig {
 export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   "/saas-payment-recovery": {
     "path": "/saas-payment-recovery",
-    "accent": "#234bc2",
-    "soft": "#edf2fc",
     "buyer": "For billing and customer operations teams",
     "eyebrow": "Voice AI for subscription billing",
     "headline": "Follow up unresolved",
     "headlineAccent": "subscription payments.",
-    "description": "AI calls reach billing contacts when retries and reminders have not resolved a payment. Email follow-ups deliver the secure update link and clarify what needs to happen next.",
+    "description": "Automate follow-up on payments that retries and reminders have not resolved. A voice agent reaches the billing contact and shares the secure update link, reducing manual work for your team.",
     "problem": "Some payment failures need more than another retry. A billing contact may need to update a payment method or pass the request to finance. Focus the follow-up on accounts still waiting for that action.",
     "title": "Subscription payment follow-up | Voice AI",
-    "metaDescription": "AI calls reach billing contacts when retries and reminders have not resolved a payment. Email follow-ups deliver the secure update link and clarify what needs to happen next.",
+    "metaDescription": "Automate follow-up on payments that retries and reminders have not resolved. A voice agent reaches the billing contact and shares the secure update link, reducing manual work for your team.",
     "inbound": false,
     "illustrationLabels": [
       "Payment unresolved",
@@ -80,7 +76,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         }
       ],
       "note": "A short call clarifies the question. An email carries the agreed next step.",
-      "confirmation": "Please use your secure payment-update page: [approved link]. Contact the billing team if you need help with this request."
+      "confirmation": "Email to the approved billing address with the secure payment-update link. Payment status is checked separately."
     },
     "values": [
       {
@@ -129,16 +125,14 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/demo-recovery": {
     "path": "/demo-recovery",
-    "accent": "#234bc2",
-    "soft": "#edf2fc",
     "buyer": "For software sales teams",
     "eyebrow": "Voice AI for software sales",
     "headline": "Get missed demos",
     "headlineAccent": "back on the calendar.",
-    "description": "AI calls reconnect with qualified prospects who missed a demo and help arrange another time with their rep. Email follow-ups confirm the new meeting details and who will attend.",
+    "description": "Take demo no-shows off your reps’ follow-up lists. A voice agent reconnects with interested prospects, helps reschedule and sends confirmation, giving your team more time for sales conversations.",
     "problem": "The prospect booked a demo but did not attend. Your rep now has another round of calls and emails to manage. Follow up on that existing interest without restarting the entire sales process.",
     "title": "Missed demo follow-up | Voice AI",
-    "metaDescription": "AI calls reconnect with qualified prospects who missed a demo and help arrange another time with their rep. Email follow-ups confirm the new meeting details and who will attend.",
+    "metaDescription": "Take demo no-shows off your reps’ follow-up lists. A voice agent reconnects with interested prospects, helps reschedule and sends confirmation, giving your team more time for sales conversations.",
     "inbound": false,
     "illustrationLabels": [
       "Demo missed",
@@ -178,7 +172,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         }
       ],
       "note": "A short call clarifies the question. An email carries the agreed next step.",
-      "confirmation": "Your rearranged demo: [date and time], with [sales rep]. Your analyst is welcome to join using [meeting link]."
+      "confirmation": "Email confirmation of the rearranged demo, including the agreed time, sales rep and meeting details."
     },
     "values": [
       {
@@ -227,16 +221,14 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/fitness": {
     "path": "/fitness",
-    "accent": "#234bc2",
-    "soft": "#edf2fc",
     "buyer": "For fitness operators and membership teams",
     "eyebrow": "Voice AI for fitness clubs",
     "headline": "Rebook missed gym tours",
     "headlineAccent": "and trial visits.",
-    "description": "AI calls reconnect with prospects who missed a visit. Text follow-ups help them arrange another time and receive the details, with less chasing for your membership team.",
+    "description": "Automate follow-up after missed tours and trial visits. A voice agent helps prospects rebook and sends the details, leaving your membership team more time to welcome potential members.",
     "problem": "A prospect booked a visit but never walked through the door. They may still want to join. Give them a simple way to rearrange, while your team focuses on the people already in the club.",
     "title": "Missed tour follow-up | Voice AI",
-    "metaDescription": "AI calls reconnect with prospects who missed a visit. Text follow-ups help them arrange another time and receive the details, with less chasing for your membership team.",
+    "metaDescription": "Automate follow-up after missed tours and trial visits. A voice agent helps prospects rebook and sends the details, leaving your membership team more time to welcome potential members.",
     "inbound": false,
     "illustrationLabels": [
       "Tour or trial missed",
@@ -276,7 +268,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         }
       ],
       "note": "A short call clarifies the question. A text carries the agreed next step.",
-      "confirmation": "Your rearranged tour details: [club], [agreed date and time]. Please contact the club if you need to change your visit."
+      "confirmation": "Text confirmation with the club location and rearranged visit details."
     },
     "values": [
       {
@@ -325,16 +317,14 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/ecommerce": {
     "path": "/ecommerce",
-    "accent": "#234bc2",
-    "soft": "#edf2fc",
     "buyer": "For ecommerce and customer experience teams",
     "eyebrow": "Voice AI for ecommerce",
     "headline": "Answer the questions",
     "headlineAccent": "holding up a purchase.",
-    "description": "AI calls help eligible shoppers with unanswered product or delivery questions after an incomplete checkout. Text follow-ups share approved information or a checkout link so they can decide what comes next.",
+    "description": "Help shoppers resolve the questions holding up a purchase. Automate checkout follow-up with a voice agent that answers approved questions and shares the checkout link, reducing routine work for support.",
     "problem": "A reminder brings a shopper back to the same unanswered question. When the obstacle is a product detail or delivery policy, a conversation can help them decide whether to place the order.",
     "title": "Incomplete checkout follow-up | Voice AI",
-    "metaDescription": "AI calls help eligible shoppers with unanswered product or delivery questions after an incomplete checkout. Text follow-ups share approved information or a checkout link so they can decide what comes next.",
+    "metaDescription": "Help shoppers resolve the questions holding up a purchase. Automate checkout follow-up with a voice agent that answers approved questions and shares the checkout link, reducing routine work for support.",
     "inbound": false,
     "illustrationLabels": [
       "Checkout incomplete",
@@ -374,7 +364,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         }
       ],
       "note": "A short call clarifies the question. A text carries the agreed next step.",
-      "confirmation": "Here are the listed dimensions: [approved product information]. You can return to your checkout here: [checkout link]."
+      "confirmation": "Text follow-up sharing the approved product dimensions and checkout link."
     },
     "values": [
       {
@@ -423,16 +413,14 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/invoice-follow-up": {
     "path": "/invoice-follow-up",
-    "accent": "#234bc2",
-    "soft": "#edf2fc",
     "buyer": "For B2B finance and accounts receivable teams",
     "eyebrow": "Voice AI for accounts receivable",
     "headline": "Spend less time chasing",
     "headlineAccent": "overdue invoices.",
-    "description": "AI calls follow up undisputed overdue invoices, check receipt and ask about payment timing. Email follow-ups share the invoice or agreed next step, keeping your finance team informed.",
+    "description": "Automate routine calls about undisputed overdue invoices. A voice agent checks receipt, asks about payment timing and shares the invoice, giving finance clearer answers with less chasing.",
     "problem": "The reminder has gone out, but finance still needs an answer. Did accounts payable receive the invoice? Is something missing? When should payment arrive? Make those routine follow-ups easier to manage.",
     "title": "Overdue invoice follow-up | Voice AI",
-    "metaDescription": "AI calls follow up undisputed overdue invoices, check receipt and ask about payment timing. Email follow-ups share the invoice or agreed next step, keeping your finance team informed.",
+    "metaDescription": "Automate routine calls about undisputed overdue invoices. A voice agent checks receipt, asks about payment timing and shares the invoice, giving finance clearer answers with less chasing.",
     "inbound": false,
     "illustrationLabels": [
       "Invoice overdue",
@@ -472,7 +460,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         }
       ],
       "note": "A short call clarifies the question. An email carries the agreed next step.",
-      "confirmation": "Here is the requested invoice: [approved invoice link]. Please contact our finance team with any questions."
+      "confirmation": "Email with the requested invoice copy and a way to contact the finance team."
     },
     "values": [
       {
@@ -521,16 +509,14 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/moving": {
     "path": "/moving",
-    "accent": "#234bc2",
-    "soft": "#edf2fc",
     "buyer": "For moving companies and sales coordinators",
     "eyebrow": "Voice AI for movers",
     "headline": "Turn unanswered estimates",
     "headlineAccent": "into booked moves.",
-    "description": "AI calls follow up your moving estimates, clarify what is holding up the booking, and use text messages to confirm the next step with your team.",
+    "description": "Automate estimate follow-up with a voice agent that checks what customers need to book and confirms the next step. Give your moving consultants less chasing and more time to close.",
     "problem": "An estimate is out, but the customer has not booked. They may still be comparing movers or need to clarify a detail. Give your sales team a clear next step instead of another unanswered follow-up task.",
     "title": "Moving estimate follow-up | Voice AI",
-    "metaDescription": "AI calls follow up your moving estimates, clarify what is holding up the booking, and use text messages to confirm the next step with your team.",
+    "metaDescription": "Automate estimate follow-up with a voice agent that checks what customers need to book and confirms the next step. Give your moving consultants less chasing and more time to close.",
     "inbound": false,
     "illustrationLabels": [
       "Estimate unanswered",
@@ -570,7 +556,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         }
       ],
       "note": "A short call clarifies the question. A text carries the agreed next step.",
-      "confirmation": "Your moving consultant will call at the agreed time to discuss Friday. The team still needs to check availability."
+      "confirmation": "Text confirmation of the agreed consultant callback. The team still needs to check date availability."
     },
     "values": [
       {
@@ -619,16 +605,14 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/restoration": {
     "path": "/restoration",
-    "accent": "#234bc2",
-    "soft": "#edf2fc",
     "buyer": "For restoration operators and intake teams",
     "eyebrow": "Voice AI for restoration",
     "headline": "Capture damage calls",
     "headlineAccent": "when your office cannot answer.",
-    "description": "AI answers overflow damage calls, collects the caller’s details and reported situation, and sends an SMS alert to your designated on-call contact so your team can take over.",
+    "description": "Automate overflow call intake when your office cannot answer. A voice agent captures the reported damage and property details, then alerts your on-call team with the information needed to respond.",
     "problem": "When the team is on a job or the office is closed, a new damage call still needs a clear next step. Capture the essential information so the person taking over does not start from scratch.",
     "title": "Overflow damage-call intake | Voice AI",
-    "metaDescription": "AI answers overflow damage calls, collects the caller’s details and reported situation, and sends an SMS alert to your designated on-call contact so your team can take over.",
+    "metaDescription": "Automate overflow call intake when your office cannot answer. A voice agent captures the reported damage and property details, then alerts your on-call team with the information needed to respond.",
     "inbound": true,
     "illustrationLabels": [
       "Overflow call",
@@ -668,7 +652,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         }
       ],
       "note": "An inbound call gathers the essentials. An SMS alert gives the on-call team the details.",
-      "confirmation": "New damage inquiry: [property address], [callback number], [reported situation]. Please acknowledge the handoff under the agreed process."
+      "confirmation": "SMS alert with the reported water leak, property address and callback number. The on-call contact is asked to acknowledge the handoff."
     },
     "values": [
       {
@@ -717,16 +701,14 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/commercial-contractors": {
     "path": "/commercial-contractors",
-    "accent": "#234bc2",
-    "soft": "#edf2fc",
     "buyer": "For commercial HVAC and mechanical service teams",
     "eyebrow": "Voice AI for commercial HVAC",
     "headline": "Follow up repair proposals",
     "headlineAccent": "still waiting for approval.",
-    "description": "AI calls ask what is holding up an open repair proposal and bring questions to your service team. Email follow-ups share the proposal or confirm the next step.",
+    "description": "Automate follow-up on open repair proposals. A voice agent checks what is delaying approval and passes questions to your service team, reducing routine calls while keeping proposed work moving.",
     "problem": "Your technician identified the work and your team sent the proposal. It is still waiting on a response. Find out whether the customer needs clarification, another decision-maker or more time.",
     "title": "Open repair proposal follow-up | Voice AI",
-    "metaDescription": "AI calls ask what is holding up an open repair proposal and bring questions to your service team. Email follow-ups share the proposal or confirm the next step.",
+    "metaDescription": "Automate follow-up on open repair proposals. A voice agent checks what is delaying approval and passes questions to your service team, reducing routine calls while keeping proposed work moving.",
     "inbound": false,
     "illustrationLabels": [
       "Proposal awaiting approval",
@@ -766,7 +748,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         }
       ],
       "note": "A short call clarifies the question. An email carries the agreed next step.",
-      "confirmation": "Here is the repair proposal for review: [approved proposal link]. Your service manager can help with scope or pricing questions."
+      "confirmation": "Email sharing the issued proposal for purchasing review. Scope and price questions go to the service manager."
     },
     "values": [
       {
@@ -815,16 +797,14 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/distributors": {
     "path": "/distributors",
-    "accent": "#234bc2",
-    "soft": "#edf2fc",
     "buyer": "For specialty distributors and inside sales teams",
     "eyebrow": "Voice AI for distributors",
     "headline": "Follow up open quotes",
     "headlineAccent": "with fewer sales calls.",
-    "description": "AI calls ask buyers about quotes already sent and route questions to their rep. Email follow-ups share the quote or confirm the buyer’s response, reducing routine chasing for inside sales.",
+    "description": "Give inside sales less quote chasing to do. A voice agent follows up open quotes, checks buying plans and shares the next step, helping reps focus on orders and customer questions.",
     "problem": "Inside sales has new requests to handle while earlier quotes still need an answer. Give each follow-up a useful outcome: ready to order, waiting on approval, needs a change or no longer needed.",
     "title": "Open quote follow-up | Voice AI",
-    "metaDescription": "AI calls ask buyers about quotes already sent and route questions to their rep. Email follow-ups share the quote or confirm the buyer’s response, reducing routine chasing for inside sales.",
+    "metaDescription": "Give inside sales less quote chasing to do. A voice agent follows up open quotes, checks buying plans and shares the next step, helping reps focus on orders and customer questions.",
     "inbound": false,
     "illustrationLabels": [
       "Quote still open",
@@ -864,7 +844,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         }
       ],
       "note": "A short call clarifies the question. An email carries the agreed next step.",
-      "confirmation": "We’ve noted that your purchase order is awaiting project approval. Your rep will follow up at the agreed time."
+      "confirmation": "Email confirming that the purchase order is awaiting project approval and noting the agreed follow-up."
     },
     "values": [
       {
@@ -913,16 +893,14 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/medspa": {
     "path": "/medspa",
-    "accent": "#234bc2",
-    "soft": "#edf2fc",
     "buyer": "For medspas and aesthetics clinic teams",
     "eyebrow": "Voice AI for medspas",
     "headline": "Help patients rebook",
     "headlineAccent": "missed consultations.",
-    "description": "AI calls discreetly follow up missed consultations and help patients arrange another time. SMS follow-ups share appointment information, reducing routine rescheduling for your front desk while clinical questions stay with staff.",
+    "description": "Automate the follow-up after missed consultations. A voice agent helps patients rearrange and sends appointment details, giving your front desk more time for the people already in your clinic.",
     "problem": "A missed consultation leaves the patient without a next step and your coordinator with another callback. Make it easier to rearrange while keeping clinical questions with your team.",
     "title": "Missed consultation follow-up | Voice AI",
-    "metaDescription": "AI calls discreetly follow up missed consultations and help patients arrange another time. SMS follow-ups share appointment information, reducing routine rescheduling for your front desk while clinical questions stay with staff.",
+    "metaDescription": "Automate the follow-up after missed consultations. A voice agent helps patients rearrange and sends appointment details, giving your front desk more time for the people already in your clinic.",
     "inbound": false,
     "illustrationLabels": [
       "Consultation missed",
@@ -962,7 +940,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         }
       ],
       "note": "A short call clarifies the question. A text carries the agreed next step.",
-      "confirmation": "Your appointment at [clinic]: [agreed date and time]. Please contact the clinic if you need to rearrange."
+      "confirmation": "Discreet text with the rearranged appointment details and clinic contact information."
     },
     "values": [
       {
@@ -1011,16 +989,14 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/auto-repair": {
     "path": "/auto-repair",
-    "accent": "#234bc2",
-    "soft": "#edf2fc",
     "buyer": "For auto repair shops and service advisors",
     "eyebrow": "Voice AI for repair shops",
     "headline": "Follow up declined repairs",
     "headlineAccent": "without tying up advisors.",
-    "description": "AI calls revisit previously recommended repairs and capture the customer’s response. Text follow-ups confirm an advisor callback or appointment, giving your shop a clear next step without routine chasing.",
+    "description": "Automate follow-up on declined and deferred repairs. A voice agent checks whether customers are ready to revisit the work and arranges the next step, freeing up your service advisors.",
     "problem": "The repair was recommended, but the customer put it off. Your advisors still need to find out whether they want to return, need an updated estimate or have already had the work done.",
     "title": "Declined repair follow-up | Voice AI",
-    "metaDescription": "AI calls revisit previously recommended repairs and capture the customer’s response. Text follow-ups confirm an advisor callback or appointment, giving your shop a clear next step without routine chasing.",
+    "metaDescription": "Automate follow-up on declined and deferred repairs. A voice agent checks whether customers are ready to revisit the work and arranges the next step, freeing up your service advisors.",
     "inbound": false,
     "illustrationLabels": [
       "Repair deferred",
@@ -1060,7 +1036,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         }
       ],
       "note": "A short call clarifies the question. A text carries the agreed next step.",
-      "confirmation": "Your service advisor will call at [agreed time] to review the earlier estimate with you."
+      "confirmation": "Text confirmation of the agreed service-advisor callback to review the earlier estimate."
     },
     "values": [
       {
