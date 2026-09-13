@@ -55,6 +55,8 @@
     </script>
     <!-- Meta Pixel Code -->
     <script>
+      // Voice validation routes intentionally load no analytics.
+      if (!['/saas-payment-recovery', '/demo-recovery', '/fitness', '/ecommerce', '/invoice-follow-up', '/moving', '/restoration', '/commercial-contractors', '/distributors', '/medspa', '/auto-repair'].includes(window.location.pathname.replace(/\/$/, ''))) {
       !function(f,b,e,v,n,t,s)
       {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
       n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -65,19 +67,12 @@
       'https://connect.facebook.net/en_US/fbevents.js');
       fbq('init', '5389492514609949');
       fbq('track', 'PageView');
+      }
     </script>
     <!-- End Meta Pixel Code -->
   </head>
   <body>
-    <noscript>
-      <img
-        height="1"
-        width="1"
-        style="display:none"
-        src="https://www.facebook.com/tr?id=5389492514609949&ev=PageView&noscript=1"
-        alt=""
-      />
-    </noscript>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
