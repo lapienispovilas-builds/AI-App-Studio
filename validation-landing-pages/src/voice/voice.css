@@ -168,6 +168,14 @@
 @media(max-width:760px) { .v-value-band { margin-bottom:48px; } .v-value-band .v-value { padding-block:48px; } }
 
 .v-form-card fieldset { border:0; padding:0; margin:0; min-width:0; }
+.v-form-card select { display:block; width:100%; border:1px solid var(--v-input-border); background:var(--v-card); color:var(--v-text); border-radius:4px; padding:11px; margin-top:6px; min-height:44px; font-size:16px; }
+.v-form-card .v-checkbox-group { margin:3px 0 18px; }
+.v-form-card .v-checkbox-group legend { font-size:12px; font-weight:600; margin-bottom:10px; }
+.v-form-card .v-checkbox-group legend span { font-weight:400; color:var(--v-muted); }
+.v-form-card .v-checkbox-group label,.v-form-card .v-checkbox { display:flex; align-items:flex-start; gap:9px; font-weight:400; line-height:1.45; margin-bottom:10px; }
+.v-form-card .v-checkbox { margin:4px 0 18px; }
+.v-form-card .v-checkbox-group input,.v-form-card .v-checkbox input { width:18px; height:18px; min-height:18px; margin:0; padding:0; flex:0 0 18px; accent-color:var(--v-accent); }
+.v-form-card .v-checkbox-group label span,.v-form-card .v-checkbox span { color:var(--v-text); font-weight:400; }
 .v-button:disabled { opacity:.65; cursor:wait; }
 .v-honeypot { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }
 .v-analytics-choice { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--v-muted); }
