@@ -7,7 +7,7 @@ const pouchPaths = new Set(['/zyn-alternative', '/energy', '/coffee', '/checkout
 const path = window.location.pathname.replace(/\/$/, '') || '/'
 
 async function start() {
-  const isVoicePage = (voicePaths as readonly string[]).includes(path)
+  const isVoicePage = (voicePaths as readonly string[]).includes(path) || path === '/privacy'
   if (!isVoicePage) await import('./styles.css')
   const { App } = isVoicePage
     ? await import('./voice/VoiceApp')

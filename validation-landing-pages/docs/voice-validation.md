@@ -1,3 +1,5 @@
+> Launch update: see [revomatix-launch.md](revomatix-launch.md) for the server submission flow. Preview-only form descriptions below refer to the earlier design phase.
+
 # Voice AI validation website
 
 Local preview: http://127.0.0.1:5173/moving
