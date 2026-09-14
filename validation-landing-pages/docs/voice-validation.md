@@ -18,7 +18,7 @@ Required name, company and email use native browser validation. Whitespace-only 
 
 ## Before launch
 
-1. Confirm the final brand (currently Voice AI) and approve copy.
+1. Approve the final Revomatix branding and copy.
 2. Choose and authorize a real form destination, implement delivery/error handling and appropriate privacy information, and verify a real submission before removing preview notices.
 3. Choose the single domain/deployment target and root-path behavior. This repository contains older experiments; these have not been repurposed or deployed.
 4. Confirm pilot operations: contact rules, approved answers, handoff ownership and software compatibility. The page makes no built-in integration or production-readiness claims.
@@ -52,3 +52,9 @@ No commit, push or deployment was performed.
 All eleven hero and conversation previews were inspected at 1280px desktop and 390px mobile with no horizontal overflow. Four complete turns reveal once, followed by an accurate next-step card. Keyboard replay was verified; the moving panel height remained 613.375px before and after replay on mobile. Waveform animation has a finite iteration count. Reduced-motion CSS disables every sequence animation and displays complete content immediately; OS reduced-motion emulation was not available in the browser tool.
 
 Shared navigation, mobile menu, anchor links, keyboard FAQ operation and required-field form validation were checked. Valid form submission still explicitly says no information was sent. The build and whitespace check pass. No former green tokens or long-dash punctuation remain in voice source. The later example is a handoff summary rather than a duplicate transcript. Restoration stays inbound and ends with an alert prepared for review.
+
+## Revomatix assets
+
+Brand name and local asset paths are centralized in `src/voice/config.ts`. Original PNGs are preserved in `public/assets/revomatix/`; cropped copies remove only transparent outer margins. The header/footer artwork renders at 190px desktop and 160px mobile, with explicit intrinsic dimensions. The preview uses one decorative symbol next to “Revomatix · AI assistant.” The favicon is derived from the supplied symbol.
+
+Build and diff checks passed. All eleven routes were checked at 1280px and 390px for loaded images, titles, header sizing and overflow. Brand-to-top, mobile menu and keyboard FAQ interactions passed.

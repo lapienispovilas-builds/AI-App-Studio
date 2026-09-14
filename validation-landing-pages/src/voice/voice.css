@@ -153,3 +153,16 @@
 @media(max-width:1000px) { .v-hero { gap:30px; } }
 @media(max-width:760px) { .v-hero { grid-template-columns:1fr; padding-block:40px; } .v-conversation { width:100%; max-width:520px; margin:auto; } .v-faq-band { margin-top:48px; } .v-sequence { padding-inline:16px; } .v-conversation figcaption { padding:16px; } .v-preview-context { padding-inline:16px; } .v-preview-message { max-width:96%; } }
 @media(prefers-reduced-motion:reduce) { .v-sequence * { animation:none!important; opacity:1!important; } }
+
+/* Shared supplied Revomatix artwork, cropped only to transparent bounds. */
+.v-brand-image { display:block; width:190px; height:auto; }
+.v-assistant-brand { display:flex; align-items:center; gap:9px; margin-bottom:10px; }
+.v-conversation .v-assistant-brand>span:last-child { color:var(--v-text); font-size:12px; font-weight:600; }
+.v-avatar { display:grid; place-items:center; width:38px; height:38px; background:var(--v-soft); border:1px solid var(--v-border); border-radius:7px; }
+.v-avatar img { display:block; width:32px; height:auto; }
+@media(max-width:760px) { .v-brand-image { width:160px; } }
+
+/* Separate pilot value from the preceding white handoff section. */
+.v-value-band { background:var(--v-soft); border-block:1px solid var(--v-border); margin-bottom:72px; }
+.v-value-band .v-value { padding-block:72px; }
+@media(max-width:760px) { .v-value-band { margin-bottom:48px; } .v-value-band .v-value { padding-block:48px; } }

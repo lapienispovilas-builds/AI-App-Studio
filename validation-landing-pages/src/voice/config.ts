@@ -1,4 +1,4 @@
-export const voiceBrand = { name: 'Voice AI' }
+export const voiceBrand = { name: 'Revomatix', logo: '/assets/revomatix/revomatix-header-cropped.png', symbol: '/assets/revomatix/revomatix-symbol-cropped.png', favicon: '/assets/revomatix/favicon.png' }
 export const voicePaths = ['/saas-payment-recovery', '/demo-recovery', '/fitness', '/ecommerce', '/invoice-follow-up', '/moving', '/restoration', '/commercial-contractors', '/distributors', '/medspa', '/auto-repair'] as const
 export interface VoicePageConfig {
   path: typeof voicePaths[number]
@@ -36,7 +36,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     "headlineAccent": "subscription payments.",
     "description": "Automate follow-up on payments that retries and reminders have not resolved. A voice agent reaches the billing contact and shares the secure update link, reducing manual work for your team.",
     "problem": "Some payment failures need more than another retry. A billing contact may need to update a payment method or pass the request to finance. Focus the follow-up on accounts still waiting for that action.",
-    "title": "Subscription payment follow-up | Voice AI",
+    "title": "Subscription payment follow-up | Revomatix",
     "metaDescription": "Automate follow-up on payments that retries and reminders have not resolved. A voice agent reaches the billing contact and shares the secure update link, reducing manual work for your team.",
     "inbound": false,
     "illustrationLabels": [
@@ -161,7 +161,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     "headlineAccent": "back on the calendar.",
     "description": "Take demo no-shows off your reps’ follow-up lists. A voice agent reconnects with interested prospects, helps reschedule and sends confirmation, giving your team more time for sales conversations.",
     "problem": "The prospect booked a demo but did not attend. Your rep now has another round of calls and emails to manage. Follow up on that existing interest without restarting the entire sales process.",
-    "title": "Missed demo follow-up | Voice AI",
+    "title": "Missed demo follow-up | Revomatix",
     "metaDescription": "Take demo no-shows off your reps’ follow-up lists. A voice agent reconnects with interested prospects, helps reschedule and sends confirmation, giving your team more time for sales conversations.",
     "inbound": false,
     "illustrationLabels": [
@@ -287,7 +287,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     "headlineAccent": "and trial visits.",
     "description": "Automate follow-up after missed tours and trial visits. A voice agent helps prospects rebook and sends the details, leaving your membership team more time to welcome potential members.",
     "problem": "A prospect booked a visit but never walked through the door. They may still want to join. Give them a simple way to rearrange, while your team focuses on the people already in the club.",
-    "title": "Missed tour follow-up | Voice AI",
+    "title": "Missed tour follow-up | Revomatix",
     "metaDescription": "Automate follow-up after missed tours and trial visits. A voice agent helps prospects rebook and sends the details, leaving your membership team more time to welcome potential members.",
     "inbound": false,
     "illustrationLabels": [
@@ -412,7 +412,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     "headlineAccent": "holding up a purchase.",
     "description": "Help shoppers resolve the questions holding up a purchase. Automate checkout follow-up with a voice agent that answers approved questions and shares the checkout link, reducing routine work for support.",
     "problem": "A reminder brings a shopper back to the same unanswered question. When the obstacle is a product detail or delivery policy, a conversation can help them decide whether to place the order.",
-    "title": "Incomplete checkout follow-up | Voice AI",
+    "title": "Incomplete checkout follow-up | Revomatix",
     "metaDescription": "Help shoppers resolve the questions holding up a purchase. Automate checkout follow-up with a voice agent that answers approved questions and shares the checkout link, reducing routine work for support.",
     "inbound": false,
     "illustrationLabels": [
@@ -537,7 +537,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     "headlineAccent": "overdue invoices.",
     "description": "Automate routine calls about undisputed overdue invoices. A voice agent checks receipt, asks about payment timing and shares the invoice, giving finance clearer answers with less chasing.",
     "problem": "The reminder has gone out, but finance still needs an answer. Did accounts payable receive the invoice? Is something missing? When should payment arrive? Make those routine follow-ups easier to manage.",
-    "title": "Overdue invoice follow-up | Voice AI",
+    "title": "Overdue invoice follow-up | Revomatix",
     "metaDescription": "Automate routine calls about undisputed overdue invoices. A voice agent checks receipt, asks about payment timing and shares the invoice, giving finance clearer answers with less chasing.",
     "inbound": false,
     "illustrationLabels": [
@@ -663,7 +663,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     "headlineAccent": "into booked moves.",
     "description": "Automate estimate follow-up with a voice agent that checks what customers need to book and confirms the next step. Give your moving consultants less chasing and more time to close.",
     "problem": "An estimate is out, but the customer has not booked. They may still be comparing movers or need to clarify a detail. Give your sales team a clear next step instead of another unanswered follow-up task.",
-    "title": "Moving estimate follow-up | Voice AI",
+    "title": "Moving estimate follow-up | Revomatix",
     "metaDescription": "Automate estimate follow-up with a voice agent that checks what customers need to book and confirms the next step. Give your moving consultants less chasing and more time to close.",
     "inbound": false,
     "illustrationLabels": [
@@ -789,7 +789,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     "headlineAccent": "when your office cannot answer.",
     "description": "Automate overflow call intake when your office cannot answer. A voice agent captures the reported damage and property details, then alerts your on-call team with the information needed to respond.",
     "problem": "When the team is on a job or the office is closed, a new damage call still needs a clear next step. Capture the essential information so the person taking over does not start from scratch.",
-    "title": "Overflow damage-call intake | Voice AI",
+    "title": "Overflow damage-call intake | Revomatix",
     "metaDescription": "Automate overflow call intake when your office cannot answer. A voice agent captures the reported damage and property details, then alerts your on-call team with the information needed to respond.",
     "inbound": true,
     "illustrationLabels": [
@@ -915,7 +915,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     "headlineAccent": "still waiting for approval.",
     "description": "Automate follow-up on open repair proposals. A voice agent checks what is delaying approval and passes questions to your service team, reducing routine calls while keeping proposed work moving.",
     "problem": "Your technician identified the work and your team sent the proposal. It is still waiting on a response. Find out whether the customer needs clarification, another decision-maker or more time.",
-    "title": "Open repair proposal follow-up | Voice AI",
+    "title": "Open repair proposal follow-up | Revomatix",
     "metaDescription": "Automate follow-up on open repair proposals. A voice agent checks what is delaying approval and passes questions to your service team, reducing routine calls while keeping proposed work moving.",
     "inbound": false,
     "illustrationLabels": [
@@ -1040,7 +1040,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     "headlineAccent": "with fewer sales calls.",
     "description": "Give inside sales less quote chasing to do. A voice agent follows up open quotes, checks buying plans and shares the next step, helping reps focus on orders and customer questions.",
     "problem": "Inside sales has new requests to handle while earlier quotes still need an answer. Give each follow-up a useful outcome: ready to order, waiting on approval, needs a change or no longer needed.",
-    "title": "Open quote follow-up | Voice AI",
+    "title": "Open quote follow-up | Revomatix",
     "metaDescription": "Give inside sales less quote chasing to do. A voice agent follows up open quotes, checks buying plans and shares the next step, helping reps focus on orders and customer questions.",
     "inbound": false,
     "illustrationLabels": [
@@ -1165,7 +1165,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     "headlineAccent": "missed consultations.",
     "description": "Automate the follow-up after missed consultations. A voice agent helps patients rearrange and sends appointment details, giving your front desk more time for the people already in your clinic.",
     "problem": "A missed consultation leaves the patient without a next step and your coordinator with another callback. Make it easier to rearrange while keeping clinical questions with your team.",
-    "title": "Missed consultation follow-up | Voice AI",
+    "title": "Missed consultation follow-up | Revomatix",
     "metaDescription": "Automate the follow-up after missed consultations. A voice agent helps patients rearrange and sends appointment details, giving your front desk more time for the people already in your clinic.",
     "inbound": false,
     "illustrationLabels": [
@@ -1290,7 +1290,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     "headlineAccent": "without tying up advisors.",
     "description": "Automate follow-up on declined and deferred repairs. A voice agent checks whether customers are ready to revisit the work and arranges the next step, freeing up your service advisors.",
     "problem": "The repair was recommended, but the customer put it off. Your advisors still need to find out whether they want to return, need an updated estimate or have already had the work done.",
-    "title": "Declined repair follow-up | Voice AI",
+    "title": "Declined repair follow-up | Revomatix",
     "metaDescription": "Automate follow-up on declined and deferred repairs. A voice agent checks whether customers are ready to revisit the work and arranges the next step, freeing up your service advisors.",
     "inbound": false,
     "illustrationLabels": [
