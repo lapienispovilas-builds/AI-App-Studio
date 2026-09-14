@@ -2,6 +2,13 @@ import { createHash, createSign } from 'node:crypto'
 import { mappedRow, type Lead } from './validation.js'
 async function request(url:string,init?:RequestInit) { const r=await fetch(url,{...init,signal:AbortSignal.timeout(12000)}); if(!r.ok) throw new Error(`UPSTREAM_${r.status}`); return r.json() }
 export async function saveLead(lead:Lead) {
+ const scriptUrl=process.env.REVOMATIX_APPS_SCRIPT_URL, scriptSecret=process.env.REVOMATIX_APPS_SCRIPT_SECRET
+ if(scriptUrl||scriptSecret) {
+  if(!scriptUrl||!scriptSecret) throw new Error('NOT_CONFIGURED')
+  const result=await request(scriptUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({secret:scriptSecret,lead})})
+  if(result?.ok!==true||result.submissionId!==lead.submissionId) throw new Error('SAVE_UNCONFIRMED')
+  return {submissionId:lead.submissionId,duplicate:result.duplicate===true}
+ }
  const id=process.env.REVOMATIX_SHEET_ID, tab=process.env.REVOMATIX_SHEET_TAB, db=process.env.SUPABASE_URL, dbKey=process.env.SUPABASE_SERVICE_ROLE_KEY
  let key=process.env.GOOGLE_PRIVATE_KEY?.trim() || '', email=process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || ''
  if(key.startsWith('{')) { const account=JSON.parse(key);key=account.private_key;email ||= account.client_email }
