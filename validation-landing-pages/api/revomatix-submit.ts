@@ -1,5 +1,5 @@
-import { validate } from '../server/revomatix/validation'
-import { saveLead } from '../server/revomatix/storage'
+import { validate } from '../server/revomatix/validation.js'
+import { saveLead } from '../server/revomatix/storage.js'
 type Request={method?:string;body?:unknown;headers:Record<string,string|string[]|undefined>}
 type Response={status:(n:number)=>Response;json:(v:unknown)=>void;setHeader:(k:string,v:string)=>void;end:()=>void}
 export default async function handler(req:Request,res:Response) {

@@ -1,4 +1,4 @@
-import { voicePaths } from '../../src/voice/config'
+import { voicePaths } from '../../src/voice/config.js'
 export const fields = ['Submission ID','Timestamp','Name','Work email','Company','Optional answer','Niche','Submission path','Original landing path','UTM source','UTM medium','UTM campaign','UTM content','UTM term','Referrer','Test traffic'] as const
 export type Lead = { submissionId: string; name: string; email: string; company: string; answer: string; niche: string; path: string; landingPath: string; utmSource: string; utmMedium: string; utmCampaign: string; utmContent: string; utmTerm: string; referrer: string; test: boolean }
 export function validate(body: unknown): Lead {

@@ -1,5 +1,5 @@
 import { createHash, createSign } from 'node:crypto'
-import { mappedRow, type Lead } from './validation'
+import { mappedRow, type Lead } from './validation.js'
 async function request(url:string,init?:RequestInit) { const r=await fetch(url,{...init,signal:AbortSignal.timeout(12000)}); if(!r.ok) throw new Error(`UPSTREAM_${r.status}`); return r.json() }
 export async function saveLead(lead:Lead) {
  const id=process.env.REVOMATIX_SHEET_ID, tab=process.env.REVOMATIX_SHEET_TAB, db=process.env.SUPABASE_URL, dbKey=process.env.SUPABASE_SERVICE_ROLE_KEY
