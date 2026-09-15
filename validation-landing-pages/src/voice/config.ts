@@ -3,8 +3,11 @@ export const voicePaths = ['/saas-payment-recovery', '/demo-recovery', '/fitness
 export interface VoiceAudioDemo {
   src: string
   duration: number
+  title?: string
+  trigger?: string
   transcript: { at: number; speaker: 'AI agent' | 'Customer'; text: string }[]
   stages: string[]
+  stageTimes?: number[]
   outcome: { title: string; detail: string }
 }
 export interface VoicePageConfig {
@@ -46,6 +49,55 @@ export interface VoicePageConfig {
 export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   "/saas-payment-recovery": {
     "path": "/saas-payment-recovery",
+    "audioDemo": {
+      "src": "/audio/revomatix/saas-payment-recovery-conversation.mp3",
+      "duration": 24.92,
+      "title": "Subscription payment recovery",
+      "trigger": "Payment failed; subscription at risk of interruption.",
+      "transcript": [
+        {
+          "at": 0.0,
+          "speaker": "AI agent",
+          "text": "Hi Sam, this is Lumen's AI billing assistant. Today's subscription payment didn't go through. Would you like a secure card update link by text?"
+        },
+        {
+          "at": 9.19,
+          "speaker": "Customer",
+          "text": "Oh, that's probably my old card. Yes, text it to me."
+        },
+        {
+          "at": 13.42,
+          "speaker": "AI agent",
+          "text": "It's sent. I can stay on the line while you update it."
+        },
+        {
+          "at": 17.1,
+          "speaker": "Customer",
+          "text": "Okay, I've updated the card."
+        },
+        {
+          "at": 19.35,
+          "speaker": "AI agent",
+          "text": "Thank you. The payment has gone through, and your subscription will continue without interruption."
+        }
+      ],
+      "stages": [
+        "Payment unresolved",
+        "Customer reached",
+        "Secure update completed",
+        "Payment recovered"
+      ],
+      "stageTimes": [
+        0,
+        9.19,
+        13.42,
+        17.1
+      ],
+      "outcome": {
+        "title": "Payment recovered",
+        "detail": "Card updated and subscription continued without interruption."
+      }
+    },
     "sectionCopy": {
       "problem": {
         "eyebrow": "AFTER DUNNING",
@@ -197,6 +249,55 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/demo-recovery": {
     "path": "/demo-recovery",
+    "audioDemo": {
+      "src": "/audio/revomatix/demo-recovery-conversation.mp3",
+      "duration": 22.6,
+      "title": "Missed demo recovery",
+      "trigger": "Qualified prospect missed the scheduled demo.",
+      "transcript": [
+        {
+          "at": 0.0,
+          "speaker": "AI agent",
+          "text": "Hi James, this is Northstar's AI scheduling assistant. You missed today's two o'clock demo. Would you like to find another time?"
+        },
+        {
+          "at": 7.6,
+          "speaker": "Customer",
+          "text": "Sorry, I got pulled into a client call. Can we do tomorrow?"
+        },
+        {
+          "at": 11.52,
+          "speaker": "AI agent",
+          "text": "Of course. I can offer ten in the morning or three in the afternoon tomorrow."
+        },
+        {
+          "at": 17.11,
+          "speaker": "Customer",
+          "text": "Ten in the morning works."
+        },
+        {
+          "at": 18.86,
+          "speaker": "AI agent",
+          "text": "You're booked for ten tomorrow. I've just sent the calendar invitation."
+        }
+      ],
+      "stages": [
+        "Demo missed",
+        "Prospect reached",
+        "Availability checked",
+        "Demo rebooked"
+      ],
+      "stageTimes": [
+        0,
+        7.6,
+        11.52,
+        17.11
+      ],
+      "outcome": {
+        "title": "Demo rebooked",
+        "detail": "Tomorrow at 10am confirmed and calendar invitation sent."
+      }
+    },
     "sectionCopy": {
       "problem": {
         "eyebrow": "AFTER THE NO-SHOW",
@@ -349,6 +450,55 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/fitness": {
     "path": "/fitness",
+    "audioDemo": {
+      "src": "/audio/revomatix/fitness-conversation.mp3",
+      "duration": 23.88,
+      "title": "Trial visit recovery",
+      "trigger": "Prospect missed a booked trial visit.",
+      "transcript": [
+        {
+          "at": 0.0,
+          "speaker": "AI agent",
+          "text": "Hi Marcus, this is Peak Fitness's AI scheduling assistant. We missed you at tonight's trial visit. Would you like to reschedule?"
+        },
+        {
+          "at": 7.84,
+          "speaker": "Customer",
+          "text": "Yeah, work ran late. Sorry about that."
+        },
+        {
+          "at": 11.52,
+          "speaker": "AI agent",
+          "text": "No problem. I have space tomorrow at six, or Thursday at seven."
+        },
+        {
+          "at": 16.72,
+          "speaker": "Customer",
+          "text": "Tomorrow at six would be great."
+        },
+        {
+          "at": 18.89,
+          "speaker": "AI agent",
+          "text": "You're rebooked for tomorrow at six. I've sent the confirmation and reminder by text."
+        }
+      ],
+      "stages": [
+        "Trial missed",
+        "Prospect reached",
+        "New time selected",
+        "Visit rebooked"
+      ],
+      "stageTimes": [
+        0,
+        7.84,
+        11.52,
+        16.72
+      ],
+      "outcome": {
+        "title": "Trial visit rebooked",
+        "detail": "Tomorrow at 6pm confirmed and reminder scheduled."
+      }
+    },
     "sectionCopy": {
       "problem": {
         "eyebrow": "AFTER THE MISSED VISIT",
@@ -500,6 +650,55 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/ecommerce": {
     "path": "/ecommerce",
+    "audioDemo": {
+      "src": "/audio/revomatix/ecommerce-conversation.mp3",
+      "duration": 27.64,
+      "title": "High-value checkout recovery",
+      "trigger": "Customer left a cedar dining set at checkout.",
+      "transcript": [
+        {
+          "at": 0.0,
+          "speaker": "AI agent",
+          "text": "Hi Ethan, this is Aurelia's AI shopping assistant. I'm following up on the cedar dining set you left at checkout. Was there a question I can answer?"
+        },
+        {
+          "at": 9.19,
+          "speaker": "Customer",
+          "text": "Yeah, I wasn't sure whether it ships assembled."
+        },
+        {
+          "at": 12.3,
+          "speaker": "AI agent",
+          "text": "It arrives assembled except for the legs, which take about five minutes to attach. I've sent your saved checkout link."
+        },
+        {
+          "at": 20.37,
+          "speaker": "Customer",
+          "text": "Great, I have it. I'll complete the order now."
+        },
+        {
+          "at": 23.74,
+          "speaker": "AI agent",
+          "text": "Your order is confirmed. You'll receive the delivery details by email."
+        }
+      ],
+      "stages": [
+        "Checkout abandoned",
+        "Customer reached",
+        "Product question resolved",
+        "Order completed"
+      ],
+      "stageTimes": [
+        0,
+        9.19,
+        12.3,
+        20.37
+      ],
+      "outcome": {
+        "title": "Order completed",
+        "detail": "Product question answered and purchase confirmed."
+      }
+    },
     "sectionCopy": {
       "problem": {
         "eyebrow": "BEFORE THE PURCHASE",
@@ -651,6 +850,55 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/invoice-follow-up": {
     "path": "/invoice-follow-up",
+    "audioDemo": {
+      "src": "/audio/revomatix/invoice-follow-up-conversation.mp3",
+      "duration": 28.11,
+      "title": "Overdue invoice follow-up",
+      "trigger": "Undisputed invoice remains overdue after written reminders.",
+      "transcript": [
+        {
+          "at": 0.0,
+          "speaker": "AI agent",
+          "text": "Hi David, this is Bramwell Consulting's AI accounts assistant, following up on invoice four four seven one. It is thirty days overdue. Was there a problem with it?"
+        },
+        {
+          "at": 10.55,
+          "speaker": "Customer",
+          "text": "No problem. Sorry, it just slipped through."
+        },
+        {
+          "at": 14.31,
+          "speaker": "AI agent",
+          "text": "I can text you a secure payment link now, or record a payment date. Which works better?"
+        },
+        {
+          "at": 20.55,
+          "speaker": "Customer",
+          "text": "Send the link. I'll pay it now."
+        },
+        {
+          "at": 22.72,
+          "speaker": "AI agent",
+          "text": "Thank you. The payment has been received, and the receipt is on its way by email."
+        }
+      ],
+      "stages": [
+        "Invoice overdue",
+        "Billing contact reached",
+        "Secure link sent",
+        "Payment received"
+      ],
+      "stageTimes": [
+        0,
+        10.55,
+        14.31,
+        20.55
+      ],
+      "outcome": {
+        "title": "Payment received",
+        "detail": "Invoice paid and receipt sent without manual follow-up."
+      }
+    },
     "sectionCopy": {
       "problem": {
         "eyebrow": "AFTER THE REMINDER",
@@ -805,40 +1053,49 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     "path": "/moving",
     "audioDemo": {
       "src": "/audio/moving-rescheduling-demo.mp3",
-      "duration": 37.2,
+      "duration": 35.6,
       "transcript": [
         {
-          "at": 0,
+          "at": 0.0,
           "speaker": "AI agent",
-          "text": "Hi Alex, this is Revomatix, the AI assistant calling on behalf of your moving company. I’m following up about your estimate. Is there anything you’d like to confirm before booking?"
+          "text": "Hi Alex, this is Revomatix, the AI assistant calling on behalf of your moving company. I'm following up about your estimate. Is there anything you'd like to confirm before booking?"
         },
         {
-          "at": 11.32,
+          "at": 11.36,
           "speaker": "Customer",
           "text": "Yeah, we need to move on Friday instead. Is that available?"
         },
         {
-          "at": 16.56,
+          "at": 15.51,
           "speaker": "AI agent",
           "text": "Yes, Friday is available. I can update your move now. Would you prefer the morning or afternoon?"
         },
         {
-          "at": 23.56,
+          "at": 22.54,
           "speaker": "Customer",
           "text": "The afternoon would work better."
         },
         {
-          "at": 26.24,
+          "at": 24.86,
           "speaker": "AI agent",
-          "text": "Perfect. I’ve rescheduled your move for Friday afternoon and sent the updated confirmation by text. Is there anything else you’d like me to update?"
+          "text": "Perfect. I've rescheduled your move for Friday afternoon and sent the updated confirmation by text. Is there anything else you'd like me to update?"
         },
         {
-          "at": 35.32,
+          "at": 33.98,
           "speaker": "Customer",
-          "text": "No, that’s everything. Thank you."
+          "text": "No, that's everything. Thank you."
         }
       ],
-      "stages": ["Estimate awaiting response", "Availability checked", "Move rescheduled"],
+      "stages": [
+        "Estimate awaiting response",
+        "Availability checked",
+        "Move rescheduled"
+      ],
+      "stageTimes": [
+        0,
+        11.36,
+        24.86
+      ],
       "outcome": {
         "title": "Move rescheduled",
         "detail": "Friday afternoon reserved and confirmation sent."
@@ -996,6 +1253,55 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/restoration": {
     "path": "/restoration",
+    "audioDemo": {
+      "src": "/audio/revomatix/restoration-conversation.mp3",
+      "duration": 27.72,
+      "title": "Emergency restoration intake",
+      "trigger": "Urgent water-damage call received after hours.",
+      "transcript": [
+        {
+          "at": 0.0,
+          "speaker": "AI agent",
+          "text": "Hi, this is Coastal Restoration's AI emergency assistant. Are you safe, and is the water still spreading?"
+        },
+        {
+          "at": 7.44,
+          "speaker": "Customer",
+          "text": "We're safe, but it's coming from upstairs pretty steadily."
+        },
+        {
+          "at": 11.91,
+          "speaker": "AI agent",
+          "text": "Thank you. I've recorded this as urgent and sent the details to the on-call technician. Please hold while I confirm the response."
+        },
+        {
+          "at": 20.22,
+          "speaker": "Customer",
+          "text": "Okay, please hurry."
+        },
+        {
+          "at": 22.7,
+          "speaker": "AI agent",
+          "text": "The technician has accepted the job and will call you shortly with an estimated arrival time."
+        }
+      ],
+      "stages": [
+        "Emergency call answered",
+        "Urgency recorded",
+        "On-call team alerted",
+        "Job accepted"
+      ],
+      "stageTimes": [
+        0,
+        7.44,
+        11.91,
+        20.22
+      ],
+      "outcome": {
+        "title": "Technician dispatched",
+        "detail": "Urgent loss recorded and accepted by the on-call technician."
+      }
+    },
     "sectionCopy": {
       "problem": {
         "eyebrow": "WHEN STAFF CANNOT ANSWER",
@@ -1148,6 +1454,55 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/commercial-contractors": {
     "path": "/commercial-contractors",
+    "audioDemo": {
+      "src": "/audio/revomatix/commercial-contractors-conversation.mp3",
+      "duration": 34.19,
+      "title": "Repair proposal follow-up",
+      "trigger": "Commercial repair proposal remains unanswered.",
+      "transcript": [
+        {
+          "at": 0.0,
+          "speaker": "AI agent",
+          "text": "Hi Peter, this is the AI assistant for your commercial service team, following up on the rooftop heating and cooling repair proposal for building C. Do you have any questions?"
+        },
+        {
+          "at": 11.91,
+          "speaker": "Customer",
+          "text": "I saw it, but I've been buried. Can you remind me of the total?"
+        },
+        {
+          "at": 17.34,
+          "speaker": "AI agent",
+          "text": "The approved proposal is four thousand two hundred dollars. Thursday is available. Should I record your approval and reserve that slot?"
+        },
+        {
+          "at": 27.34,
+          "speaker": "Customer",
+          "text": "Yes, let's go ahead with Thursday."
+        },
+        {
+          "at": 30.13,
+          "speaker": "AI agent",
+          "text": "The work is approved and scheduled for Thursday. I've emailed the confirmation."
+        }
+      ],
+      "stages": [
+        "Proposal unanswered",
+        "Decision-maker reached",
+        "Approval recorded",
+        "Work scheduled"
+      ],
+      "stageTimes": [
+        0,
+        11.91,
+        17.34,
+        27.34
+      ],
+      "outcome": {
+        "title": "Work approved and scheduled",
+        "detail": "Thursday reserved and confirmation emailed."
+      }
+    },
     "sectionCopy": {
       "problem": {
         "eyebrow": "AFTER THE PROPOSAL",
@@ -1299,6 +1654,55 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/distributors": {
     "path": "/distributors",
+    "audioDemo": {
+      "src": "/audio/revomatix/distributors-conversation.mp3",
+      "duration": 30.04,
+      "title": "Distributor quote follow-up",
+      "trigger": "Quote sent; buyer has not placed the order.",
+      "transcript": [
+        {
+          "at": 0.0,
+          "speaker": "AI agent",
+          "text": "Hi Tom, this is your distributor's AI sales assistant, following up on the quote for two hundred three-inch fittings. Is anything holding up the order?"
+        },
+        {
+          "at": 9.93,
+          "speaker": "Customer",
+          "text": "Is there a discount if we increase it to three hundred units?"
+        },
+        {
+          "at": 13.85,
+          "speaker": "AI agent",
+          "text": "Yes. Your approved tier-two price is eight percent lower at three hundred units. Should I update the quantity and place the order?"
+        },
+        {
+          "at": 22.89,
+          "speaker": "Customer",
+          "text": "Yes, let's do that."
+        },
+        {
+          "at": 25.21,
+          "speaker": "AI agent",
+          "text": "The order for three hundred units is confirmed. I've emailed the updated order summary."
+        }
+      ],
+      "stages": [
+        "Quote unanswered",
+        "Buyer reached",
+        "Pricing question resolved",
+        "Order confirmed"
+      ],
+      "stageTimes": [
+        0,
+        9.93,
+        13.85,
+        22.89
+      ],
+      "outcome": {
+        "title": "Order confirmed",
+        "detail": "Quantity updated to 300 units and order summary sent."
+      }
+    },
     "sectionCopy": {
       "problem": {
         "eyebrow": "AFTER THE QUOTE",
@@ -1450,6 +1854,55 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/medspa": {
     "path": "/medspa",
+    "audioDemo": {
+      "src": "/audio/revomatix/medspa-conversation.mp3",
+      "duration": 26.67,
+      "title": "Consultation no-show recovery",
+      "trigger": "Prospect missed a scheduled consultation.",
+      "transcript": [
+        {
+          "at": 0.0,
+          "speaker": "AI agent",
+          "text": "Hi Jason, this is Radiance Aesthetics' AI scheduling assistant. We missed you at today's consultation. Would you like to find another time?"
+        },
+        {
+          "at": 8.72,
+          "speaker": "Customer",
+          "text": "Sorry, I completely forgot. Work has been crazy."
+        },
+        {
+          "at": 13.03,
+          "speaker": "AI agent",
+          "text": "No problem. I can offer tomorrow at noon or Thursday at four."
+        },
+        {
+          "at": 17.42,
+          "speaker": "Customer",
+          "text": "Thursday at four works."
+        },
+        {
+          "at": 19.9,
+          "speaker": "AI agent",
+          "text": "Your consultation is rebooked for Thursday at four. I've sent a confirmation and reminder by text."
+        }
+      ],
+      "stages": [
+        "Consultation missed",
+        "Prospect reached",
+        "Availability checked",
+        "Consultation rebooked"
+      ],
+      "stageTimes": [
+        0,
+        8.72,
+        13.03,
+        17.42
+      ],
+      "outcome": {
+        "title": "Consultation rebooked",
+        "detail": "Thursday at 4pm confirmed and reminder scheduled."
+      }
+    },
     "sectionCopy": {
       "problem": {
         "eyebrow": "AFTER THE NO-SHOW",
@@ -1601,6 +2054,65 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/auto-repair": {
     "path": "/auto-repair",
+    "audioDemo": {
+      "src": "/audio/revomatix/auto-repair-conversation.mp3",
+      "duration": 35.87,
+      "title": "Declined repair follow-up",
+      "trigger": "Quoted brake repair was postponed.",
+      "transcript": [
+        {
+          "at": 0.0,
+          "speaker": "AI agent",
+          "text": "Hi Mike, this is Crestline Auto's AI service assistant, following up on the brake repair quoted last week. Is cost or timing holding it up?"
+        },
+        {
+          "at": 9.59,
+          "speaker": "Customer",
+          "text": "Honestly, I wasn't sure I could afford it right now."
+        },
+        {
+          "at": 12.96,
+          "speaker": "AI agent",
+          "text": "Crestline offers a three-month payment option, subject to approval. I can text you the secure application link."
+        },
+        {
+          "at": 20.17,
+          "speaker": "Customer",
+          "text": "I just completed it and got approved. Can I come in Friday?"
+        },
+        {
+          "at": 24.17,
+          "speaker": "AI agent",
+          "text": "Yes. I have ten in the morning available on Friday. Should I book it?"
+        },
+        {
+          "at": 29.13,
+          "speaker": "Customer",
+          "text": "Yes, that works."
+        },
+        {
+          "at": 30.8,
+          "speaker": "AI agent",
+          "text": "Your brake repair is booked for Friday at ten. I've sent the appointment confirmation by text."
+        }
+      ],
+      "stages": [
+        "Repair postponed",
+        "Customer reached",
+        "Cost blocker resolved",
+        "Repair booked"
+      ],
+      "stageTimes": [
+        0,
+        9.59,
+        12.96,
+        29.13
+      ],
+      "outcome": {
+        "title": "Repair booked",
+        "detail": "Friday at 10am confirmed after the payment option was approved."
+      }
+    },
     "sectionCopy": {
       "problem": {
         "eyebrow": "AFTER THE DECLINE",
