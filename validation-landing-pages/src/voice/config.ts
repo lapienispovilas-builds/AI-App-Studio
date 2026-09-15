@@ -10,6 +10,14 @@ export interface VoiceAudioDemo {
 export interface VoicePageConfig {
   path: typeof voicePaths[number]
   audioDemo?: VoiceAudioDemo
+  sectionCopy?: {
+    problem: { eyebrow: string; headline: string; body: string; emphasis: string }
+    workflowEyebrow: string
+    valueEyebrow: string
+    valueHeadline: string
+    differentiation: { eyebrow: string; headline: string; body: string; emphasis: string }
+    ctaLabel: string
+  }
   preview: { emphasis: string[]; context: string; messages: { speaker: string; text: string }[]; status: string; detail: string; need: string; recorded: string; owner: string }
   buyer: string
   eyebrow: string
@@ -706,38 +714,60 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         "detail": "Friday afternoon reserved and confirmation sent."
       }
     },
+    "sectionCopy": {
+      "problem": {
+        "eyebrow": "AFTER THE ESTIMATE",
+        "headline": "An open estimate is often a conversation waiting to happen.",
+        "body": "Some customers are still comparing movers. Others only need to change the date, confirm what is included or understand the next step. Another automated reminder cannot tell the difference. Revomatix calls while the move is still active, identifies the blocker and moves the resolvable opportunities forward.",
+        "emphasis": "Less time chasing estimates. More time closing moves."
+      },
+      "workflowEyebrow": "HOW IT WORKS",
+      "valueEyebrow": "BUILT FOR MOVING SALES TEAMS",
+      "valueHeadline": "Automate the follow-up your consultants repeat every day.",
+      "differentiation": {
+        "eyebrow": "NO PLATFORM SWITCH REQUIRED",
+        "headline": "Add voice follow-up to the workflow you already use.",
+        "body": "Some moving platforms include broad automation features, but replacing your operating system is a major decision. Revomatix is designed as a focused voice layer for the estimate-to-booking moment and to work alongside your existing estimate, calendar and booking workflow.",
+        "emphasis": "Start with one high-value workflow: open estimates that still need a decision."
+      },
+      "ctaLabel": "Discuss a moving pilot"
+    },
     "buyer": "For moving companies and sales coordinators",
     "eyebrow": "Voice AI for movers",
     "headline": "Turn unanswered estimates",
     "headlineAccent": "into booked moves.",
-    "description": "Automate estimate follow-up with a voice agent that checks what customers need to book and confirms the next step. Give your moving consultants less chasing and more time to close.",
-    "problem": "An estimate is out, but the customer has not booked. They may still be comparing movers or need to clarify a detail. Give your sales team a clear next step instead of another unanswered follow-up task.",
+    "description": "Automate estimate follow-up with an AI voice agent that calls customers, understands what is holding up the booking and handles the next step. Check availability, book or reschedule the move, and send confirmation without another task for your sales team.",
+    "problem": "Some customers are still comparing movers. Others only need to change the date, confirm what is included or understand the next step. Another automated reminder cannot tell the difference.",
     "title": "Moving estimate follow-up | Revomatix",
-    "metaDescription": "Automate estimate follow-up with a voice agent that checks what customers need to book and confirms the next step. Give your moving consultants less chasing and more time to close.",
+    "metaDescription": "Automate moving estimate follow-up with an AI voice agent that identifies blockers, checks availability, books or reschedules moves and sends confirmation.",
     "inbound": false,
     "illustrationLabels": [
       "Estimate unanswered",
       "Follow-up call",
       "Callback confirmed by text"
     ],
-    "invitation": "Now inviting focused pilot partners.",
+    "invitation": "Now inviting a small number of moving companies to test the workflow.",
     "formHeading": "Let’s look at your moving estimate follow-up",
-    "workflowTitle": "Make estimate follow-up easier.",
+    "workflowTitle": "From sent estimate to confirmed move.",
     "workflowName": "Moving estimate follow-up",
     "outcomeDetail": "A callback is not a booked move.",
     "formIntro": "Explore a focused pilot with your team.",
     "workflow": [
       {
-        "title": "Find the open estimate",
-        "body": "Select sent estimates due for follow-up. Exclude moves already booked or closed."
+        "title": "Detect the open estimate",
+        "body": "Identify estimates that have been sent but have not turned into booked moves."
       },
       {
-        "title": "Call about the move",
-        "body": "Ask what is holding up the booking and pass date, packing or price questions to the moving consultant."
+        "title": "Start the conversation",
+        "body": "The AI voice agent calls the customer and asks what is holding up the booking."
       },
       {
-        "title": "Confirm the next step",
-        "body": "Send an SMS confirming the callback or sharing the approved estimate link. Track booked moves separately."
+        "title": "Resolve the next step",
+        "body": "Answer approved questions, check availability and update the move date when the connected workflow allows it."
+      },
+      {
+        "title": "Confirm the move",
+        "body": "Record the outcome and send the customer their booking details by text or email."
       }
     ],
     "example": {
@@ -757,44 +787,48 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     },
     "values": [
       {
-        "title": "Consistent follow-up on estimates already sent.",
-        "body": ""
+        "title": "Reach open estimates consistently",
+        "body": "Follow up while the customer’s move is still active instead of leaving promising estimates buried in a call list."
       },
       {
-        "title": "Less time spent checking whether customers are ready to book.",
-        "body": ""
+        "title": "Handle the common blockers",
+        "body": "Identify date, availability, estimate and deposit questions before they turn into lost bookings."
       },
       {
-        "title": "Clear reasons a move remains unbooked.",
-        "body": ""
+        "title": "Return completed outcomes",
+        "body": "Give your team a booked move, a clear next step or a documented reason the customer is not ready."
       }
     ],
     "pilot": {
-      "title": "Start with your moving estimate follow-up.",
-      "description": "We’re inviting moving companies and sales coordinators to test one focused workflow. We’ll agree the call process, SMS follow-up and human handoff before the pilot starts.",
+      "title": "See how many open estimates still have a move behind them.",
+      "description": "Run a focused pilot on a defined group of unbooked estimates. Measure conversations reached, blockers identified and moves booked or rescheduled.",
       "scope": [
-        "Moving estimate follow-up",
-        "Approved SMS follow-ups",
-        "Human handoff with the conversation context"
+        "A defined group of unbooked estimates",
+        "Approved questions and booking rules",
+        "Booked moves, rescheduled moves and unresolved blockers"
       ],
       "question": "How does your team follow up estimates that have not turned into bookings?"
     },
     "faqs": [
       {
-        "question": "Will it create or change moving estimates?",
-        "answer": "The proposed pilot follows up estimates your team has already issued. Pricing changes stay with your moving consultant."
+        "question": "Does Revomatix replace our moving consultants?",
+        "answer": "No. It handles repetitive estimate follow-up and straightforward next steps, then passes exceptions or complex questions to your team."
       },
       {
-        "question": "What if the customer wants a different date?",
-        "answer": "The assistant captures the request for your team to check; it does not promise crew availability."
+        "question": "Can it check availability and book the move?",
+        "answer": "It can be configured to check approved availability and update the booking when the required calendar or moving-system access is available. The exact workflow is defined during the pilot."
       },
       {
-        "question": "Does it replace our moving software?",
-        "answer": "We will review how estimate status and follow-up outcomes can fit your current process before agreeing a pilot."
+        "question": "What happens when the customer asks something it cannot answer?",
+        "answer": "It follows the rules agreed with your team, records the question and routes the conversation to the appropriate person."
       },
       {
-        "question": "Can the agent send our estimate?",
-        "answer": "The proposed pilot can use SMS to share your approved estimate link or confirm a callback. We agree the message content and setup before the pilot."
+        "question": "Does it only make phone calls?",
+        "answer": "Voice is the primary channel. Text or email can support the conversation by sending estimates, booking details and confirmations."
+      },
+      {
+        "question": "Do we need to replace our current moving software?",
+        "answer": "The pilot is designed around your existing process. Any required connection is assessed before launch."
       }
     ],
     "finalTitle": "Let’s talk about your\nmoving estimate follow-up.",

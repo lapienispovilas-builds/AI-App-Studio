@@ -235,6 +235,32 @@
  .v-audio-message { transition:none; }
  .v-audio-transcript { scroll-behavior:auto; }
 }
+
+/* Optional long-form copy treatment used by the moving route only. */
+.v-copy-split { align-items:start; }
+.v-copy-split>div:last-child { padding-top:30px; }
+.v-copy-emphasis { margin-top:24px!important; padding-top:20px; border-top:1px solid var(--v-border); color:var(--v-text); font-size:16px; font-weight:600; }
+.v-section-heading.is-single { grid-template-columns:minmax(0,720px); }
+.v-process.is-four { grid-template-columns:repeat(4,1fr); }
+.v-value-list.is-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.v-value-list.is-cards article { display:block; padding:24px; border:1px solid var(--v-border); border-radius:6px; background:var(--v-card); }
+.v-value-list.is-cards article:last-child { border-bottom:1px solid var(--v-border); }
+.v-value-list.is-cards article>span { display:block; margin-bottom:18px; }
+.v-value-list.is-cards article h3 { margin-bottom:12px; }
+.v-value-list.is-cards article p { line-height:1.65; }
+.v-differentiation-band { background:var(--v-card); }
+.v-differentiation { display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center; }
+.v-differentiation>div:last-child { color:var(--v-muted); font-size:15px; }
+.v-differentiation strong { display:block; margin-top:24px; padding-top:20px; border-top:1px solid var(--v-border); color:var(--v-text); font-size:14px; }
+@media(max-width:1000px) {
+ .v-process.is-four { grid-template-columns:repeat(2,1fr); }
+ .v-differentiation { gap:32px; }
+}
+@media(max-width:760px) {
+ .v-copy-split>div:last-child { padding-top:0; }
+ .v-process.is-four,.v-value-list.is-cards,.v-differentiation { grid-template-columns:1fr; }
+ .v-differentiation { gap:24px; }
+}
 .v-analytics-choice { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--v-muted); }
 .v-footer { flex-wrap:wrap; } .v-footer>a:not(.v-brand) { font-size:12px; text-decoration:underline; }
 .v-privacy { max-width:800px; } .v-privacy h1 { margin-block:30px; } .v-privacy h2 { font-size:26px; margin-top:32px; } .v-privacy p { margin-block:18px; } .v-privacy a,.v-preview-note a { text-decoration:underline; }
