@@ -46,14 +46,32 @@ export interface VoicePageConfig {
 export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   "/saas-payment-recovery": {
     "path": "/saas-payment-recovery",
-    "buyer": "For billing and customer operations teams",
-    "eyebrow": "Voice AI for subscription billing",
-    "headline": "Follow up unresolved",
+    "sectionCopy": {
+      "problem": {
+        "eyebrow": "AFTER DUNNING",
+        "headline": "When retries stop working, the payment needs a conversation.",
+        "body": "Retries and dunning emails work for straightforward failures. Some accounts remain unpaid because the cardholder changed, the billing email is wrong, approval is required or the customer needs help. Another retry cannot resolve a human blocker.",
+        "emphasis": "Recover unresolved subscriptions without adding another manual queue for customer success."
+      },
+      "workflowEyebrow": "HOW IT WORKS",
+      "valueEyebrow": "BUILT FOR REVENUE TEAMS",
+      "valueHeadline": "Escalate unresolved payments with less manual work.",
+      "differentiation": {
+        "eyebrow": "AFTER NORMAL DUNNING",
+        "headline": "Add a conversation when reminders are no longer enough.",
+        "body": "Revomatix is designed as the conversational escalation layer after normal dunning has failed. It works around your existing billing process rather than replacing payment retries or billing infrastructure.",
+        "emphasis": "Start with recurring payments that still need action from a billing contact."
+      },
+      "ctaLabel": "Discuss a payment-recovery pilot"
+    },
+    "buyer": "For subscription SaaS billing and revenue teams",
+    "eyebrow": "Voice AI for subscription payments",
+    "headline": "Recover unresolved",
     "headlineAccent": "subscription payments.",
-    "description": "Automate follow-up on payments that retries and reminders have not resolved. A voice agent reaches the billing contact and shares the secure update link, reducing manual work for your team.",
-    "problem": "Some payment failures need more than another retry. A billing contact may need to update a payment method or pass the request to finance. Focus the follow-up on accounts still waiting for that action.",
+    "description": "Automate follow-up after retries and written reminders have failed. An AI voice agent reaches the billing contact, identifies the human blocker and sends the secure next step needed to preserve the subscription.",
+    "problem": "Retries and dunning emails resolve straightforward failures. Some accounts stay unpaid because the cardholder changed, approval is required or the billing contact needs help.",
     "title": "Subscription payment follow-up | Revomatix",
-    "metaDescription": "Automate follow-up on payments that retries and reminders have not resolved. A voice agent reaches the billing contact and shares the secure update link, reducing manual work for your team.",
+    "metaDescription": "Automate follow-up after retries and written reminders have failed. An AI voice agent reaches the billing contact, identifies the human blocker and sends the secure next step needed to preserve the subscription.",
     "inbound": false,
     "illustrationLabels": [
       "Payment unresolved",
@@ -62,22 +80,26 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     ],
     "invitation": "Now inviting focused pilot partners.",
     "formHeading": "Let’s look at your subscription payment follow-up",
-    "workflowTitle": "Reach accounts that still need customer action.",
+    "workflowTitle": "From unresolved payment to a clear next step.",
     "workflowName": "Subscription payment follow-up",
     "outcomeDetail": "Confirm payment from billing records.",
     "formIntro": "Explore a focused pilot with your team.",
     "workflow": [
       {
-        "title": "Find unresolved payments",
-        "body": "Select accounts needing customer action after retries and reminders, before any actual suspension deadline."
+        "title": "Detect the unresolved payment",
+        "body": "Identify recurring payments that remain unresolved after automatic retries and written reminders."
       },
       {
-        "title": "Call the billing contact",
-        "body": "Clarify the action needed under your recovery policy. Route account questions to your team."
+        "title": "Reach the billing contact",
+        "body": "The AI voice agent calls the approved contact while the subscription can still be preserved."
       },
       {
-        "title": "Email the secure link",
-        "body": "Send the approved payment-update link to the billing address. Confirm settlement in billing records, not from link delivery."
+        "title": "Identify the blocker",
+        "body": "Clarify whether the issue is a changed cardholder, internal approval, contact detail or another permitted reason."
+      },
+      {
+        "title": "Send the secure next step",
+        "body": "Email the approved payment-update link and record the outcome for your billing or customer team."
       }
     ],
     "example": {
@@ -97,44 +119,48 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     },
     "values": [
       {
-        "title": "Less manual billing follow-up.",
-        "body": ""
+        "title": "Escalate the right accounts",
+        "body": "Focus voice follow-up on payments that normal retries and reminders have not resolved."
       },
       {
-        "title": "A clearer next step for unresolved accounts.",
-        "body": ""
+        "title": "Clarify human blockers",
+        "body": "Find the contact, approval or payment-update issue that another automated retry cannot uncover."
       },
       {
-        "title": "Recovery measured against your current retries and reminders.",
-        "body": ""
+        "title": "Keep teams out of manual queues",
+        "body": "Return a requested action, a clear owner or a documented reason the account remains unresolved."
       }
     ],
     "pilot": {
-      "title": "Start with your subscription payment follow-up.",
-      "description": "We’re inviting billing and customer operations teams to test one focused workflow. We’ll agree the call process, email follow-up and human handoff before the pilot starts.",
+      "title": "Find which unresolved subscriptions still need a conversation.",
+      "description": "Run a focused pilot after your normal dunning sequence. Measure billing contacts reached, blockers identified and secure update steps requested.",
       "scope": [
-        "Subscription payment follow-up",
-        "Approved email follow-ups",
-        "Human handoff with the conversation context"
+        "A defined group of unresolved recurring payments",
+        "Approved call rules and secure email follow-up",
+        "Recorded outcomes for billing and customer teams"
       ],
       "question": "What happens today when retries and payment emails do not resolve an account?"
     },
     "faqs": [
       {
-        "question": "Does this replace payment retries?",
-        "answer": "No. The pilot focuses on unresolved accounts that still need customer action."
+        "question": "Does Revomatix replace our billing or dunning system?",
+        "answer": "No. It is designed as a conversational escalation after your normal retries and written reminders have not resolved the payment."
       },
       {
-        "question": "Will the agent take card details?",
-        "answer": "Customers use your approved secure payment-update page. The proposed call does not collect card numbers."
+        "question": "Will the AI voice agent collect card details?",
+        "answer": "No. Customers use your approved secure payment-update page. Card details are not collected during the call."
       },
       {
-        "question": "How will recovered payments be measured?",
-        "answer": "We agree how to confirm payment in your billing records and compare outcomes with your existing process."
+        "question": "What can it say about an account?",
+        "answer": "It follows the billing rules and account information approved by your team. Exceptions are recorded and passed to the appropriate person."
       },
       {
-        "question": "How is the payment link sent?",
-        "answer": "The proposed pilot uses email to the approved billing address. We agree the sender, link and contact rules during setup. Email delivery does not confirm payment."
+        "question": "How is the secure link sent?",
+        "answer": "The pilot can be configured to email an approved link to the verified billing contact. Sending a link does not confirm payment."
+      },
+      {
+        "question": "What system access is required?",
+        "answer": "Any billing or customer-system access needed for the pilot is assessed before launch."
       }
     ],
     "finalTitle": "Let’s talk about your\nsubscription payment follow-up.",
@@ -171,14 +197,32 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/demo-recovery": {
     "path": "/demo-recovery",
-    "buyer": "For software sales teams",
-    "eyebrow": "Voice AI for software sales",
-    "headline": "Get missed demos",
-    "headlineAccent": "back on the calendar.",
-    "description": "Take demo no-shows off your reps’ follow-up lists. A voice agent reconnects with interested prospects, helps reschedule and sends confirmation, giving your team more time for sales conversations.",
-    "problem": "The prospect booked a demo but did not attend. Your rep now has another round of calls and emails to manage. Follow up on that existing interest without restarting the entire sales process.",
+    "sectionCopy": {
+      "problem": {
+        "eyebrow": "AFTER THE NO-SHOW",
+        "headline": "A missed demo does not need to become a lost opportunity.",
+        "body": "A missed meeting is often a calendar or logistics problem. The costly part is allowing a qualified prospect to become cold while representatives repeatedly call and email. Revomatix starts the recovery conversation while the original interest is still fresh.",
+        "emphasis": "Rebook qualified no-shows without a week of email tag."
+      },
+      "workflowEyebrow": "HOW IT WORKS",
+      "valueEyebrow": "BUILT FOR SOFTWARE SALES TEAMS",
+      "valueHeadline": "Take post-no-show scheduling off the sales queue.",
+      "differentiation": {
+        "eyebrow": "AFTER THE MISSED MEETING",
+        "headline": "Recover the demo after reminders have done their job.",
+        "body": "Pre-meeting reminders help prospects attend, but they do not resolve what happens after a qualified buyer misses the call. Revomatix focuses on the immediate post-no-show conversation and approved rescheduling step.",
+        "emphasis": "Start with qualified meetings that still have active buying intent."
+      },
+      "ctaLabel": "Discuss a demo-recovery pilot"
+    },
+    "buyer": "For B2B SaaS sales and revenue teams",
+    "eyebrow": "Voice AI for missed demos",
+    "headline": "Rebook missed demos",
+    "headlineAccent": "while intent is warm.",
+    "description": "Automate follow-up when a qualified prospect misses a booked demo. An AI voice agent reconnects promptly, understands the scheduling issue, offers approved availability and confirms a new meeting.",
+    "problem": "A missed demo is often a calendar or logistics problem. The opportunity becomes expensive when a qualified prospect grows cold while representatives repeatedly follow up.",
     "title": "Missed demo follow-up | Revomatix",
-    "metaDescription": "Take demo no-shows off your reps’ follow-up lists. A voice agent reconnects with interested prospects, helps reschedule and sends confirmation, giving your team more time for sales conversations.",
+    "metaDescription": "Automate follow-up when a qualified prospect misses a booked demo. An AI voice agent reconnects promptly, understands the scheduling issue, offers approved availability and confirms a new meeting.",
     "inbound": false,
     "illustrationLabels": [
       "Demo missed",
@@ -187,22 +231,26 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     ],
     "invitation": "Now inviting focused pilot partners.",
     "formHeading": "Let’s look at your missed demo follow-up",
-    "workflowTitle": "Reconnect after a missed demo.",
+    "workflowTitle": "From missed meeting to a confirmed new time.",
     "workflowName": "Missed demo follow-up",
     "outcomeDetail": "Track attended demos, not bookings alone.",
     "formIntro": "Explore a focused pilot with your team.",
     "workflow": [
       {
-        "title": "Check the missed demo",
-        "body": "Select confirmed no-shows. Exclude canceled, rearranged or actively handled meetings."
+        "title": "Detect the missed meeting",
+        "body": "Identify a qualified prospect who did not attend a booked demo or evaluation call."
       },
       {
-        "title": "Call to rearrange",
-        "body": "Confirm interest and find another time with the right rep, respecting account ownership."
+        "title": "Contact while intent is warm",
+        "body": "The AI voice agent follows up promptly and asks what prevented the prospect from attending."
       },
       {
-        "title": "Email the meeting details",
-        "body": "Confirm the new meeting through the agreed booking process. Track whether the prospect attends."
+        "title": "Offer approved availability",
+        "body": "Present suitable times when the required calendar access and booking rules are available."
+      },
+      {
+        "title": "Rebook and confirm",
+        "body": "Record the new meeting and email the approved confirmation details to the prospect."
       }
     ],
     "example": {
@@ -222,44 +270,48 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     },
     "values": [
       {
-        "title": "Less manual rescheduling for sales reps.",
-        "body": ""
+        "title": "Respond while interest is fresh",
+        "body": "Follow up soon after the missed meeting instead of allowing a qualified prospect to become cold."
       },
       {
-        "title": "Account ownership stays clear.",
-        "body": ""
+        "title": "Remove routine calendar chasing",
+        "body": "Handle common scheduling issues without adding another sequence of manual calls and emails."
       },
       {
-        "title": "Measure attended demos rather than calendar bookings alone.",
-        "body": ""
+        "title": "Return a useful sales outcome",
+        "body": "Give the representative a rebooked meeting, a clear next action or a documented reason to pause."
       }
     ],
     "pilot": {
-      "title": "Start with your missed demo follow-up.",
-      "description": "We’re inviting software sales teams to test one focused workflow. We’ll agree the call process, email follow-up and human handoff before the pilot starts.",
+      "title": "See how many qualified no-shows can return to the calendar.",
+      "description": "Run a focused pilot on missed qualified demos. Measure prospects reached, scheduling blockers identified and meetings rebooked.",
       "scope": [
-        "Missed demo follow-up",
-        "Approved email follow-ups",
-        "Human handoff with the conversation context"
+        "A defined group of qualified demo no-shows",
+        "Approved availability and contact rules",
+        "Rebooked meetings and recorded outcomes"
       ],
-      "question": "Who follows up when a qualified prospect misses a demo?"
+      "question": "How does your sales team follow up after a qualified prospect misses a demo?"
     },
     "faqs": [
       {
-        "question": "Is this cold outreach?",
-        "answer": "The proposed workflow starts with prospects who already booked a demo."
+        "question": "Does Revomatix replace our sales representatives?",
+        "answer": "No. It handles routine post-no-show follow-up and scheduling, then returns the conversation to the representative when needed."
       },
       {
-        "question": "Will it interfere with our account executives?",
-        "answer": "We agree account ownership and stop rules before contacting prospects."
+        "question": "How quickly does it contact a missed prospect?",
+        "answer": "The timing is agreed during pilot setup and can be configured around your meeting and outreach rules."
       },
       {
-        "question": "Can it answer technical product questions?",
-        "answer": "Approved basic information can be included; detailed evaluation questions go to your sales or technical team."
+        "question": "Can it rebook directly on our calendar?",
+        "answer": "It can offer approved availability and rebook when the required calendar access is available. The exact workflow is defined during the pilot."
       },
       {
-        "question": "How will prospects receive the new details?",
-        "answer": "The proposed pilot sends an email after the new time is agreed through your booking process. We review calendar access, sender details and account-owner rules first."
+        "question": "What happens when the prospect has a sales question?",
+        "answer": "The AI voice agent records the question and routes it to the appropriate representative instead of inventing an answer."
+      },
+      {
+        "question": "How is the new meeting confirmed?",
+        "answer": "An email can support the call by sharing the approved meeting details. Sending confirmation does not guarantee attendance."
       }
     ],
     "finalTitle": "Let’s talk about your\nmissed demo follow-up.",
@@ -297,14 +349,32 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/fitness": {
     "path": "/fitness",
-    "buyer": "For fitness operators and membership teams",
+    "sectionCopy": {
+      "problem": {
+        "eyebrow": "AFTER THE MISSED VISIT",
+        "headline": "Bring missed tours back while the intention to join is still fresh.",
+        "body": "A missed tour is a warm membership lead becoming colder every hour. The prospect may only need a different time, but repeated follow-up competes with members already in the club. Revomatix starts the rebooking conversation promptly.",
+        "emphasis": "Turn today’s no-show into another chance to win the membership."
+      },
+      "workflowEyebrow": "HOW IT WORKS",
+      "valueEyebrow": "BUILT FOR MEMBERSHIP TEAMS",
+      "valueHeadline": "Recover missed visits without another call list.",
+      "differentiation": {
+        "eyebrow": "AFTER THE REMINDER",
+        "headline": "Handle the recovery motion after the visit is missed.",
+        "body": "Most fitness automation focuses on initial speed-to-lead or reminders before an appointment. Revomatix handles the voice conversation after the prospect still misses the tour or trial.",
+        "emphasis": "Start with one focused workflow: missed visits that can still be rearranged."
+      },
+      "ctaLabel": "Discuss a fitness pilot"
+    },
+    "buyer": "For regional gyms, health clubs and membership teams",
     "eyebrow": "Voice AI for fitness clubs",
-    "headline": "Rebook missed gym tours",
-    "headlineAccent": "and trial visits.",
-    "description": "Automate follow-up after missed tours and trial visits. A voice agent helps prospects rebook and sends the details, leaving your membership team more time to welcome potential members.",
-    "problem": "A prospect booked a visit but never walked through the door. They may still want to join. Give them a simple way to rearrange, while your team focuses on the people already in the club.",
+    "headline": "Bring missed club visits",
+    "headlineAccent": "back to the calendar.",
+    "description": "Automate follow-up after a prospect misses a booked tour or trial. An AI voice agent finds another suitable time, rebooks the visit and sends the details by text.",
+    "problem": "A missed tour is a warm membership lead becoming colder every hour. Membership teams need a consistent way to recover the visit without filling another call list.",
     "title": "Missed tour follow-up | Revomatix",
-    "metaDescription": "Automate follow-up after missed tours and trial visits. A voice agent helps prospects rebook and sends the details, leaving your membership team more time to welcome potential members.",
+    "metaDescription": "Automate follow-up after a prospect misses a booked tour or trial. An AI voice agent finds another suitable time, rebooks the visit and sends the details by text.",
     "inbound": false,
     "illustrationLabels": [
       "Tour or trial missed",
@@ -313,22 +383,26 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     ],
     "invitation": "Now inviting focused pilot partners.",
     "formHeading": "Let’s look at your missed tour follow-up",
-    "workflowTitle": "Make it easy to rearrange a missed visit.",
+    "workflowTitle": "From missed visit to another chance to join.",
     "workflowName": "Missed tour follow-up",
     "outcomeDetail": "Track attendance after the rearranged visit.",
     "formIntro": "Explore a focused pilot with your team.",
     "workflow": [
       {
-        "title": "Find the missed visit",
-        "body": "Identify a tour or trial at the correct club that has not been rearranged."
+        "title": "Detect the missed visit",
+        "body": "Identify a booked club tour or trial that the prospect did not attend."
       },
       {
-        "title": "Call to rebook",
-        "body": "Help the prospect find another suitable time under the club’s booking rules."
+        "title": "Call the prospect",
+        "body": "The AI voice agent follows up and asks whether they would like to arrange another visit."
       },
       {
-        "title": "Send the details",
-        "body": "Confirm the rearranged visit by SMS. Track attendance and membership separately."
+        "title": "Offer club availability",
+        "body": "Present approved times when the required club calendar access is available."
+      },
+      {
+        "title": "Rebook and confirm",
+        "body": "Record the new visit and text the approved time and club details to the prospect."
       }
     ],
     "example": {
@@ -348,44 +422,48 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     },
     "values": [
       {
-        "title": "Consistent follow-up after missed visits.",
-        "body": ""
+        "title": "Follow up while interest is fresh",
+        "body": "Reconnect soon after the no-show while the prospect is still considering membership."
       },
       {
-        "title": "Fewer rescheduling calls for the membership team.",
-        "body": ""
+        "title": "Reduce repetitive rebooking calls",
+        "body": "Let the AI voice agent handle straightforward scheduling while membership teams welcome people in the club."
       },
       {
-        "title": "A clear path from rebooked visit to attendance and membership.",
-        "body": ""
+        "title": "Return a clear outcome",
+        "body": "Give the team a rebooked visit, a requested follow-up or a reason the prospect is not ready."
       }
     ],
     "pilot": {
-      "title": "Start with your missed tour follow-up.",
-      "description": "We’re inviting fitness operators and membership teams to test one focused workflow. We’ll agree the call process, SMS follow-up and human handoff before the pilot starts.",
+      "title": "Bring more missed tours back to the club calendar.",
+      "description": "Run a focused pilot on missed tours and trials. Measure prospects reached, visits rebooked and the outcomes recorded for your membership team.",
       "scope": [
-        "Missed tour follow-up",
-        "Approved SMS follow-ups",
-        "Human handoff with the conversation context"
+        "One or more agreed club locations",
+        "Approved availability and text confirmation",
+        "Rebooked visits and documented outcomes"
       ],
-      "question": "What happens when someone misses a booked tour or trial visit?"
+      "question": "How does your membership team follow up after missed tours or trial visits?"
     },
     "faqs": [
       {
-        "question": "Does this contact existing members?",
-        "answer": "This pilot focuses on prospects who missed a booked visit, not member retention."
+        "question": "Does Revomatix replace our membership team?",
+        "answer": "No. It handles routine post-no-show follow-up and rebooking, then passes membership questions or exceptions to your team."
       },
       {
-        "question": "Can it handle several clubs?",
-        "answer": "We assess location routing and booking access during the pilot discussion."
+        "question": "Can it see available tour times?",
+        "answer": "It can offer approved availability when the required calendar or club-system access is available. The pilot workflow is agreed before launch."
       },
       {
-        "question": "Will it offer discounts?",
-        "answer": "Membership prices and promotions stay within the rules your team explicitly approves."
+        "question": "What can it promise a prospect?",
+        "answer": "Only the times, visit details and answers approved by your team. Membership terms and exceptions stay with your staff."
       },
       {
-        "question": "How are visit details confirmed?",
-        "answer": "The proposed pilot uses SMS after a visit is rearranged through your agreed booking process. We review booking access and message setup with you first."
+        "question": "How are visit details sent?",
+        "answer": "Text can support the voice conversation by confirming the agreed time and approved club details."
+      },
+      {
+        "question": "Does this cover all membership follow-up?",
+        "answer": "No. The initial pilot stays focused on prospects who missed a booked tour or trial."
       }
     ],
     "finalTitle": "Let’s talk about your\nmissed tour follow-up.",
@@ -422,14 +500,32 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/ecommerce": {
     "path": "/ecommerce",
-    "buyer": "For ecommerce and customer experience teams",
-    "eyebrow": "Voice AI for ecommerce",
-    "headline": "Answer the questions",
-    "headlineAccent": "holding up a purchase.",
-    "description": "Help shoppers resolve the questions holding up a purchase. Automate checkout follow-up with a voice agent that answers approved questions and shares the checkout link, reducing routine work for support.",
-    "problem": "A reminder brings a shopper back to the same unanswered question. When the obstacle is a product detail or delivery policy, a conversation can help them decide whether to place the order.",
+    "sectionCopy": {
+      "problem": {
+        "eyebrow": "BEFORE THE PURCHASE",
+        "headline": "Some abandoned carts are unanswered questions.",
+        "body": "This workflow is built for considered purchases, not low-value impulse buys. Some valuable carts remain incomplete because nobody answered a question about sizing, compatibility, delivery, assembly or availability. Another reminder cannot discover which concern matters.",
+        "emphasis": "Recover the considered purchases that need a conversation, not another coupon."
+      },
+      "workflowEyebrow": "HOW IT WORKS",
+      "valueEyebrow": "BUILT FOR CONSIDERED PURCHASES",
+      "valueHeadline": "Help customers resolve practical buying blockers.",
+      "differentiation": {
+        "eyebrow": "BEYOND CART REMINDERS",
+        "headline": "Answer the question behind the abandoned checkout.",
+        "body": "Email and text cart flows can remind a customer or offer a discount. Revomatix is designed for eligible purchases where a voice conversation can identify and resolve an approved product or delivery question.",
+        "emphasis": "Start with a narrow group of valuable checkouts where personal help makes sense."
+      },
+      "ctaLabel": "Discuss a checkout-recovery pilot"
+    },
+    "buyer": "For high-consideration ecommerce brands",
+    "eyebrow": "Voice AI for considered purchases",
+    "headline": "Turn unanswered questions",
+    "headlineAccent": "back into checkouts.",
+    "description": "Automate follow-up on qualified high-value carts. An AI voice agent identifies approved questions about sizing, compatibility, delivery or availability and guides the customer back to checkout.",
+    "problem": "Some high-value carts are abandoned because nobody answered a practical question. A reminder or discount cannot understand whether sizing, compatibility, delivery or assembly is holding up the purchase.",
     "title": "Incomplete checkout follow-up | Revomatix",
-    "metaDescription": "Help shoppers resolve the questions holding up a purchase. Automate checkout follow-up with a voice agent that answers approved questions and shares the checkout link, reducing routine work for support.",
+    "metaDescription": "Automate follow-up on qualified high-value carts. An AI voice agent identifies approved questions about sizing, compatibility, delivery or availability and guides the customer back to checkout.",
     "inbound": false,
     "illustrationLabels": [
       "Checkout incomplete",
@@ -438,22 +534,26 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     ],
     "invitation": "Now inviting focused pilot partners.",
     "formHeading": "Let’s look at your incomplete checkout follow-up",
-    "workflowTitle": "Help shoppers resolve the unanswered question.",
+    "workflowTitle": "From qualified abandoned checkout to a resolved next step.",
     "workflowName": "Incomplete checkout follow-up",
     "outcomeDetail": "Confirm orders separately from messages sent.",
     "formIntro": "Explore a focused pilot with your team.",
     "workflow": [
       {
-        "title": "Check the open checkout",
-        "body": "Select known shoppers eligible for assistance and confirm they have not already ordered."
+        "title": "Detect the qualified checkout",
+        "body": "Select eligible high-consideration carts where a practical question may be holding up the purchase."
       },
       {
-        "title": "Call to clarify",
-        "body": "Ask about the obstacle and use approved product or delivery information. Refer other questions to support."
+        "title": "Start the conversation",
+        "body": "The AI voice agent contacts the customer under the outreach rules agreed for the pilot."
       },
       {
-        "title": "Text the information",
-        "body": "Send approved product details or the checkout link by SMS. Check completed orders separately."
+        "title": "Resolve an approved question",
+        "body": "Answer permitted product, compatibility, availability or delivery questions using approved information."
+      },
+      {
+        "title": "Return to checkout",
+        "body": "Send the approved product information or checkout link and record the customer’s next step."
       }
     ],
     "example": {
@@ -473,44 +573,48 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     },
     "values": [
       {
-        "title": "Follow-up that can address a question.",
-        "body": ""
+        "title": "Focus on considered purchases",
+        "body": "Use conversational follow-up where the order value and buying process justify personal help."
       },
       {
-        "title": "Less routine pre-purchase work for support.",
-        "body": ""
+        "title": "Understand the real blocker",
+        "body": "Separate practical product or delivery questions from customers who are simply not ready to buy."
       },
       {
-        "title": "Measure completed orders and contribution after costs.",
-        "body": ""
+        "title": "Return a useful outcome",
+        "body": "Give support a resolved question, a requested follow-up or a clear reason the checkout remains incomplete."
       }
     ],
     "pilot": {
-      "title": "Start with your incomplete checkout follow-up.",
-      "description": "We’re inviting ecommerce and customer experience teams to test one focused workflow. We’ll agree the call process, SMS follow-up and human handoff before the pilot starts.",
+      "title": "Find which valuable checkouts still need an answer.",
+      "description": "Run a focused pilot on a defined group of eligible abandoned checkouts. Measure customers reached, questions identified and approved next steps taken.",
       "scope": [
-        "Incomplete checkout follow-up",
-        "Approved SMS follow-ups",
-        "Human handoff with the conversation context"
+        "A defined high-consideration product or cart segment",
+        "Approved product answers and contact rules",
+        "Checkout links, follow-ups and recorded outcomes"
       ],
-      "question": "Which product or delivery questions most often hold up an order?"
+      "question": "Which customer questions most often hold up your higher-value purchases?"
     },
     "faqs": [
       {
-        "question": "Will it call every abandoned checkout?",
-        "answer": "No. We agree which shoppers and situations are appropriate for phone follow-up."
+        "question": "Is this intended for every abandoned cart?",
+        "answer": "No. The pilot focuses on eligible high-consideration purchases where a practical question may justify a conversation."
       },
       {
-        "question": "Can it change prices or offer discounts?",
-        "answer": "The pilot uses only your approved information and offers."
+        "question": "What product questions can the AI voice agent answer?",
+        "answer": "Only questions covered by product and delivery information approved by your team. Exceptions are passed to a person."
       },
       {
-        "question": "What if the shopper has already ordered?",
-        "answer": "The workflow needs a current order-status check so completed purchases are excluded."
+        "question": "Can it apply discounts or change an order?",
+        "answer": "Only actions explicitly approved and configured for the pilot are available. It does not invent discounts, availability or terms."
       },
       {
-        "question": "What will the text follow-up include?",
-        "answer": "The proposed SMS can share approved product information or a checkout link. We agree eligible shoppers and message content first. Sending a link is not a completed order."
+        "question": "How does the customer return to checkout?",
+        "answer": "Text can support the call by sharing approved product information or a checkout link. Sending the link does not confirm a purchase."
+      },
+      {
+        "question": "What store access is required?",
+        "answer": "Any product, inventory or checkout access needed for the proposed workflow is assessed before launch."
       }
     ],
     "finalTitle": "Let’s talk about your\nincomplete checkout follow-up.",
@@ -547,14 +651,32 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/invoice-follow-up": {
     "path": "/invoice-follow-up",
-    "buyer": "For B2B finance and accounts receivable teams",
-    "eyebrow": "Voice AI for accounts receivable",
-    "headline": "Spend less time chasing",
-    "headlineAccent": "overdue invoices.",
-    "description": "Automate routine calls about undisputed overdue invoices. A voice agent checks receipt, asks about payment timing and shares the invoice, giving finance clearer answers with less chasing.",
-    "problem": "The reminder has gone out, but finance still needs an answer. Did accounts payable receive the invoice? Is something missing? When should payment arrive? Make those routine follow-ups easier to manage.",
+    "sectionCopy": {
+      "problem": {
+        "eyebrow": "AFTER THE REMINDER",
+        "headline": "When written reminders stop working, follow up with a conversation.",
+        "body": "The objective is faster cash collection with less routine chasing. Some invoices remain overdue because the contact needs another copy or can only pay in a later run. Revomatix calls about eligible undisputed invoices and records the answer.",
+        "emphasis": "Spend less finance-team time chasing routine overdue invoices."
+      },
+      "workflowEyebrow": "HOW IT WORKS",
+      "valueEyebrow": "BUILT FOR FINANCE TEAMS",
+      "valueHeadline": "Automate the calls behind routine invoice follow-up.",
+      "differentiation": {
+        "eyebrow": "BEYOND EMAIL REMINDERS",
+        "headline": "Use voice when another automated email is unlikely to help.",
+        "body": "Email sequences and collections portals manage written reminders. Revomatix handles the next conversation for eligible undisputed invoices while keeping disputes and account decisions with your finance team.",
+        "emphasis": "Start with overdue invoices that need receipt or payment timing confirmed."
+      },
+      "ctaLabel": "Discuss an invoice follow-up pilot"
+    },
+    "buyer": "For B2B finance teams and business owners",
+    "eyebrow": "Voice AI for overdue invoices",
+    "headline": "Follow up overdue invoices",
+    "headlineAccent": "with a real conversation.",
+    "description": "Automate routine calls about undisputed overdue invoices. An AI voice agent confirms receipt, asks about payment timing, shares the invoice when needed and records the promised next step.",
+    "problem": "Written reminders handle many late invoices. Some remain overdue because the invoice was missed, the contact changed or payment is waiting for the next run.",
     "title": "Overdue invoice follow-up | Revomatix",
-    "metaDescription": "Automate routine calls about undisputed overdue invoices. A voice agent checks receipt, asks about payment timing and shares the invoice, giving finance clearer answers with less chasing.",
+    "metaDescription": "Automate routine calls about undisputed overdue invoices. An AI voice agent confirms receipt, asks about payment timing, shares the invoice when needed and records the promised next step.",
     "inbound": false,
     "illustrationLabels": [
       "Invoice overdue",
@@ -563,22 +685,26 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     ],
     "invitation": "Now inviting focused pilot partners.",
     "formHeading": "Let’s look at your overdue invoice follow-up",
-    "workflowTitle": "Get a clear response on overdue invoices.",
+    "workflowTitle": "From overdue invoice to recorded payment timing.",
     "workflowName": "Overdue invoice follow-up",
     "outcomeDetail": "Check payment against current finance records.",
     "formIntro": "Explore a focused pilot with your team.",
     "workflow": [
       {
-        "title": "Check the overdue balance",
-        "body": "Select undisputed invoices after ordinary reminders. Exclude payments already received."
+        "title": "Detect the eligible invoice",
+        "body": "Identify an undisputed invoice that remains overdue after your normal written reminders."
       },
       {
-        "title": "Call the payment contact",
-        "body": "Check receipt and ask for an expected payment date. Flag new disputes for finance."
+        "title": "Call the billing contact",
+        "body": "The AI voice agent confirms that the invoice reached the correct person."
       },
       {
-        "title": "Email the follow-up",
-        "body": "Send the approved invoice copy or confirm the agreed next step. Record the response for finance."
+        "title": "Clarify payment timing",
+        "body": "Ask when payment is expected and route any dispute or complex account question to your team."
+      },
+      {
+        "title": "Send and record",
+        "body": "Email the invoice or agreed follow-up and record the timing reported by the contact."
       }
     ],
     "example": {
@@ -598,44 +724,48 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     },
     "values": [
       {
-        "title": "Less routine calling for finance.",
-        "body": ""
+        "title": "Follow up consistently",
+        "body": "Reach eligible overdue accounts without adding every invoice to a finance team call list."
       },
       {
-        "title": "Expected payment dates recorded consistently.",
-        "body": ""
+        "title": "Separate routine delays from disputes",
+        "body": "Confirm receipt and timing while passing disputed invoices to the person who can resolve them."
       },
       {
-        "title": "Payment questions reach the person who can resolve them.",
-        "body": ""
+        "title": "Return clearer cash information",
+        "body": "Record the expected payment step, requested invoice copy or reason further action is needed."
       }
     ],
     "pilot": {
-      "title": "Start with your overdue invoice follow-up.",
-      "description": "We’re inviting B2B finance and accounts receivable teams to test one focused workflow. We’ll agree the call process, email follow-up and human handoff before the pilot starts.",
+      "title": "Turn routine invoice chasing into clearer payment answers.",
+      "description": "Run a focused pilot on undisputed overdue invoices. Measure contacts reached, payment timing recorded and next steps requested.",
       "scope": [
-        "Overdue invoice follow-up",
-        "Approved email follow-ups",
-        "Human handoff with the conversation context"
+        "A defined group of undisputed overdue invoices",
+        "Approved call rules and invoice email follow-up",
+        "Recorded timing, requests and human exceptions"
       ],
-      "question": "How much manual calling does your team do about overdue invoices?"
+      "question": "How does your finance team follow up undisputed invoices after written reminders?"
     },
     "faqs": [
       {
-        "question": "What happens if an invoice is disputed?",
-        "answer": "The proposed workflow flags it for your finance team rather than trying to settle the dispute."
+        "question": "Does Revomatix handle disputed invoices?",
+        "answer": "No. The initial workflow is for undisputed overdue invoices. Any dispute is recorded and passed to your finance team."
       },
       {
-        "question": "Will it negotiate payment terms?",
-        "answer": "No. Changes to terms stay with your team."
+        "question": "Can it confirm that an invoice was paid?",
+        "answer": "Payment must be confirmed in your accounting records when the required system access is available. A promise or email delivery is not recorded as payment."
       },
       {
-        "question": "How is this different from invoice reminders?",
-        "answer": "The pilot tests a phone conversation when written reminders have not produced a clear response."
+        "question": "What can the AI voice agent ask?",
+        "answer": "It can confirm receipt, ask about expected payment timing and follow the account rules approved by your team."
       },
       {
-        "question": "What does the follow-up email contain?",
-        "answer": "The proposed pilot can email an approved invoice copy or confirm the agreed follow-up. Sender and recipient details are reviewed first. A payment promise is not cash received."
+        "question": "How is the invoice shared?",
+        "answer": "Email can support the call by sending the approved invoice or agreed follow-up to the correct contact."
+      },
+      {
+        "question": "Do we need to replace our accounting software?",
+        "answer": "No. The pilot is designed around your existing process, and any required connection is assessed before launch."
       }
     ],
     "finalTitle": "Let’s talk about your\noverdue invoice follow-up.",
@@ -866,14 +996,32 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/restoration": {
     "path": "/restoration",
-    "buyer": "For restoration operators and intake teams",
-    "eyebrow": "Voice AI for restoration",
-    "headline": "Capture damage calls",
-    "headlineAccent": "when your office cannot answer.",
-    "description": "Automate overflow call intake when your office cannot answer. A voice agent captures the reported damage and property details, then alerts your on-call team with the information needed to respond.",
-    "problem": "When the team is on a job or the office is closed, a new damage call still needs a clear next step. Capture the essential information so the person taking over does not start from scratch.",
+    "sectionCopy": {
+      "problem": {
+        "eyebrow": "WHEN STAFF CANNOT ANSWER",
+        "headline": "When damage is spreading, every unanswered minute matters.",
+        "body": "Restoration intake is an availability and responsiveness problem. A customer experiencing active damage will often call the next company if nobody answers. Revomatix answers immediately, gathers approved loss details and starts an accountable handoff.",
+        "emphasis": "Answer every urgent call, collect the loss details and alert the right person."
+      },
+      "workflowEyebrow": "HOW IT WORKS",
+      "valueEyebrow": "BUILT FOR RESTORATION INTAKE",
+      "valueHeadline": "Give on-call teams a clearer first report.",
+      "differentiation": {
+        "eyebrow": "MORE THAN A MESSAGE",
+        "headline": "Apply restoration-specific rules before the handoff.",
+        "body": "Traditional answering services can collect a message. Revomatix is designed to follow your restoration intake questions, assess urgency within approved boundaries and alert the correct on-call person with an acknowledgement step.",
+        "emphasis": "Start with one defined overflow or after-hours coverage window."
+      },
+      "ctaLabel": "Discuss an after-hours intake pilot"
+    },
+    "buyer": "For water, fire and damage-restoration companies",
+    "eyebrow": "Voice AI for restoration intake",
+    "headline": "Answer urgent restoration calls",
+    "headlineAccent": "when your team cannot.",
+    "description": "Automate overflow and after-hours intake with an AI voice agent that answers immediately, collects reported loss details, follows approved urgency questions and alerts the correct on-call person.",
+    "problem": "A customer experiencing active property damage may call the next company if nobody answers. The first priority is immediate, structured intake and an acknowledged human handoff.",
     "title": "Overflow damage-call intake | Revomatix",
-    "metaDescription": "Automate overflow call intake when your office cannot answer. A voice agent captures the reported damage and property details, then alerts your on-call team with the information needed to respond.",
+    "metaDescription": "Automate overflow and after-hours intake with an AI voice agent that answers immediately, collects reported loss details, follows approved urgency questions and alerts the correct on-call person.",
     "inbound": true,
     "illustrationLabels": [
       "Overflow call",
@@ -882,22 +1030,26 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     ],
     "invitation": "Now inviting focused pilot partners.",
     "formHeading": "Let’s look at your overflow damage-call intake",
-    "workflowTitle": "Give every overflow call a clear handoff.",
+    "workflowTitle": "From unanswered risk to acknowledged on-call handoff.",
     "workflowName": "Overflow damage-call intake",
     "outcomeDetail": "A handoff needs acceptance. An alert is not dispatch.",
     "formIntro": "Explore a focused pilot with your team.",
     "workflow": [
       {
-        "title": "Answer the overflow call",
-        "body": "Use the agreed coverage and forwarding setup when your office cannot answer."
+        "title": "Answer immediately",
+        "body": "The AI voice agent answers an eligible overflow or after-hours call when staff cannot."
       },
       {
         "title": "Collect the loss details",
-        "body": "Record the address, callback number and reported damage. Assessment stays with your professionals."
+        "body": "Capture the caller’s property information and what they report about the water, fire or other damage."
       },
       {
-        "title": "Alert the on-call contact",
-        "body": "Send an SMS alert under your escalation rules. Track acceptance and use agreed backups if needed."
+        "title": "Assess urgency",
+        "body": "Follow company-approved questions without offering a technical diagnosis or replacing emergency services."
+      },
+      {
+        "title": "Confirm the handoff",
+        "body": "Alert the designated on-call person and record acknowledgement under the pilot’s escalation rules."
       }
     ],
     "example": {
@@ -917,44 +1069,48 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     },
     "values": [
       {
-        "title": "More complete information from overflow calls.",
-        "body": ""
+        "title": "Keep urgent callers from silence",
+        "body": "Provide an immediate response during overflow or after-hours periods when office staff cannot answer."
       },
       {
-        "title": "Clearer handoffs to the on-call team.",
-        "body": ""
+        "title": "Collect useful intake details",
+        "body": "Give the on-call person structured property and loss information before they respond."
       },
       {
-        "title": "Less time reconstructing details from voicemail.",
-        "body": ""
+        "title": "Create an acknowledged handoff",
+        "body": "Track whether the alert reached the responsible person without implying that a crew accepted dispatch."
       }
     ],
     "pilot": {
-      "title": "Start with your overflow damage-call intake.",
-      "description": "We’re inviting restoration teams to test one overflow intake workflow. We’ll agree call coverage, SMS alerts and handoff acceptance before the pilot starts.",
+      "title": "See how reliably urgent overflow calls reach the right person.",
+      "description": "Run a focused pilot during agreed coverage periods. Measure calls answered, required details captured and handoffs acknowledged.",
       "scope": [
-        "Overflow damage-call intake",
-        "SMS alerts and agreed escalation rules",
-        "Human handoff with the conversation context"
+        "Defined overflow or after-hours coverage",
+        "Approved restoration intake and urgency questions",
+        "On-call alerts with acknowledgement rules"
       ],
-      "question": "Who handles new damage calls when your office cannot answer?"
+      "question": "What happens today when an urgent restoration call arrives and your staff cannot answer?"
     },
     "faqs": [
       {
-        "question": "Will it dispatch a crew automatically?",
-        "answer": "The pilot follows your agreed escalation process. Your team controls dispatch decisions."
+        "question": "Does Revomatix diagnose the damage?",
+        "answer": "No. It collects what the caller reports and follows approved intake questions. Technical assessment stays with restoration professionals."
       },
       {
-        "question": "Can it assess the damage?",
-        "answer": "It collects what the caller reports; assessment stays with your restoration professionals."
+        "question": "Does an alert mean a crew accepted dispatch?",
+        "answer": "No. The workflow records the alert and the agreed acknowledgement. Your team makes dispatch decisions."
       },
       {
-        "question": "What if the on-call contact does not answer?",
-        "answer": "We define backup contacts and acknowledgement rules with you before a pilot starts."
+        "question": "What happens in an emergency?",
+        "answer": "The AI voice agent follows your approved escalation language, including directing callers to emergency services when required."
       },
       {
-        "question": "How does the on-call team get notified?",
-        "answer": "The proposed pilot sends an SMS alert to the designated contact. We agree backup contacts and acknowledgement rules first. An alert does not mean a crew has been dispatched."
+        "question": "How does the on-call person receive the details?",
+        "answer": "The pilot can be configured to send an SMS alert with the approved intake summary and require acknowledgement."
+      },
+      {
+        "question": "Can it work with our current call process?",
+        "answer": "The pilot is designed around your existing coverage and escalation rules. Any required phone or system connection is assessed before launch."
       }
     ],
     "finalTitle": "Let’s talk about your\noverflow damage-call intake.",
@@ -992,14 +1148,32 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/commercial-contractors": {
     "path": "/commercial-contractors",
-    "buyer": "For commercial HVAC and mechanical service teams",
-    "eyebrow": "Voice AI for commercial HVAC",
-    "headline": "Follow up repair proposals",
-    "headlineAccent": "still waiting for approval.",
-    "description": "Automate follow-up on open repair proposals. A voice agent checks what is delaying approval and passes questions to your service team, reducing routine calls while keeping proposed work moving.",
-    "problem": "Your technician identified the work and your team sent the proposal. It is still waiting on a response. Find out whether the customer needs clarification, another decision-maker or more time.",
+    "sectionCopy": {
+      "problem": {
+        "eyebrow": "AFTER THE PROPOSAL",
+        "headline": "An unanswered proposal costs more than the job it delays.",
+        "body": "Open repair proposals put revenue at risk and consume account-manager time that could go to active customers and new work. The customer may only need a question answered or an internal approval moved forward. Revomatix identifies that blocker.",
+        "emphasis": "Automate routine proposal chasing and return a decision your account manager can act on."
+      },
+      "workflowEyebrow": "HOW IT WORKS",
+      "valueEyebrow": "BUILT FOR COMMERCIAL SERVICE TEAMS",
+      "valueHeadline": "Move issued repair proposals toward a decision.",
+      "differentiation": {
+        "eyebrow": "NO PLATFORM REPLACEMENT",
+        "headline": "Add focused voice follow-up to your proposal workflow.",
+        "body": "Revomatix is designed as a proposal-follow-up layer that can work alongside existing field-service software. It handles the conversation around the open decision without replacing the operating platform.",
+        "emphasis": "Start with issued repair proposals that still need approval or a clear next action."
+      },
+      "ctaLabel": "Discuss a proposal-recovery pilot"
+    },
+    "buyer": "For commercial service contractors and account teams",
+    "eyebrow": "Voice AI for repair proposals",
+    "headline": "Turn open repair proposals",
+    "headlineAccent": "into clear decisions.",
+    "description": "Automate follow-up after a commercial repair proposal is issued. An AI voice agent reaches the decision-maker, identifies the approval blocker and records a decision or useful next step.",
+    "problem": "An unanswered repair proposal puts revenue at risk and consumes account-manager time. The customer may need a technical answer, internal approval or a revised next step before deciding.",
     "title": "Open repair proposal follow-up | Revomatix",
-    "metaDescription": "Automate follow-up on open repair proposals. A voice agent checks what is delaying approval and passes questions to your service team, reducing routine calls while keeping proposed work moving.",
+    "metaDescription": "Automate follow-up after a commercial repair proposal is issued. An AI voice agent reaches the decision-maker, identifies the approval blocker and records a decision or useful next step.",
     "inbound": false,
     "illustrationLabels": [
       "Proposal awaiting approval",
@@ -1008,22 +1182,26 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     ],
     "invitation": "Now inviting focused pilot partners.",
     "formHeading": "Let’s look at your open repair proposal follow-up",
-    "workflowTitle": "Find out what is delaying the decision.",
+    "workflowTitle": "From open repair proposal to an actionable decision.",
     "workflowName": "Open repair proposal follow-up",
     "outcomeDetail": "Approval follows your formal authorization process.",
     "formIntro": "Explore a focused pilot with your team.",
     "workflow": [
       {
-        "title": "Find the open proposal",
-        "body": "Select issued service-repair proposals due for follow-up with the site or purchasing contact."
+        "title": "Detect the open proposal",
+        "body": "Identify a repair or maintenance proposal that has been issued but remains undecided."
       },
       {
-        "title": "Call about the decision",
-        "body": "Ask what is delaying approval. Send scope and price questions to the service manager."
+        "title": "Reach the decision-maker",
+        "body": "The AI voice agent contacts the appropriate customer under the agreed follow-up rules."
       },
       {
-        "title": "Email the next step",
-        "body": "Share the approved proposal or confirm the follow-up. Record decision status without assuming authorization."
+        "title": "Identify the approval step",
+        "body": "Clarify the question, internal approval or timing issue holding up the decision."
+      },
+      {
+        "title": "Record the outcome",
+        "body": "Capture approval, decline or the next action and send the proposal or confirmation by email when requested."
       }
     ],
     "example": {
@@ -1043,44 +1221,48 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     },
     "values": [
       {
-        "title": "Less manual proposal chasing.",
-        "body": ""
+        "title": "Follow up open proposals consistently",
+        "body": "Keep issued repair work visible without filling account managers’ days with routine calls."
       },
       {
-        "title": "Clearer reasons approvals are delayed.",
-        "body": ""
+        "title": "Surface the approval blocker",
+        "body": "Find whether the customer needs information, internal authorization or a different timing discussion."
       },
       {
-        "title": "Keep service recommendations connected to the next customer decision.",
-        "body": ""
+        "title": "Return a decision the team can use",
+        "body": "Record approval, decline or a specific next action for the responsible account manager."
       }
     ],
     "pilot": {
-      "title": "Start with your open repair proposal follow-up.",
-      "description": "We’re inviting commercial HVAC and mechanical service teams to test one focused workflow. We’ll agree the call process, email follow-up and human handoff before the pilot starts.",
+      "title": "Find which open proposals are still waiting on a resolvable step.",
+      "description": "Run a focused pilot on issued repair proposals. Measure decision-makers reached, blockers identified and approvals, declines or next actions recorded.",
       "scope": [
-        "Open repair proposal follow-up",
-        "Approved email follow-ups",
-        "Human handoff with the conversation context"
+        "A defined group of open repair proposals",
+        "Approved commercial answers and escalation rules",
+        "Decisions, questions and next actions recorded"
       ],
-      "question": "How do you follow up repair proposals that are waiting for customer approval?"
+      "question": "How does your team follow up repair proposals that remain open?"
     },
     "faqs": [
       {
-        "question": "Will it negotiate the proposal?",
-        "answer": "Scope and price changes stay with your service team."
+        "question": "Does Revomatix replace our account managers?",
+        "answer": "No. It handles routine proposal follow-up and returns technical questions or exceptions to the appropriate person."
       },
       {
-        "question": "Can it contact the right person at each site?",
-        "answer": "We review your contact records and approval process before selecting a pilot queue."
+        "question": "Can it approve pricing or change a proposal?",
+        "answer": "No. It only uses proposal information and rules approved by your team. Pricing and technical decisions stay with your staff."
       },
       {
-        "question": "Does this cover new construction bids?",
-        "answer": "The initial pilot focuses on issued service-repair proposals, not complex tendering."
+        "question": "What outcomes can it record?",
+        "answer": "It can record an approval, decline, question or agreed next action. The exact permitted workflow is defined during the pilot."
       },
       {
-        "question": "Can it share the repair proposal?",
-        "answer": "The proposed pilot can email your approved proposal or confirm the next step with the agreed contact. We review the setup first. Interest does not replace formal approval."
+        "question": "How is the proposal shared?",
+        "answer": "Email can support the voice conversation by sending the approved proposal or confirming the agreed next step."
+      },
+      {
+        "question": "Do we need to replace our field-service software?",
+        "answer": "No. Revomatix is designed to work alongside the existing process. Any required pilot connection is assessed before launch."
       }
     ],
     "finalTitle": "Let’s talk about your\nopen repair proposal follow-up.",
@@ -1117,14 +1299,32 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/distributors": {
     "path": "/distributors",
-    "buyer": "For specialty distributors and inside sales teams",
-    "eyebrow": "Voice AI for distributors",
-    "headline": "Follow up open quotes",
-    "headlineAccent": "with fewer sales calls.",
-    "description": "Give inside sales less quote chasing to do. A voice agent follows up open quotes, checks buying plans and shares the next step, helping reps focus on orders and customer questions.",
-    "problem": "Inside sales has new requests to handle while earlier quotes still need an answer. Give each follow-up a useful outcome: ready to order, waiting on approval, needs a change or no longer needed.",
+    "sectionCopy": {
+      "problem": {
+        "eyebrow": "AFTER THE QUOTE",
+        "headline": "A silent quote can still become an order.",
+        "body": "An unanswered quote does not always mean rejection. The buyer may be waiting on internal approval, availability, specification details or a purchase order. They may also order from the supplier that follows up first.",
+        "emphasis": "Find the blocker before the buyer places the order somewhere else."
+      },
+      "workflowEyebrow": "HOW IT WORKS",
+      "valueEyebrow": "BUILT FOR INSIDE SALES",
+      "valueHeadline": "Give representatives less quote chasing to do.",
+      "differentiation": {
+        "eyebrow": "NO SYSTEM SWITCH REQUIRED",
+        "headline": "Add a voice conversation to your existing quote process.",
+        "body": "Revomatix is designed for fast conversational follow-up without replacing your quoting or order-management software. It focuses on the buyer response your inside-sales team needs to act.",
+        "emphasis": "Start with open quotes where a timely answer still matters."
+      },
+      "ctaLabel": "Discuss a quote-follow-up pilot"
+    },
+    "buyer": "For established distributors, quote desks and inside sales",
+    "eyebrow": "Voice AI for open quotes",
+    "headline": "Turn silent quotes",
+    "headlineAccent": "into clear next steps.",
+    "description": "Automate follow-up on open quotes with an AI voice agent that reaches the buyer, identifies the commercial or operational blocker and records the order decision or next action.",
+    "problem": "An unanswered quote does not always mean rejection. The buyer may be waiting on internal approval, specification details, availability or a purchase order.",
     "title": "Open quote follow-up | Revomatix",
-    "metaDescription": "Give inside sales less quote chasing to do. A voice agent follows up open quotes, checks buying plans and shares the next step, helping reps focus on orders and customer questions.",
+    "metaDescription": "Automate follow-up on open quotes with an AI voice agent that reaches the buyer, identifies the commercial or operational blocker and records the order decision or next action.",
     "inbound": false,
     "illustrationLabels": [
       "Quote still open",
@@ -1133,22 +1333,26 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     ],
     "invitation": "Now inviting focused pilot partners.",
     "formHeading": "Let’s look at your open quote follow-up",
-    "workflowTitle": "Give inside sales a useful quote update.",
+    "workflowTitle": "From open quote to order decision or next action.",
     "workflowName": "Open quote follow-up",
     "outcomeDetail": "A buyer’s response is not an accepted order.",
     "formIntro": "Explore a focused pilot with your team.",
     "workflow": [
       {
-        "title": "Check the open quote",
-        "body": "Select sent quotes with no response or order. Confirm the current status before contact."
+        "title": "Detect the open quote",
+        "body": "Identify an issued quote where the buyer has not ordered or explained the next step."
       },
       {
         "title": "Call the buyer",
-        "body": "Ask about approval, purchase-order readiness or requested changes. Route rep-level questions to inside sales."
+        "body": "The AI voice agent contacts the approved buyer and asks what is holding up the order."
       },
       {
-        "title": "Email the follow-up",
-        "body": "Share the approved quote or confirm the buyer’s response. Pass the context back to the rep."
+        "title": "Identify the blocker",
+        "body": "Clarify whether price, availability, specification, approval or a purchase order is involved."
+      },
+      {
+        "title": "Confirm the next action",
+        "body": "Record the order decision or follow-up and email the quote or approved details when requested."
       }
     ],
     "example": {
@@ -1168,44 +1372,48 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     },
     "values": [
       {
-        "title": "Less routine quote chasing.",
-        "body": ""
+        "title": "Keep quote follow-up consistent",
+        "body": "Reach buyers while the requirement is active instead of leaving quotes buried in an inside-sales queue."
       },
       {
-        "title": "Useful status updates for each open quote.",
-        "body": ""
+        "title": "Find the buying blocker",
+        "body": "Understand whether the buyer needs approval, product information, availability or another commercial step."
       },
       {
-        "title": "Clear handoffs for questions that require a rep.",
-        "body": ""
+        "title": "Return an actionable response",
+        "body": "Give the representative an order decision, a specific follow-up or a documented reason the quote is paused."
       }
     ],
     "pilot": {
-      "title": "Start with your open quote follow-up.",
-      "description": "We’re inviting specialty distributors and inside sales teams to test one focused workflow. We’ll agree the call process, email follow-up and human handoff before the pilot starts.",
+      "title": "See which open quotes still have an order behind them.",
+      "description": "Run a focused pilot on a defined group of issued quotes. Measure buyers reached, blockers identified and order decisions or next actions recorded.",
       "scope": [
-        "Open quote follow-up",
-        "Approved email follow-ups",
-        "Human handoff with the conversation context"
+        "A defined group of open customer quotes",
+        "Approved quote information and contact rules",
+        "Orders, declines and next actions recorded"
       ],
-      "question": "Who follows up quotes that have not turned into orders?"
+      "question": "How does your inside-sales team follow up quotes that receive no response?"
     },
     "faqs": [
       {
-        "question": "Will it generate quotes or enter orders?",
-        "answer": "This first pilot follows up quotes your reps have already sent."
+        "question": "Does Revomatix replace our inside-sales team?",
+        "answer": "No. It handles routine quote follow-up and returns commercial, specification or relationship questions to the appropriate representative."
       },
       {
-        "question": "Can it answer stock or lead-time questions?",
-        "answer": "Those questions go to your rep unless the pilot explicitly includes reliable approved information."
+        "question": "Can it change price or promise availability?",
+        "answer": "No. It uses only approved quote and availability information. Any exception or negotiation stays with your team."
       },
       {
-        "question": "What if an order has already arrived?",
-        "answer": "Current quote and order status must be checked before follow-up."
+        "question": "Can it place the order?",
+        "answer": "It can record or complete approved order steps when the required system access is available. The exact workflow is defined during the pilot."
       },
       {
-        "question": "What will the follow-up email include?",
-        "answer": "The proposed pilot can share the approved quote or confirm the buyer’s response. We review sender details and quote access before setup. It does not enter or accept orders."
+        "question": "How is the quote shared?",
+        "answer": "Email can support the voice call by sending the approved quote or confirming the buyer’s stated next step."
+      },
+      {
+        "question": "Do we need to replace our quoting software?",
+        "answer": "No. The pilot is designed around your current quote process, and any required connection is assessed before launch."
       }
     ],
     "finalTitle": "Let’s talk about your\nopen quote follow-up.",
@@ -1242,14 +1450,32 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/medspa": {
     "path": "/medspa",
-    "buyer": "For medspas and aesthetics clinic teams",
-    "eyebrow": "Voice AI for medspas",
-    "headline": "Help patients rebook",
-    "headlineAccent": "missed consultations.",
-    "description": "Automate the follow-up after missed consultations. A voice agent helps patients rearrange and sends appointment details, giving your front desk more time for the people already in your clinic.",
-    "problem": "A missed consultation leaves the patient without a next step and your coordinator with another callback. Make it easier to rearrange while keeping clinical questions with your team.",
+    "sectionCopy": {
+      "problem": {
+        "eyebrow": "AFTER THE NO-SHOW",
+        "headline": "A missed consultation should not end the treatment journey.",
+        "body": "The practice discovers the missed visit only after provider capacity has gone unused. Some prospects are still considering treatment and only need another time. Revomatix starts a discreet rescheduling conversation while their interest is still active.",
+        "emphasis": "Recover high-intent consultations while the prospect is still considering treatment."
+      },
+      "workflowEyebrow": "HOW IT WORKS",
+      "valueEyebrow": "BUILT FOR CONSULTATION TEAMS",
+      "valueHeadline": "Recover missed consultations with less front-desk chasing.",
+      "differentiation": {
+        "eyebrow": "AFTER THE REMINDER",
+        "headline": "Handle the recovery workflow after the prospect misses the visit.",
+        "body": "Booking platforms and reminders act before an appointment. Revomatix focuses on the post-no-show voice conversation, approved rescheduling and discreet confirmation.",
+        "emphasis": "Start with one narrow workflow: missed initial consultations."
+      },
+      "ctaLabel": "Discuss a medspa pilot"
+    },
+    "buyer": "For multi-provider medspas and aesthetics clinics",
+    "eyebrow": "Voice AI for missed consultations",
+    "headline": "Bring missed consultations",
+    "headlineAccent": "back to the calendar.",
+    "description": "Automate follow-up after a prospect misses an initial consultation. An AI voice agent offers another approved time, rebooks the visit and sends discreet confirmation without providing clinical advice.",
+    "problem": "The practice learns about a missed consultation only after provider capacity has gone unused. Prompt follow-up can recover prospects who still intend to discuss treatment but need another time.",
     "title": "Missed consultation follow-up | Revomatix",
-    "metaDescription": "Automate the follow-up after missed consultations. A voice agent helps patients rearrange and sends appointment details, giving your front desk more time for the people already in your clinic.",
+    "metaDescription": "Automate follow-up after a prospect misses an initial consultation. An AI voice agent offers another approved time, rebooks the visit and sends discreet confirmation without providing clinical advice.",
     "inbound": false,
     "illustrationLabels": [
       "Consultation missed",
@@ -1258,22 +1484,26 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     ],
     "invitation": "Now inviting focused pilot partners.",
     "formHeading": "Let’s look at your missed consultation follow-up",
-    "workflowTitle": "Make missed consultations easier to rearrange.",
+    "workflowTitle": "From missed consultation to another approved appointment.",
     "workflowName": "Missed consultation follow-up",
     "outcomeDetail": "Track attendance after the consultation.",
     "formIntro": "Explore a focused pilot with your team.",
     "workflow": [
       {
-        "title": "Find the missed consultation",
-        "body": "Select initial consultations that have not already been rearranged."
+        "title": "Detect the consultation no-show",
+        "body": "Identify a prospect who missed a booked initial consultation for an eligible treatment."
       },
       {
-        "title": "Call discreetly to rebook",
-        "body": "Ask whether the patient wants another appointment. Keep clinical questions with your team."
+        "title": "Call the prospect",
+        "body": "The AI voice agent follows up discreetly and asks whether they would like another appointment."
       },
       {
-        "title": "Text appointment details",
-        "body": "Send discreet SMS confirmation through the agreed booking process. Track attendance separately."
+        "title": "Offer approved availability",
+        "body": "Present suitable consultation times when the required scheduling access is available."
+      },
+      {
+        "title": "Rebook and confirm",
+        "body": "Record the new appointment and send discreet confirmation with the approved details."
       }
     ],
     "example": {
@@ -1293,44 +1523,48 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     },
     "values": [
       {
-        "title": "Less routine rescheduling for the front desk.",
-        "body": ""
+        "title": "Follow up while interest remains high",
+        "body": "Reconnect promptly with prospects who were already interested enough to book a consultation."
       },
       {
-        "title": "A consistent next step after a consultation no-show.",
-        "body": ""
+        "title": "Reduce repetitive front-desk calls",
+        "body": "Handle straightforward rescheduling while clinic staff focus on people already in the practice."
       },
       {
-        "title": "Measure patients who attend, not bookings alone.",
-        "body": ""
+        "title": "Return a clear appointment outcome",
+        "body": "Give the team a rebooked consultation, a requested callback or a documented reason to pause."
       }
     ],
     "pilot": {
-      "title": "Start with your missed consultation follow-up.",
-      "description": "We’re inviting medspas and aesthetics clinic teams to test one focused workflow. We’ll agree the call process, SMS follow-up and human handoff before the pilot starts.",
+      "title": "See how many missed consultations can return to the calendar.",
+      "description": "Run a focused pilot on eligible initial consultation no-shows. Measure prospects reached, appointments rebooked and outcomes recorded.",
       "scope": [
-        "Missed consultation follow-up",
-        "Approved SMS follow-ups",
-        "Human handoff with the conversation context"
+        "A defined group of missed initial consultations",
+        "Approved availability, privacy and contact rules",
+        "Rebooked appointments and human handoffs"
       ],
       "question": "How does your front desk follow up missed initial consultations?"
     },
     "faqs": [
       {
-        "question": "Can it recommend a treatment?",
-        "answer": "No. Treatment questions stay with your clinical team."
+        "question": "Does Revomatix provide clinical advice?",
+        "answer": "No. It handles approved scheduling information only. Treatment suitability, risks and clinical questions stay with qualified clinic staff."
       },
       {
-        "question": "Will it change no-show fees or deposits?",
-        "answer": "Your clinic sets those policies; the pilot does not waive or change them."
+        "question": "Can it see available consultation times?",
+        "answer": "It can offer approved times when the required scheduling access is available. The exact booking workflow is agreed during the pilot."
       },
       {
-        "question": "Is this appointment reminder software?",
-        "answer": "The initial workflow follows up after a consultation is missed, rather than only reminding people beforehand."
+        "question": "What happens when a prospect asks about treatment?",
+        "answer": "The AI voice agent records the question and routes it to the appropriate clinic professional."
       },
       {
-        "question": "What information goes in the text?",
-        "answer": "The proposed SMS contains discreet appointment information, not treatment details. We agree the content and setup with your clinic before the pilot."
+        "question": "How is the appointment confirmed?",
+        "answer": "A discreet message can support the call by sharing only the approved appointment information."
+      },
+      {
+        "question": "Does this cover all front-desk calls?",
+        "answer": "No. The initial pilot stays focused on follow-up after missed initial consultations."
       }
     ],
     "finalTitle": "Let’s talk about your\nmissed consultation follow-up.",
@@ -1367,14 +1601,32 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/auto-repair": {
     "path": "/auto-repair",
-    "buyer": "For auto repair shops and service advisors",
-    "eyebrow": "Voice AI for repair shops",
-    "headline": "Follow up declined repairs",
-    "headlineAccent": "without tying up advisors.",
-    "description": "Automate follow-up on declined and deferred repairs. A voice agent checks whether customers are ready to revisit the work and arranges the next step, freeing up your service advisors.",
-    "problem": "The repair was recommended, but the customer put it off. Your advisors still need to find out whether they want to return, need an updated estimate or have already had the work done.",
+    "sectionCopy": {
+      "problem": {
+        "eyebrow": "AFTER THE DECLINE",
+        "headline": "Declined work is often delayed work.",
+        "body": "Many customers who decline a repair mean “not right now.” The shop has already inspected the vehicle and explained the work, but without structured follow-up the repair may never return. Revomatix checks when the customer is ready to revisit it.",
+        "emphasis": "Bring postponed repairs back without filling your service advisors’ call lists."
+      },
+      "workflowEyebrow": "HOW IT WORKS",
+      "valueEyebrow": "BUILT FOR SERVICE ADVISORS",
+      "valueHeadline": "Follow up deferred repairs without another manual call list.",
+      "differentiation": {
+        "eyebrow": "TURN RECORDS INTO ACTION",
+        "headline": "Add the conversation after declined work is recorded.",
+        "body": "Shop-management systems can record declined work while leaving the service advisor responsible for repeated follow-up. Revomatix is designed as the conversational action layer around that existing record.",
+        "emphasis": "Start with previously inspected and quoted repairs that customers postponed."
+      },
+      "ctaLabel": "Discuss a declined-work pilot"
+    },
+    "buyer": "For independent and regional auto-repair shops",
+    "eyebrow": "Voice AI for declined repair work",
+    "headline": "Bring declined repair work",
+    "headlineAccent": "back when customers are ready.",
+    "description": "Automate follow-up on declined or deferred repairs. An AI voice agent asks whether timing or cost delayed the work and helps schedule the approved repair when the customer is ready.",
+    "problem": "Many declined repairs mean “not right now.” Without structured follow-up, previously inspected and quoted work may never return to the shop.",
     "title": "Declined repair follow-up | Revomatix",
-    "metaDescription": "Automate follow-up on declined and deferred repairs. A voice agent checks whether customers are ready to revisit the work and arranges the next step, freeing up your service advisors.",
+    "metaDescription": "Automate follow-up on declined or deferred repairs. An AI voice agent asks whether timing or cost delayed the work and helps schedule the approved repair when the customer is ready.",
     "inbound": false,
     "illustrationLabels": [
       "Repair deferred",
@@ -1383,22 +1635,26 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     ],
     "invitation": "Now inviting focused pilot partners.",
     "formHeading": "Let’s look at your declined repair follow-up",
-    "workflowTitle": "Reconnect about repairs already recommended.",
+    "workflowTitle": "From declined work to a scheduled repair or clear follow-up.",
     "workflowName": "Declined repair follow-up",
     "outcomeDetail": "A callback or visit is not completed repair work.",
     "formIntro": "Explore a focused pilot with your team.",
     "workflow": [
       {
-        "title": "Find the deferred repair",
-        "body": "Select eligible quoted work from the customer and vehicle record. Exclude work already completed."
+        "title": "Detect eligible declined work",
+        "body": "Identify a previously inspected and quoted repair that the customer declined or postponed."
       },
       {
-        "title": "Call about the recommendation",
-        "body": "Ask whether the customer wants to revisit the work. Route estimate questions to the service advisor."
+        "title": "Call at the right time",
+        "body": "The AI voice agent follows up under the timing and contact rules approved by the shop."
       },
       {
-        "title": "Confirm the next step",
-        "body": "Text the agreed advisor callback or appointment details. Update the follow-up status separately from completed work."
+        "title": "Identify the concern",
+        "body": "Clarify whether cost, timing or another approved issue is keeping the customer from scheduling."
+      },
+      {
+        "title": "Schedule or record",
+        "body": "Arrange the repair when approved scheduling access is available, or record the next follow-up for an advisor."
       }
     ],
     "example": {
@@ -1418,44 +1674,48 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     },
     "values": [
       {
-        "title": "Less routine calling for service advisors.",
-        "body": ""
+        "title": "Keep deferred work visible",
+        "body": "Follow up at an appropriate time instead of allowing previously quoted repairs to disappear from the shop’s pipeline."
       },
       {
-        "title": "Keep deferred recommendations visible.",
-        "body": ""
+        "title": "Understand why the work was delayed",
+        "body": "Separate timing and cost concerns from questions that need a service advisor’s judgment."
       },
       {
-        "title": "A clearer route from declined work to a return appointment.",
-        "body": ""
+        "title": "Return a practical outcome",
+        "body": "Give the advisor a scheduled repair, a requested callback or a clear date for the next follow-up."
       }
     ],
     "pilot": {
-      "title": "Start with your declined repair follow-up.",
-      "description": "We’re inviting auto repair shops and service advisors to test one focused workflow. We’ll agree the call process, SMS follow-up and human handoff before the pilot starts.",
+      "title": "See which postponed repairs are ready to return.",
+      "description": "Run a focused pilot on eligible declined or deferred work. Measure customers reached, concerns identified and repairs scheduled or assigned a next step.",
       "scope": [
-        "Declined repair follow-up",
-        "Approved SMS follow-ups",
-        "Human handoff with the conversation context"
+        "A defined group of previously quoted repairs",
+        "Shop-approved recommendations and contact rules",
+        "Scheduled work, callbacks and future follow-ups"
       ],
-      "question": "How does your shop follow up declined or deferred repair work?"
+      "question": "How do your service advisors follow up repairs that customers decline or postpone?"
     },
     "faqs": [
       {
-        "question": "Will it recommend additional repairs?",
-        "answer": "No. The pilot follows up work already documented by your shop."
+        "question": "Does Revomatix diagnose vehicles or recommend new repairs?",
+        "answer": "No. It uses only recommendations previously inspected and approved by your shop. Mechanical questions go to a service advisor."
       },
       {
-        "question": "What if the old estimate is no longer valid?",
-        "answer": "The assistant routes that question to your service advisor."
+        "question": "Can it schedule the repair?",
+        "answer": "It can offer approved times and schedule when the required shop-calendar access is available. The exact workflow is defined during the pilot."
       },
       {
-        "question": "Can it book the vehicle in?",
-        "answer": "We agree whether the pilot can use verified appointment availability or should arrange an advisor callback."
+        "question": "Can it negotiate the repair price?",
+        "answer": "No. It can record a cost concern, but pricing decisions and technical advice remain with your team."
       },
       {
         "question": "How is the next step confirmed?",
-        "answer": "The proposed pilot uses SMS to confirm an advisor callback or an appointment agreed through your booking process. We review the messaging setup before the pilot."
+        "answer": "Text can support the call by confirming an approved appointment or advisor callback."
+      },
+      {
+        "question": "Do we need to replace our shop-management system?",
+        "answer": "No. Revomatix is designed as a follow-up layer around your existing process. Any required connection is assessed before launch."
       }
     ],
     "finalTitle": "Let’s talk about your\ndeclined repair follow-up.",
