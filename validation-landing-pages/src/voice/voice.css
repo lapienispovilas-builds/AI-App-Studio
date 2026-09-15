@@ -178,6 +178,63 @@
 .v-form-card .v-checkbox-group label span,.v-form-card .v-checkbox span { color:var(--v-text); font-weight:400; }
 .v-button:disabled { opacity:.65; cursor:wait; }
 .v-honeypot { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }
+
+/* Moving audio demo. Other routes continue to use the shared static preview. */
+.v-audio-demo { background:var(--v-soft); }
+.v-audio-demo figcaption { background:var(--v-card); }
+.v-audio-call { display:flex; align-items:center; gap:14px; padding:13px 22px 8px; }
+.v-call-status { display:flex; align-items:center; gap:7px; min-width:max-content; color:var(--v-accent); font-size:11px; font-weight:600; }
+.v-call-status i { width:7px; height:7px; border-radius:50%; background:var(--v-input-border); }
+.v-call-status small { color:var(--v-muted); font-size:10px; font-weight:400; }
+.v-call-status.is-playing i { background:var(--v-accent); animation:v-call-pulse 1.25s ease-in-out infinite; }
+.v-audio-wave { height:34px; flex:1; display:flex; align-items:center; justify-content:flex-end; gap:4px; overflow:hidden; }
+.v-audio-wave i { display:block; width:3px; max-height:26px; background:var(--v-highlight); border-radius:3px; transform:scaleY(.45); }
+.v-audio-wave.is-playing i { animation:v-audio-wave .55s ease-in-out infinite alternate; }
+.v-audio-controls { display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:center; padding:8px 22px 14px; border-bottom:1px solid var(--v-border); }
+.v-audio-play { min-height:42px; display:inline-flex; align-items:center; justify-content:center; gap:8px; border:0; border-radius:6px; padding:10px 14px; background:var(--v-button); color:var(--v-card); font-size:12px; font-weight:600; }
+.v-audio-play:hover { background:var(--v-hover); }
+.v-audio-play svg { flex-shrink:0; }
+.v-audio-timeline { min-width:0; }
+.v-audio-timeline input { display:block; width:100%; height:18px; margin:0; accent-color:var(--v-accent); cursor:pointer; }
+.v-audio-timeline>div { display:flex; justify-content:space-between; color:var(--v-muted); font-size:9px; line-height:1; }
+.v-audio-transcript { height:214px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; padding:14px 22px; scroll-behavior:smooth; }
+.v-audio-message { width:90%; padding:9px 12px; border:1px solid transparent; border-radius:5px 10px 10px 10px; background:var(--v-card); transition:opacity .2s,border-color .2s,box-shadow .2s; }
+.v-audio-message small { display:block; margin-bottom:3px; color:var(--v-muted); font-size:9px; font-weight:600; }
+.v-audio-message p { font-size:11px; line-height:1.45; }
+.v-audio-customer { align-self:flex-end; border-radius:10px 5px 10px 10px; background:color-mix(in srgb,var(--v-highlight) 16%,var(--v-card)); }
+.v-audio-customer small { text-align:right; }
+.v-audio-message.is-active { opacity:1; border-color:var(--v-highlight); box-shadow:0 4px 14px var(--v-shadow); }
+.v-audio-message.is-complete { opacity:.58; }
+.v-audio-message.is-upcoming:not(.is-active) { opacity:.3; }
+.v-audio-footer { min-height:72px; display:flex; align-items:center; padding:12px 22px; background:var(--v-card); border-top:1px solid var(--v-border); }
+.v-audio-stages { width:100%; display:flex; align-items:center; justify-content:space-between; gap:7px; margin:0; padding:0; list-style:none; color:var(--v-muted); font-size:9px; }
+.v-audio-stages li { display:flex; align-items:center; gap:7px; }
+.v-audio-stages li.is-reached { color:var(--v-accent); font-weight:600; }
+.v-audio-stages svg { color:var(--v-border); flex-shrink:0; }
+.v-audio-outcome { display:flex; gap:10px; align-items:flex-start; color:var(--v-accent); }
+.v-audio-outcome svg { margin-top:2px; flex-shrink:0; }
+.v-audio-outcome strong { color:var(--v-text); font-size:12px; }
+.v-audio-outcome p { color:var(--v-muted); font-size:10px; margin-top:2px; }
+@keyframes v-audio-wave { from { transform:scaleY(.35); } to { transform:scaleY(1); } }
+@keyframes v-call-pulse { 50% { opacity:.35; transform:scale(.8); } }
+@media(max-width:760px) {
+ .v-audio-call,.v-audio-controls,.v-audio-footer { padding-inline:16px; }
+ .v-audio-controls { grid-template-columns:1fr; gap:8px; }
+ .v-audio-play { width:100%; }
+ .v-audio-transcript { height:226px; padding-inline:16px; }
+ .v-audio-message { width:94%; }
+ .v-audio-stages { align-items:flex-start; }
+ .v-audio-stages li { gap:4px; line-height:1.3; }
+}
+@media(max-width:390px) {
+ .v-audio-stages { display:grid; gap:5px; }
+ .v-audio-stages li svg { display:none; }
+}
+@media(prefers-reduced-motion:reduce) {
+ .v-call-status.is-playing i,.v-audio-wave.is-playing i { animation:none; transform:none; }
+ .v-audio-message { transition:none; }
+ .v-audio-transcript { scroll-behavior:auto; }
+}
 .v-analytics-choice { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--v-muted); }
 .v-footer { flex-wrap:wrap; } .v-footer>a:not(.v-brand) { font-size:12px; text-decoration:underline; }
 .v-privacy { max-width:800px; } .v-privacy h1 { margin-block:30px; } .v-privacy h2 { font-size:26px; margin-top:32px; } .v-privacy p { margin-block:18px; } .v-privacy a,.v-preview-note a { text-decoration:underline; }

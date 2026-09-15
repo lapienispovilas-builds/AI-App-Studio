@@ -1,7 +1,15 @@
 export const voiceBrand = { name: 'Revomatix', logo: '/assets/revomatix/revomatix-header-cropped.png', symbol: '/assets/revomatix/revomatix-symbol-cropped.png', favicon: '/assets/revomatix/favicon.png' }
 export const voicePaths = ['/saas-payment-recovery', '/demo-recovery', '/fitness', '/ecommerce', '/invoice-follow-up', '/moving', '/restoration', '/commercial-contractors', '/distributors', '/medspa', '/auto-repair'] as const
+export interface VoiceAudioDemo {
+  src: string
+  duration: number
+  transcript: { at: number; speaker: 'AI agent' | 'Customer'; text: string }[]
+  stages: string[]
+  outcome: { title: string; detail: string }
+}
 export interface VoicePageConfig {
   path: typeof voicePaths[number]
+  audioDemo?: VoiceAudioDemo
   preview: { emphasis: string[]; context: string; messages: { speaker: string; text: string }[]; status: string; detail: string; need: string; recorded: string; owner: string }
   buyer: string
   eyebrow: string
@@ -657,6 +665,47 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
   },
   "/moving": {
     "path": "/moving",
+    "audioDemo": {
+      "src": "/audio/moving-rescheduling-demo.mp3",
+      "duration": 37.2,
+      "transcript": [
+        {
+          "at": 0,
+          "speaker": "AI agent",
+          "text": "Hi Alex, this is Revomatix, the AI assistant calling on behalf of your moving company. I’m following up about your estimate. Is there anything you’d like to confirm before booking?"
+        },
+        {
+          "at": 11.32,
+          "speaker": "Customer",
+          "text": "Yeah, we need to move on Friday instead. Is that available?"
+        },
+        {
+          "at": 16.56,
+          "speaker": "AI agent",
+          "text": "Yes, Friday is available. I can update your move now. Would you prefer the morning or afternoon?"
+        },
+        {
+          "at": 23.56,
+          "speaker": "Customer",
+          "text": "The afternoon would work better."
+        },
+        {
+          "at": 26.24,
+          "speaker": "AI agent",
+          "text": "Perfect. I’ve rescheduled your move for Friday afternoon and sent the updated confirmation by text. Is there anything else you’d like me to update?"
+        },
+        {
+          "at": 35.32,
+          "speaker": "Customer",
+          "text": "No, that’s everything. Thank you."
+        }
+      ],
+      "stages": ["Estimate awaiting response", "Availability checked", "Move rescheduled"],
+      "outcome": {
+        "title": "Move rescheduled",
+        "detail": "Friday afternoon reserved and confirmation sent."
+      }
+    },
     "buyer": "For moving companies and sales coordinators",
     "eyebrow": "Voice AI for movers",
     "headline": "Turn unanswered estimates",

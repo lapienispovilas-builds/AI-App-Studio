@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { ArrowRight, ArrowDown, Check, Phone, MessageSquare, Menu, X } from 'lucide-react'
+import { ArrowRight, ArrowDown, Check, Phone, MessageSquare, Menu, X, Play, Pause, RotateCcw } from 'lucide-react'
 import { voiceBrand, voicePages, type VoicePageConfig } from './config'
 import './voice.css'
 import { attribution, measure, submitLead } from './leadClient'
@@ -18,8 +18,45 @@ function EmphasizedCopy({ config: c }: { config: VoicePageConfig }) {
   return <>{c.description.split(pattern).map((part,i) => c.preview.emphasis.some(p => p.toLowerCase() === part.toLowerCase()) ? <strong key={i}>{part}</strong> : part)}</>
 }
 function ConversationPreview({ config: c }: { config: VoicePageConfig }) {
+  return c.audioDemo ? <AudioConversationPreview config={c} /> : <StaticConversationPreview config={c} />
+}
+function StaticConversationPreview({ config: c }: { config: VoicePageConfig }) {
   const [sequence, setSequence] = useState(0)
   return <figure className="v-conversation"><figcaption><div className="v-assistant-brand"><span className="v-avatar"><img src={voiceBrand.symbol} alt="" width={1125} height={991} /></span><span>Revomatix · AI assistant</span></div><strong>{c.workflowName}</strong><span>Illustrative conversation</span></figcaption><div className="v-preview-context"><Phone size={16} aria-hidden="true" /><span>{c.preview.context}</span></div><div key={sequence} className="v-sequence"><div className="v-preview-wave" aria-hidden="true">{[8,16,10,22,14,20,8,16,10].map((h,i) => <i key={i} style={{height:h, animationDelay:`${i*0.06}s`}} />)}</div><div className="v-preview-messages">{c.preview.messages.map((m,i)=><div className={`v-preview-message ${m.speaker === 'AI assistant' ? 'v-assistant' : 'v-person'}`} key={i} style={{animationDelay:`${i*1.15}s`}}><small>{m.speaker}</small><p>{m.text}</p></div>)}</div><div className="v-preview-result"><Check size={19} aria-hidden="true" /><div><strong>{c.preview.status}</strong><p>{c.preview.detail}</p></div></div></div><button className="v-replay" onClick={()=>setSequence(s=>s+1)}>Replay example<span aria-hidden="true">↻</span></button></figure>
+}
+function formatAudioTime(seconds:number) {
+  const safe=Number.isFinite(seconds)?Math.max(0,seconds):0
+  return `${Math.floor(safe/60)}:${Math.floor(safe%60).toString().padStart(2,'0')}`
+}
+function AudioConversationPreview({config:c}:{config:VoicePageConfig}) {
+ const demo=c.audioDemo!
+ const audio=useRef<HTMLAudioElement>(null), transcript=useRef<HTMLDivElement>(null), messageRefs=useRef<(HTMLDivElement|null)[]>([])
+ const [currentTime,setCurrentTime]=useState(0), [duration,setDuration]=useState(demo.duration), [playing,setPlaying]=useState(false), [ended,setEnded]=useState(false)
+ const activeIndex=demo.transcript.reduce((active,line,index)=>currentTime>=line.at?index:active,-1)
+ const outcomeVisible=ended||currentTime>=demo.transcript[demo.transcript.length-1].at
+ useEffect(()=>()=>audio.current?.pause(),[])
+ useEffect(()=>{
+  const container=transcript.current, active=messageRefs.current[activeIndex]
+  if(!container||!active)return
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  container.scrollTo({top:Math.max(0,active.offsetTop-container.offsetTop-8),behavior:reduce?'auto':'smooth'})
+ },[activeIndex])
+ async function toggle(){
+  const player=audio.current;if(!player)return
+  if(playing){player.pause();return}
+  if(outcomeVisible||player.currentTime>=player.duration-.1){player.currentTime=0;setCurrentTime(0);setEnded(false)}
+  try{await player.play()}catch{setPlaying(false)}
+ }
+ function seek(value:number){const player=audio.current;if(!player)return;player.currentTime=value;setCurrentTime(value);setEnded(false)}
+ const controlLabel=playing?'Pause conversation':outcomeVisible?'Replay conversation':currentTime>0?'Resume conversation':'Play conversation'
+ return <figure className="v-conversation v-audio-demo">
+  <figcaption><div className="v-assistant-brand"><span className="v-avatar"><img src={voiceBrand.symbol} alt="" width={1125} height={991}/></span><span>Revomatix AI voice agent</span></div><strong>{c.workflowName}</strong><span>Example conversation</span></figcaption>
+  <audio ref={audio} src={demo.src} preload="metadata" onLoadedMetadata={e=>setDuration(Number.isFinite(e.currentTarget.duration)?e.currentTarget.duration:demo.duration)} onTimeUpdate={e=>setCurrentTime(e.currentTarget.currentTime)} onPlay={()=>{setPlaying(true);setEnded(false)}} onPause={()=>setPlaying(false)} onEnded={e=>{setPlaying(false);setEnded(true);setCurrentTime(e.currentTarget.duration)}} />
+  <div className="v-audio-call"><div className={`v-call-status ${playing?'is-playing':''}`}><Phone size={15} aria-hidden="true"/><span>AI call</span><i aria-hidden="true"/><small>{ended?'Complete':playing?'Playing':currentTime>0?'Paused':'Ready'}</small></div><div className={`v-audio-wave ${playing?'is-playing':''}`} aria-hidden="true">{[12,22,16,30,18,26,13,24,17,29,15,21].map((height,index)=><i key={index} style={{height,animationDelay:`${index*.06}s`}}/>)}</div></div>
+  <div className="v-audio-controls"><button type="button" className="v-audio-play" onClick={toggle} aria-label={controlLabel}>{playing?<Pause size={18} fill="currentColor"/>:ended?<RotateCcw size={18}/>:<Play size={18} fill="currentColor"/>}<span>{controlLabel}</span></button><div className="v-audio-timeline"><input type="range" min="0" max={duration||demo.duration} step="0.01" value={Math.min(currentTime,duration||demo.duration)} onChange={event=>seek(Number(event.target.value))} aria-label="Conversation playback position"/><div><time>{formatAudioTime(currentTime)}</time><time>{formatAudioTime(duration)}</time></div></div></div>
+  <div ref={transcript} className="v-audio-transcript" aria-label="Conversation transcript">{demo.transcript.map((line,index)=><div ref={node=>{messageRefs.current[index]=node}} key={line.at} className={`v-audio-message ${line.speaker==='AI agent'?'v-audio-ai':'v-audio-customer'} ${index===activeIndex?'is-active':''} ${index<activeIndex?'is-complete':'is-upcoming'}`}><small>{line.speaker}</small><p>{line.text}</p></div>)}</div>
+  <div className="v-audio-footer">{outcomeVisible?<div className="v-audio-outcome"><Check size={18} aria-hidden="true"/><div><strong>{demo.outcome.title}</strong><p>{demo.outcome.detail}</p></div></div>:<ol className="v-audio-stages">{demo.stages.map((stage,index)=><li key={stage} className={currentTime>=(index===0?0:index===1?11.32:26.24)?'is-reached':''}>{stage}{index<demo.stages.length-1&&<ArrowRight size={13} aria-hidden="true"/>}</li>)}</ol>}</div>
+ </figure>
 }
 const relatedIssueOptions:Partial<Record<VoicePageConfig['path'],string[]>>={
  '/fitness':['Cancelled slots go unfilled','Failed membership payments','Lapsed members who never come back'],
