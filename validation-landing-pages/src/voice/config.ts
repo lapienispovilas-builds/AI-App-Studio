@@ -1,5 +1,5 @@
 export const voiceBrand = { name: 'Revomatix', logo: '/assets/revomatix/revomatix-header-cropped.png', symbol: '/assets/revomatix/revomatix-symbol-cropped.png', favicon: '/assets/revomatix/favicon.png' }
-export const voicePaths = ['/saas-payment-recovery', '/demo-recovery', '/fitness', '/ecommerce', '/invoice-follow-up', '/moving', '/restoration', '/commercial-contractors', '/distributors', '/medspa', '/auto-repair'] as const
+export const voicePaths = ['/saas-payment-recovery', '/demo-recovery', '/fitness', '/ecommerce', '/invoice-follow-up', '/moving', '/restoration', '/commercial-contractors', '/distributors', '/medspa', '/auto-repair', '/ai-app-retention', '/ecommerce-retention'] as const
 export interface VoiceAudioDemo {
   src: string
   duration: number
@@ -9,6 +9,8 @@ export interface VoiceAudioDemo {
   stages: string[]
   stageTimes?: number[]
   outcome: { title: string; detail: string }
+  outcomeAtEnd?: boolean
+  note?: string
 }
 export interface VoicePageConfig {
   path: typeof voicePaths[number]
@@ -2261,5 +2263,346 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
       "recorded": "Tomorrow morning preferred for an advisor callback.",
       "owner": "Your service advisor reviews the work and answers technical questions."
     }
+  },
+  "/ai-app-retention": {
+    "path": "/ai-app-retention",
+    "audioDemo": {
+      "src": "/audio/revomatix/ai-app-retention-conversation.mp3",
+      "duration": 36.24,
+      "title": "AI app cancellation support",
+      "trigger": "Subscriber requested help before cancellation.",
+      "transcript": [
+        {
+          "at": 0,
+          "speaker": "AI agent",
+          "text": "Hi Alex, this is Frame Studio's AI assistant. You asked for help before cancelling. What's not working for you?"
+        },
+        {
+          "at": 7.72,
+          "speaker": "Customer",
+          "text": "I wanted to make product videos, but I couldn't get my first one finished."
+        },
+        {
+          "at": 12.16,
+          "speaker": "AI agent",
+          "text": "There's a product video template included in your plan. I've emailed it to you. Open it, add your product photo, then select Generate."
+        },
+        {
+          "at": 21.4,
+          "speaker": "Customer",
+          "text": "That worked. This is what I needed. Please remove my cancellation. I'll keep the plan."
+        },
+        {
+          "at": 28.48,
+          "speaker": "AI agent",
+          "text": "Done. Your cancellation is removed and your plan will renew as scheduled. I've emailed the confirmation and the template for next time."
+        }
+      ],
+      "stages": [
+        "Help requested",
+        "Blocker identified",
+        "Template shared",
+        "Cancellation withdrawn"
+      ],
+      "stageTimes": [0, 7.72, 12.16, 36.24],
+      "outcome": {
+        "title": "Cancellation withdrawn",
+        "detail": "Customer chose to continue. Renewal remains scheduled; future payment is not yet verified."
+      },
+      "outcomeAtEnd": true,
+      "note": "Shortened illustrative conversation; product-generation waiting time is omitted."
+    },
+    "sectionCopy": {
+      "problem": {
+        "eyebrow": "WHEN VALUE IS UNCLEAR",
+        "headline": "A paid plan does not mean a user has found value.",
+        "body": "A subscriber may have credits left but no finished output. A generic reminder cannot tell you whether the problem is a confusing workflow, an unsuitable plan or an unmet expectation. A focused conversation helps identify what needs to change.",
+        "emphasis": "Help paying users make progress before they decide to leave."
+      },
+      "workflowEyebrow": "HOW IT WORKS",
+      "valueEyebrow": "BUILT FOR RETENTION TEAMS",
+      "valueHeadline": "Support more paid subscribers without handling every conversation manually.",
+      "differentiation": {
+        "eyebrow": "BEYOND LIFECYCLE EMAILS",
+        "headline": "Give your lifecycle emails a conversational follow-up.",
+        "body": "Written flows can remind subscribers to return. A voice conversation can ask what went wrong, respond to the answer and guide the next step. Start with subscribers who want help and have enough account value to justify personal follow-up.",
+        "emphasis": "Start with one supportable use case and one agreed subscriber cohort."
+      },
+      "ctaLabel": "Discuss an AI-app retention pilot"
+    },
+    "preview": {
+      "emphasis": ["retention follow-up", "approved next step"],
+      "context": "Paid subscriber asked for help before cancelling.",
+      "messages": [
+        { "speaker": "AI assistant", "text": "What were you trying to create?" },
+        { "speaker": "Customer", "text": "I could not finish my first product video." }
+      ],
+      "status": "Helpful action completed",
+      "detail": "Approved template shared by email.",
+      "need": "Help completing the first useful output.",
+      "recorded": "Template resolved the immediate blocker.",
+      "owner": "The customer chooses whether to continue or cancel."
+    },
+    "buyer": "For paid AI products and lifecycle teams",
+    "eyebrow": "Voice AI for paid AI-app retention",
+    "headline": "Help paying users find value.",
+    "headlineAccent": "Give them a reason to stay.",
+    "problem": "A subscriber may have credits left but no finished output. A focused conversation can reveal whether the blocker is workflow friction, plan fit or an unmet expectation.",
+    "inbound": false,
+    "channel": "Email",
+    "illustrationLabels": ["Help requested", "Blocker understood", "Approved guidance emailed"],
+    "invitation": "Now inviting teams to a focused retention pilot.",
+    "formHeading": "Where do your paid users get stuck?",
+    "description": "Automate retention follow-up when paying users get stuck or consider cancelling. A voice agent uncovers the blocker, guides an approved next step and follows up by email, helping your team support more subscribers without handling every conversation manually.",
+    "title": "AI App Retention Automation | Revomatix",
+    "metaDescription": "Help paid AI-app subscribers overcome product friction with AI voice follow-up and email. Explore a focused retention pilot with Revomatix.",
+    "workflowTitle": "From cancellation concern to a useful next step.",
+    "workflowName": "AI app retention support",
+    "outcomeDetail": "A withdrawn cancellation is not yet a collected renewal.",
+    "formIntro": "Tell us about your product, retention workflow and the subscriber group you want to help.",
+    "workflow": [
+      {
+        "title": "Select the right subscribers",
+        "body": "Start with an agreed cohort, such as subscribers requesting help before cancellation, using available product and billing context."
+      },
+      {
+        "title": "Understand the blocker",
+        "body": "Ask about the task they wanted to complete and what stopped them."
+      },
+      {
+        "title": "Help them make progress",
+        "body": "Share an approved template or guide by email, and route complex issues to the team."
+      },
+      {
+        "title": "Confirm their choice",
+        "body": "Carry out permitted account changes only with approval and record the outcome. Respect a decision to cancel."
+      }
+    ],
+    "example": {
+      "title": "A useful next step before cancellation.",
+      "messages": [
+        { "speaker": "Subscriber", "text": "I could not finish the product video I signed up to create." },
+        { "speaker": "AI assistant", "text": "I can email the approved product-video template and guide you through the first step." }
+      ],
+      "note": "Voice identifies the product blocker. Email carries the approved guidance.",
+      "confirmation": "The subscriber makes an explicit choice after receiving help. Any account change follows the permissions agreed for the pilot."
+    },
+    "values": [
+      {
+        "title": "More users reaching first value",
+        "body": "Help subscribers complete the task they paid for."
+      },
+      {
+        "title": "Less manual retention work",
+        "body": "Automate routine conversations and follow-up, with complex cases handed to your team."
+      },
+      {
+        "title": "Clearer churn reasons",
+        "body": "Capture structured feedback on workflow friction, plan fit and unmet expectations."
+      }
+    ],
+    "pilot": {
+      "title": "Test one helpful retention conversation.",
+      "description": "Run a focused pilot with one subscriber cohort, one supportable use case and approved guidance. Compare completed helpful actions, later renewals and staff time with your normal follow-up where feasible.",
+      "scope": [
+        "One agreed subscriber cohort",
+        "One supportable use case and approved guidance",
+        "Helpful actions, explicit choices and later renewal outcomes"
+      ],
+      "question": "Where do paid subscribers get stuck before they cancel?"
+    },
+    "faqs": [
+      {
+        "question": "Which AI products fit this workflow?",
+        "answer": "Established paid AI products with a clear, supportable use case and subscribers willing to receive help are the best fit. Telephone availability and the pilot cohort are qualified before launch."
+      },
+      {
+        "question": "What if we do not collect phone numbers?",
+        "answer": "Voice follow-up requires an approved way to contact willing subscribers. If that is unavailable, this pilot may not be a fit until an appropriate contact route exists."
+      },
+      {
+        "question": "What can the agent change?",
+        "answer": "Only actions approved for the pilot and supported by the required account access. Permissions and integrations are agreed before launch."
+      },
+      {
+        "question": "What if the user still wants to cancel?",
+        "answer": "The agent records and respects that decision. The workflow must not create obstacles to cancellation."
+      },
+      {
+        "question": "How will we measure actual retention?",
+        "answer": "We separate helpful actions and withdrawn cancellations from later paid renewal. Retained revenue is measured only after billing confirms the subsequent payment."
+      }
+    ],
+    "finalTitle": "Let’s talk about your\npaid-user retention workflow."
+  },
+  "/ecommerce-retention": {
+    "path": "/ecommerce-retention",
+    "audioDemo": {
+      "src": "/audio/revomatix/ecommerce-retention-conversation.mp3",
+      "duration": 39.04,
+      "title": "Subscription delivery adjustment",
+      "trigger": "Subscriber requested a call about cancelling.",
+      "transcript": [
+        {
+          "at": 0,
+          "speaker": "AI agent",
+          "text": "Hi James, this is Daily Roast's AI assistant. You requested a call about cancelling your coffee subscription. Can I ask what's changed?"
+        },
+        {
+          "at": 8.28,
+          "speaker": "Customer",
+          "text": "I like the coffee, but a delivery every two weeks is too much. I've got bags piling up."
+        },
+        {
+          "at": 15.2,
+          "speaker": "AI agent",
+          "text": "We can switch to a delivery every four weeks, at the same price per delivery. Your next order would move back two weeks. Would that suit you?"
+        },
+        {
+          "at": 24.52,
+          "speaker": "Customer",
+          "text": "Yes, that's much better. Please change it to every four weeks and keep my subscription."
+        },
+        {
+          "at": 31.76,
+          "speaker": "AI agent",
+          "text": "Done. Your delivery schedule is updated and your subscription is staying active. I've sent a text confirming your next order date."
+        }
+      ],
+      "stages": [
+        "Cancellation help requested",
+        "Too much product",
+        "New schedule agreed",
+        "Delivery schedule updated"
+      ],
+      "stageTimes": [0, 8.28, 15.2, 39.04],
+      "outcome": {
+        "title": "Delivery schedule updated",
+        "detail": "Delivery changed to every four weeks with customer approval. Future order revenue is not yet verified."
+      },
+      "outcomeAtEnd": true
+    },
+    "sectionCopy": {
+      "problem": {
+        "eyebrow": "WHEN THE SCHEDULE DOES NOT FIT",
+        "headline": "Sometimes the product is right. The delivery schedule is wrong.",
+        "body": "Products pile up, routines change and another discount does not fix the problem. A short conversation can reveal whether a different delivery frequency or an approved alternative would better suit the customer.",
+        "emphasis": "Resolve the reason for cancellation instead of defaulting to another discount."
+      },
+      "workflowEyebrow": "HOW IT WORKS",
+      "valueEyebrow": "BUILT FOR RETENTION AND CX TEAMS",
+      "valueHeadline": "Handle routine subscription changes without another manual queue.",
+      "differentiation": {
+        "eyebrow": "BEYOND WRITTEN FLOWS",
+        "headline": "Add a conversation to the retention flows you already run.",
+        "body": "Email and SMS remain useful for reminders and confirmations. Voice adds a chance to understand the customer’s objection and resolve an approved issue during the same conversation. The pilot tests whether that adds value beyond your existing flows.",
+        "emphasis": "Start with one subscription cohort and one approved action."
+      },
+      "ctaLabel": "Discuss an ecommerce retention pilot"
+    },
+    "preview": {
+      "emphasis": ["subscribers considering cancellation", "adjust deliveries"],
+      "context": "Subscriber asked for help before cancelling.",
+      "messages": [
+        { "speaker": "AI assistant", "text": "Can I ask what changed?" },
+        { "speaker": "Customer", "text": "Deliveries arrive faster than I use the product." }
+      ],
+      "status": "Schedule change approved",
+      "detail": "New delivery frequency confirmed by text.",
+      "need": "A delivery schedule that fits current use.",
+      "recorded": "Customer approved delivery every four weeks.",
+      "owner": "The connected subscription workflow applies the approved change."
+    },
+    "buyer": "For subscription ecommerce retention and CX teams",
+    "eyebrow": "Voice AI for ecommerce retention",
+    "headline": "Keep the customer.",
+    "headlineAccent": "Fix the reason they want to leave.",
+    "problem": "Products pile up, routines change and another discount does not always fix the problem. A short conversation can reveal whether the schedule or another approved option would better suit the customer.",
+    "inbound": false,
+    "channel": "SMS",
+    "illustrationLabels": ["Cancellation help requested", "Reason understood", "Schedule change confirmed"],
+    "invitation": "Now inviting subscription brands to a focused retention pilot.",
+    "formHeading": "Why do your subscribers cancel?",
+    "description": "Automate follow-up with subscribers considering cancellation. A voice agent understands the reason, helps them adjust deliveries or choose an approved option, and confirms the change by text, saving your retention team time on routine conversations.",
+    "title": "Ecommerce Retention Automation | Revomatix",
+    "metaDescription": "Help subscribers resolve delivery and subscription issues with AI voice follow-up and SMS confirmation. Explore an ecommerce retention pilot.",
+    "workflowTitle": "From cancellation concern to a subscription that fits.",
+    "workflowName": "Ecommerce subscription retention",
+    "outcomeDetail": "A schedule change is not yet a verified future order.",
+    "formIntro": "Tell us about your subscription products, current retention flows and the cancellation reason you want to address.",
+    "workflow": [
+      {
+        "title": "Identify an eligible retention moment",
+        "body": "Start with subscribers requesting cancellation help and an approved contact route."
+      },
+      {
+        "title": "Ask why they want to leave",
+        "body": "Distinguish excess product, delivery timing, price and product issues."
+      },
+      {
+        "title": "Apply the agreed change",
+        "body": "Adjust frequency, skip an order or use an approved option within the brand’s policies and supported integration."
+      },
+      {
+        "title": "Confirm and measure",
+        "body": "Send an SMS confirmation and record the change. Verify subsequent orders separately."
+      }
+    ],
+    "example": {
+      "title": "The product still fits. The schedule does not.",
+      "messages": [
+        { "speaker": "Subscriber", "text": "I like the product, but deliveries are arriving too often." },
+        { "speaker": "AI assistant", "text": "I can offer an approved delivery interval and confirm your choice by text." }
+      ],
+      "note": "Voice identifies the objection. SMS confirms the approved subscription change.",
+      "confirmation": "The customer approves the delivery-frequency change. Subsequent paid orders are verified separately."
+    },
+    "values": [
+      {
+        "title": "Address the reason for cancellation",
+        "body": "Offer a relevant solution rather than a default discount."
+      },
+      {
+        "title": "Reduce repetitive CX work",
+        "body": "Automate routine questions, permitted changes and confirmations."
+      },
+      {
+        "title": "See what happens after the call",
+        "body": "Track subsequent paid orders, skips, cancellations and contact costs."
+      }
+    ],
+    "pilot": {
+      "title": "Test one subscription action with one customer cohort.",
+      "description": "Run a focused pilot on one retention moment, such as delivery-frequency adjustment. Measure completed changes, staff time and subsequent paid orders net of discounts, refunds, product and contact costs.",
+      "scope": [
+        "One eligible subscription cohort",
+        "One approved action and contact route",
+        "Completed changes, later orders and staff time"
+      ],
+      "question": "Which subscription cancellation reason would you address first?"
+    },
+    "faqs": [
+      {
+        "question": "Is this for subscription or one-off brands?",
+        "answer": "The first workflow is designed for established subscription or replenishment brands. A different pilot would be needed for occasional repeat purchase or one-off products."
+      },
+      {
+        "question": "Does this replace email and SMS?",
+        "answer": "No. Voice handles the conversation, while email or SMS can continue to support reminders and confirmations where appropriate."
+      },
+      {
+        "question": "Can it update the subscription?",
+        "answer": "It can apply approved changes when the required subscription-system access is available. Supported actions and permissions are defined during the pilot."
+      },
+      {
+        "question": "Does it always offer discounts?",
+        "answer": "No. It follows the options and rules approved by the brand. The first pilot can stay focused on delivery-frequency changes or skips."
+      },
+      {
+        "question": "How do we verify recovered revenue?",
+        "answer": "We track subsequent paid orders separately from schedule changes, pauses or withdrawn cancellations. Revenue is counted only after the later payment is confirmed."
+      }
+    ],
+    "finalTitle": "Let’s talk about your\necommerce retention workflow."
   }
 }

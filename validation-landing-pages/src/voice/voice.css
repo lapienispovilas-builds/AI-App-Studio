@@ -198,6 +198,7 @@
 .v-audio-timeline input { display:block; width:100%; height:18px; margin:0; accent-color:var(--v-accent); cursor:pointer; }
 .v-audio-timeline>div { display:flex; justify-content:space-between; color:var(--v-muted); font-size:9px; line-height:1; }
 .v-audio-transcript { height:214px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; padding:14px 22px; scroll-behavior:smooth; }
+.v-audio-note { margin:0; padding:0 22px 12px; color:var(--v-muted); font-size:11px; line-height:1.45; }
 .v-audio-message { width:90%; padding:9px 12px; border:1px solid transparent; border-radius:5px 10px 10px 10px; background:var(--v-card); transition:opacity .2s,border-color .2s,box-shadow .2s; }
 .v-audio-message small { display:block; margin-bottom:3px; color:var(--v-muted); font-size:9px; font-weight:600; }
 .v-audio-message p { font-size:11px; line-height:1.45; }

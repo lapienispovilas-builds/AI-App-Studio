@@ -33,7 +33,7 @@ function AudioConversationPreview({config:c}:{config:VoicePageConfig}) {
  const audio=useRef<HTMLAudioElement>(null), transcript=useRef<HTMLDivElement>(null), messageRefs=useRef<(HTMLDivElement|null)[]>([])
  const [currentTime,setCurrentTime]=useState(0), [duration,setDuration]=useState(demo.duration), [playing,setPlaying]=useState(false), [ended,setEnded]=useState(false)
  const activeIndex=demo.transcript.reduce((active,line,index)=>currentTime>=line.at?index:active,-1)
- const outcomeVisible=ended||currentTime>=demo.transcript[demo.transcript.length-1].at
+ const outcomeVisible=ended||(!demo.outcomeAtEnd&&currentTime>=demo.transcript[demo.transcript.length-1].at)
  useEffect(()=>()=>audio.current?.pause(),[])
  useEffect(()=>{
   const container=transcript.current, active=messageRefs.current[activeIndex]
@@ -56,6 +56,7 @@ function AudioConversationPreview({config:c}:{config:VoicePageConfig}) {
   <div className="v-audio-call"><div className={`v-call-status ${playing?'is-playing':''}`}><Phone size={15} aria-hidden="true"/><span>AI call</span><i aria-hidden="true"/><small>{ended?'Complete':playing?'Playing':currentTime>0?'Paused':'Ready'}</small></div><div className={`v-audio-wave ${playing?'is-playing':''}`} aria-hidden="true">{[12,22,16,30,18,26,13,24,17,29,15,21].map((height,index)=><i key={index} style={{height,animationDelay:`${index*.06}s`}}/>)}</div></div>
   <div className="v-audio-controls"><button type="button" className="v-audio-play" onClick={toggle} aria-label={controlLabel}>{playing?<Pause size={18} fill="currentColor"/>:ended?<RotateCcw size={18}/>:<Play size={18} fill="currentColor"/>}<span>{controlLabel}</span></button><div className="v-audio-timeline"><input type="range" min="0" max={duration||demo.duration} step="0.01" value={Math.min(currentTime,duration||demo.duration)} onChange={event=>seek(Number(event.target.value))} aria-label="Conversation playback position"/><div><time>{formatAudioTime(currentTime)}</time><time>{formatAudioTime(duration)}</time></div></div></div>
   <div ref={transcript} className="v-audio-transcript" aria-label="Conversation transcript">{demo.transcript.map((line,index)=><div ref={node=>{messageRefs.current[index]=node}} key={line.at} className={`v-audio-message ${line.speaker==='AI agent'?'v-audio-ai':'v-audio-customer'} ${index===activeIndex?'is-active':''} ${index<activeIndex?'is-complete':'is-upcoming'}`}><small>{line.speaker}</small><p>{line.text}</p></div>)}</div>
+  {demo.note&&<p className="v-audio-note">{demo.note}</p>}
   <div className="v-audio-footer">{outcomeVisible?<div className="v-audio-outcome"><Check size={18} aria-hidden="true"/><div><strong>{demo.outcome.title}</strong><p>{demo.outcome.detail}</p></div></div>:<ol className="v-audio-stages">{demo.stages.map((stage,index)=><li key={stage} className={currentTime>=(demo.stageTimes?.[index]??(index===0?0:index===1?11.32:26.24))?'is-reached':''}>{stage}{index<demo.stages.length-1&&<ArrowRight size={13} aria-hidden="true"/>}</li>)}</ol>}</div>
  </figure>
 }
