@@ -1,10 +1,22 @@
 const REVOMATIX_HEADERS = [
-  'Submission ID', 'Timestamp', 'Name', 'Work email', 'Company', 'Volume',
-  'Current spend', 'Current use', 'Channel preference', 'Optional answer',
-  'Related issues', 'Anonymized examples', 'Niche', 'Submission path',
-  'Original landing path', 'UTM source', 'UTM medium', 'UTM campaign',
+  'Submission ID', 'Timestamp', 'Name', 'Work email', 'Company', 'Monthly trigger volume',
+  'Existing solution?', 'Existing solution details', 'Preferred follow-up channel', 'How it is handled today',
+  'Adjacent problems', 'Open to share examples?', 'Wedge', 'Form submitted on',
+  'First landing page', 'UTM source', 'UTM medium', 'UTM campaign',
   'UTM content', 'UTM term', 'Referrer', 'Test traffic'
 ];
+const REVOMATIX_HEADER_ALIASES = {
+  'Monthly trigger volume': ['Volume'],
+  'Existing solution?': ['Current spend'],
+  'Existing solution details': ['Current use'],
+  'Preferred follow-up channel': ['Channel preference'],
+  'How it is handled today': ['Optional answer'],
+  'Adjacent problems': ['Related issues'],
+  'Open to share examples?': ['Anonymized examples'],
+  'Wedge': ['Niche'],
+  'Form submitted on': ['Submission path'],
+  'First landing page': ['Original landing path']
+};
 
 function doPost(event) {
   const lock = LockService.getScriptLock();
@@ -22,11 +34,9 @@ function doPost(event) {
     if (!sheet) throw new Error('Sheet tab not found');
     const width = Math.max(sheet.getLastColumn(), REVOMATIX_HEADERS.length);
     const headers = sheet.getRange(1, 1, 1, width).getDisplayValues()[0].map(String);
-    REVOMATIX_HEADERS.forEach(name => {
-      if (headers.filter(value => value.trim().toLowerCase() === name.toLowerCase()).length !== 1) throw new Error('Missing or duplicate header: ' + name);
-    });
+    const headerColumns = revomatixResolveHeaders(headers);
 
-    const idColumn = headers.findIndex(value => value.trim().toLowerCase() === 'submission id') + 1;
+    const idColumn = headerColumns['Submission ID'] + 1;
     const lastRow = sheet.getLastRow();
     if (lastRow > 1) {
       const ids = sheet.getRange(2, idColumn, lastRow - 1, 1).getDisplayValues().flat();
@@ -35,16 +45,17 @@ function doPost(event) {
 
     const values = {
       'Submission ID': lead.submissionId, 'Timestamp': new Date().toISOString(), 'Name': lead.name,
-      'Work email': lead.email, 'Company': lead.company, 'Volume': lead.volume,
-      'Current spend': lead.currentSpend, 'Current use': lead.currentUse,
-      'Channel preference': lead.channelPreference, 'Optional answer': lead.answer,
-      'Related issues': lead.relatedIssues, 'Anonymized examples': String(lead.anonymizedExamples === true),
-      'Niche': lead.niche, 'Submission path': lead.path, 'Original landing path': lead.landingPath,
+      'Work email': lead.email, 'Company': lead.company, 'Monthly trigger volume': lead.volume,
+      'Existing solution?': lead.currentSpend, 'Existing solution details': lead.currentUse,
+      'Preferred follow-up channel': lead.channelPreference, 'How it is handled today': lead.answer,
+      'Adjacent problems': lead.relatedIssues, 'Open to share examples?': String(lead.anonymizedExamples === true),
+      'Wedge': lead.niche, 'Form submitted on': lead.path, 'First landing page': lead.landingPath,
       'UTM source': lead.utmSource, 'UTM medium': lead.utmMedium, 'UTM campaign': lead.utmCampaign,
       'UTM content': lead.utmContent, 'UTM term': lead.utmTerm, 'Referrer': lead.referrer,
       'Test traffic': String(lead.test === true)
     };
-    const row = headers.map(header => Object.prototype.hasOwnProperty.call(values, header) ? revomatixPlainText(values[header]) : '');
+    const row = Array(width).fill('');
+    REVOMATIX_HEADERS.forEach(header => row[headerColumns[header]] = revomatixPlainText(values[header]));
     const target = sheet.getRange(lastRow + 1, 1, 1, row.length);
     target.setNumberFormat('@');
     target.setValues([row]);
@@ -56,6 +67,17 @@ function doPost(event) {
   } finally {
     if (lock.hasLock()) lock.releaseLock();
   }
+}
+
+function revomatixResolveHeaders(headers) {
+  const normalized = headers.map(value => value.trim().toLowerCase());
+  return REVOMATIX_HEADERS.reduce((columns, header) => {
+    const accepted = [header].concat(REVOMATIX_HEADER_ALIASES[header] || []).map(value => value.toLowerCase());
+    const matches = normalized.map((value, index) => accepted.indexOf(value) >= 0 ? index : -1).filter(index => index >= 0);
+    if (matches.length !== 1) throw new Error('Missing, duplicate, or ambiguous header: ' + header);
+    columns[header] = matches[0];
+    return columns;
+  }, {});
 }
 
 function revomatixPlainText(value) {

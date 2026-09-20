@@ -5,6 +5,7 @@ const { tmpdir } = require('node:os')
 const { join } = require('node:path')
 const { execFileSync } = require('node:child_process')
 const { generateKeyPairSync, randomUUID } = require('node:crypto')
+const { runInNewContext } = require('node:vm')
 
 const output = mkdtempSync(join(tmpdir(), 'revomatix-test-'))
 writeFileSync(join(output, 'package.json'), '{"type":"commonjs"}')
@@ -15,7 +16,14 @@ const { validate, fields, mappedRow } = require(join(output, 'server/revomatix/v
 const handler = require(join(output, 'api/revomatix-submit.js')).default
 const { voiceFormOptions, voicePages, voicePaths } = require(join(output, 'src/voice/config.js'))
 
-const expectedFields = ['Submission ID','Timestamp','Name','Work email','Company','Volume','Current spend','Current use','Channel preference','Optional answer','Related issues','Anonymized examples','Niche','Submission path','Original landing path','UTM source','UTM medium','UTM campaign','UTM content','UTM term','Referrer','Test traffic']
+const expectedFields = ['Submission ID','Timestamp','Name','Work email','Company','Monthly trigger volume','Existing solution?','Existing solution details','Preferred follow-up channel','How it is handled today','Adjacent problems','Open to share examples?','Wedge','Form submitted on','First landing page','UTM source','UTM medium','UTM campaign','UTM content','UTM term','Referrer','Test traffic']
+const previousNames = {
+  'Monthly trigger volume':'Volume', 'Existing solution?':'Current spend', 'Existing solution details':'Current use',
+  'Preferred follow-up channel':'Channel preference', 'How it is handled today':'Optional answer',
+  'Adjacent problems':'Related issues', 'Open to share examples?':'Anonymized examples', 'Wedge':'Niche',
+  'Form submitted on':'Submission path', 'First landing page':'Original landing path'
+}
+const oldHeaders = expectedFields.map(field => previousNames[field] || field)
 const body = () => ({
   submissionId: randomUUID(), name: 'QA Test', email: 'qa@example.com', company: 'Synthetic QA',
   volume: '21–50', currentSpend: 'Yes', currentUse: 'Answering service', channelPreference: 'Phone call',
@@ -121,16 +129,49 @@ test('identity fields stay required while qualification fields stay optional', (
   assert.equal(lead.anonymizedExamples, false)
 })
 
-test('field-to-sheet mapping and header order remain unchanged', () => {
+test('canonical, previous, and partially migrated headers map the same values', () => {
   assert.deepEqual([...fields], expectedFields)
   const lead = validate(body())
-  const mapping = mappedRow(lead, '2026-09-20T10:00:00Z', [...fields])
-  assert.equal(mapping.length, expectedFields.length)
-  assert.equal(mapping[expectedFields.indexOf('Volume')].value, '21–50')
-  assert.equal(mapping[expectedFields.indexOf('Optional answer')].value, '=SUM(1,2)')
-  assert.equal(mapping[expectedFields.indexOf('Original landing path')].value, '/fitness')
-  assert.equal(mapping[expectedFields.indexOf('Test traffic')].value, 'true')
-  assert.throws(() => mappedRow(lead, 'now', ['Email']), /SHEET_HEADERS/)
+  const mixedHeaders = expectedFields.map((field,index) => index % 2 ? (previousNames[field] || field) : field)
+  for (const headers of [expectedFields, oldHeaders, mixedHeaders]) {
+    const mapping = mappedRow(lead, '2026-09-20T10:00:00Z', [...headers])
+    assert.equal(mapping.length, expectedFields.length)
+    assert.equal(mapping[expectedFields.indexOf('Monthly trigger volume')].value, '21–50')
+    assert.equal(mapping[expectedFields.indexOf('How it is handled today')].value, '=SUM(1,2)')
+    assert.equal(mapping[expectedFields.indexOf('First landing page')].value, '/fitness')
+    assert.equal(mapping[expectedFields.indexOf('Wedge')].value, 'moving')
+    assert.equal(mapping[expectedFields.indexOf('Test traffic')].value, 'true')
+  }
+})
+
+test('ambiguous aliases and genuinely missing headers are rejected', () => {
+  const lead = validate(body())
+  assert.throws(() => mappedRow(lead, 'now', [...expectedFields, 'Volume']), /SHEET_HEADERS/)
+  assert.throws(() => mappedRow(lead, 'now', expectedFields.filter(field => field !== 'Wedge')), /SHEET_HEADERS/)
+})
+
+test('mapping follows header names when columns are reordered', () => {
+  const lead = validate(body())
+  const reordered = ['Unrelated reporting column', ...expectedFields.toReversed()]
+  const mapping = mappedRow(lead, '2026-09-20T10:00:00Z', reordered)
+  const byField = Object.fromEntries(expectedFields.map((field,index) => [field,mapping[index]]))
+  assert.equal(reordered[byField['Monthly trigger volume'].column], 'Monthly trigger volume')
+  assert.equal(byField['Monthly trigger volume'].value, '21–50')
+  assert.equal(reordered[byField['Wedge'].column], 'Wedge')
+  assert.equal(byField['Wedge'].value, 'moving')
+  assert.equal(reordered[byField['First landing page'].column], 'First landing page')
+  assert.equal(byField['First landing page'].value, '/fitness')
+})
+
+test('Apps Script storage accepts the same migration aliases and rejects ambiguity', () => {
+  const sandbox = {}
+  runInNewContext(readFileSync('google-apps-script/revomatix/Code.gs', 'utf8'), sandbox)
+  for (const headers of [expectedFields, oldHeaders, expectedFields.map((field,index) => index % 2 ? (previousNames[field] || field) : field)]) {
+    const columns = sandbox.revomatixResolveHeaders(headers)
+    assert.equal(headers[columns['Wedge']], headers.includes('Wedge') ? 'Wedge' : 'Niche')
+  }
+  assert.throws(() => sandbox.revomatixResolveHeaders([...expectedFields, 'Niche']), /ambiguous header/)
+  assert.throws(() => sandbox.revomatixResolveHeaders(expectedFields.filter(field => field !== 'First landing page')), /header/)
 })
 
 test('confirmed RAW save is duplicate-safe for retries and concurrent requests', async () => {

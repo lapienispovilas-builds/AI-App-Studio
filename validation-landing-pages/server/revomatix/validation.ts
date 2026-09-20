@@ -1,5 +1,17 @@
 import { voiceFormOptions, voicePages, voicePaths } from '../../src/voice/config.js'
-export const fields = ['Submission ID','Timestamp','Name','Work email','Company','Volume','Current spend','Current use','Channel preference','Optional answer','Related issues','Anonymized examples','Niche','Submission path','Original landing path','UTM source','UTM medium','UTM campaign','UTM content','UTM term','Referrer','Test traffic'] as const
+export const fields = ['Submission ID','Timestamp','Name','Work email','Company','Monthly trigger volume','Existing solution?','Existing solution details','Preferred follow-up channel','How it is handled today','Adjacent problems','Open to share examples?','Wedge','Form submitted on','First landing page','UTM source','UTM medium','UTM campaign','UTM content','UTM term','Referrer','Test traffic'] as const
+export const fieldAliases:Record<string,readonly string[]> = {
+ 'Monthly trigger volume':['Volume'],
+ 'Existing solution?':['Current spend'],
+ 'Existing solution details':['Current use'],
+ 'Preferred follow-up channel':['Channel preference'],
+ 'How it is handled today':['Optional answer'],
+ 'Adjacent problems':['Related issues'],
+ 'Open to share examples?':['Anonymized examples'],
+ 'Wedge':['Niche'],
+ 'Form submitted on':['Submission path'],
+ 'First landing page':['Original landing path']
+}
 export type Lead = { submissionId: string; name: string; email: string; company: string; volume: string; currentSpend: string; currentUse: string; channelPreference: string; answer: string; relatedIssues: string; anonymizedExamples: boolean; niche: string; path: string; landingPath: string; utmSource: string; utmMedium: string; utmCampaign: string; utmContent: string; utmTerm: string; referrer: string; test: boolean }
 export function validate(body: unknown): Lead {
  if (!body || typeof body !== 'object' || Array.isArray(body)) throw new Error('Invalid form data.')
@@ -32,6 +44,11 @@ export function validate(body: unknown): Lead {
 export function mappedRow(lead:Lead,timestamp:string,headers:string[]) {
  const values=[lead.submissionId,timestamp,lead.name,lead.email,lead.company,lead.volume,lead.currentSpend,lead.currentUse,lead.channelPreference,lead.answer,lead.relatedIssues,String(lead.anonymizedExamples),lead.niche,lead.path,lead.landingPath,lead.utmSource,lead.utmMedium,lead.utmCampaign,lead.utmContent,lead.utmTerm,lead.referrer,String(lead.test)]
  const normalized=headers.map(h=>h.trim().toLowerCase())
- if(fields.some(f=>normalized.filter(h=>h===f.toLowerCase()).length!==1)) throw new Error('SHEET_HEADERS')
- return fields.map((f,i)=>({column:normalized.indexOf(f.toLowerCase()),value:values[i]}))
+ const columns=fields.map(field=>{
+  const accepted=[field,...(fieldAliases[field]||[])].map(name=>name.toLowerCase())
+  const matches=normalized.map((header,index)=>accepted.includes(header)?index:-1).filter(index=>index>=0)
+  if(matches.length!==1) throw new Error('SHEET_HEADERS')
+  return matches[0]
+ })
+ return fields.map((_,i)=>({column:columns[i],value:values[i]}))
 }
