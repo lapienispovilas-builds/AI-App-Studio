@@ -1,4 +1,9 @@
 export const voiceBrand = { name: 'Revomatix', logo: '/assets/revomatix/revomatix-header-cropped.png', symbol: '/assets/revomatix/revomatix-symbol-cropped.png', favicon: '/assets/revomatix/favicon.png' }
+export const voiceFormOptions = {
+  volume: ['Fewer than 5','5–20','21–50','More than 50','Not sure'],
+  spend: ['Yes','No','Not sure'],
+  channel: ['Phone call','Text message','Email','Not sure']
+} as const
 export const voicePaths = ['/saas-payment-recovery', '/demo-recovery', '/fitness', '/ecommerce', '/invoice-follow-up', '/moving', '/restoration', '/commercial-contractors', '/distributors', '/medspa', '/auto-repair', '/ai-app-retention', '/ecommerce-retention'] as const
 export interface VoiceAudioDemo {
   src: string
@@ -15,6 +20,7 @@ export interface VoiceAudioDemo {
 export interface VoicePageConfig {
   path: typeof voicePaths[number]
   audioDemo?: VoiceAudioDemo
+  form: { volumeLabel: string; spendLabel: string; channelLabel: string; relatedIssues: string[]; currentUsePlaceholder?: string }
   sectionCopy?: {
     problem: { eyebrow: string; headline: string; body: string; emphasis: string }
     workflowEyebrow: string
@@ -133,7 +139,13 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
       "Secure link emailed"
     ],
     "invitation": "Now inviting focused pilot partners.",
-    "formHeading": "Let’s look at your subscription payment follow-up",
+    "formHeading": "Let’s look at your failed payment recovery",
+    "form": {
+      "volumeLabel": "Roughly how many subscription payments fail each month?",
+      "spendLabel": "Do you already use a tool, retry process, or team time to recover these payments?",
+      "channelLabel": "Would reaching a customer about an unresolved payment work better by phone call, email, or text?",
+      "relatedIssues": ["Customers who request to downgrade or cancel", "Accounts that go quiet before renewal"]
+    },
     "workflowTitle": "From unresolved payment to a clear next step.",
     "workflowName": "Subscription payment follow-up",
     "outcomeDetail": "Confirm payment from billing records.",
@@ -193,7 +205,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         "Approved call rules and secure email follow-up",
         "Recorded outcomes for billing and customer teams"
       ],
-      "question": "What happens today when retries and payment emails do not resolve an account?"
+      "question": "How does your team currently handle a failed payment after automated retries and reminders have not worked?"
     },
     "faqs": [
       {
@@ -334,6 +346,12 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     ],
     "invitation": "Now inviting focused pilot partners.",
     "formHeading": "Let’s look at your missed demo follow-up",
+    "form": {
+      "volumeLabel": "Roughly how many booked demos or evaluation calls are missed each month?",
+      "spendLabel": "Do you already use a tool, automated sequence, or SDR time to reschedule these?",
+      "channelLabel": "Would reaching a no-show prospect work better by phone call, text, or email?",
+      "relatedIssues": ["Deals that go quiet after a proposal is sent", "Trials that expire without meaningful product use"]
+    },
     "workflowTitle": "From missed meeting to a confirmed new time.",
     "workflowName": "Missed demo follow-up",
     "outcomeDetail": "Track attended demos, not bookings alone.",
@@ -393,7 +411,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         "Approved availability and contact rules",
         "Rebooked meetings and recorded outcomes"
       ],
-      "question": "How does your sales team follow up after a qualified prospect misses a demo?"
+      "question": "How does your team currently follow up when a qualified prospect misses a scheduled demo?"
     },
     "faqs": [
       {
@@ -535,6 +553,12 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     ],
     "invitation": "Now inviting focused pilot partners.",
     "formHeading": "Let’s look at your missed tour follow-up",
+    "form": {
+      "volumeLabel": "Roughly how many booked tours, trials, or consultations get missed each month?",
+      "spendLabel": "Do you already use a tool, service, or extra staff time to follow up on these?",
+      "channelLabel": "Would reaching a member or prospect about this work better by phone call, text, or email?",
+      "relatedIssues": ["Cancelled slots go unfilled", "Failed membership payments", "Lapsed members who never come back"]
+    },
     "workflowTitle": "From missed visit to another chance to join.",
     "workflowName": "Missed tour follow-up",
     "outcomeDetail": "Track attendance after the rearranged visit.",
@@ -594,7 +618,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         "Approved availability and text confirmation",
         "Rebooked visits and documented outcomes"
       ],
-      "question": "How does your membership team follow up after missed tours or trial visits?"
+      "question": "How does your front desk currently follow up a missed tour, trial, or consultation?"
     },
     "faqs": [
       {
@@ -734,7 +758,13 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
       "Checkout link texted"
     ],
     "invitation": "Now inviting focused pilot partners.",
-    "formHeading": "Let’s look at your incomplete checkout follow-up",
+    "formHeading": "Let’s look at your abandoned checkouts",
+    "form": {
+      "volumeLabel": "Roughly how many high-value checkouts are abandoned each month?",
+      "spendLabel": "Do you already use a tool, recovery flow, or team time to follow up on these checkouts?",
+      "channelLabel": "Would reaching a customer after an abandoned checkout work better by phone call, text, or email?",
+      "relatedIssues": ["Customers who ask a question and do not receive an answer in time", "Orders returned shortly after purchase"]
+    },
     "workflowTitle": "From qualified abandoned checkout to a resolved next step.",
     "workflowName": "Incomplete checkout follow-up",
     "outcomeDetail": "Confirm orders separately from messages sent.",
@@ -794,7 +824,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         "Approved product answers and contact rules",
         "Checkout links, follow-ups and recorded outcomes"
       ],
-      "question": "Which customer questions most often hold up your higher-value purchases?"
+      "question": "How does your team currently follow up on an abandoned checkout, especially when the customer may have an unanswered product or delivery question?"
     },
     "faqs": [
       {
@@ -935,6 +965,12 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     ],
     "invitation": "Now inviting focused pilot partners.",
     "formHeading": "Let’s look at your overdue invoice follow-up",
+    "form": {
+      "volumeLabel": "Roughly how many invoices remain overdue after your normal reminders each month?",
+      "spendLabel": "Do you already use a tool, collections service, or team time to follow up on these invoices?",
+      "channelLabel": "Would reaching a client about an overdue invoice work better by phone call, email, or text?",
+      "relatedIssues": ["Invoices that are disputed or partially paid", "Clients who go quiet before contract renewal"]
+    },
     "workflowTitle": "From overdue invoice to recorded payment timing.",
     "workflowName": "Overdue invoice follow-up",
     "outcomeDetail": "Check payment against current finance records.",
@@ -994,7 +1030,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         "Approved call rules and invoice email follow-up",
         "Recorded timing, requests and human exceptions"
       ],
-      "question": "How does your finance team follow up undisputed invoices after written reminders?"
+      "question": "How does your team currently follow up once written reminders have not received a response?"
     },
     "faqs": [
       {
@@ -1137,6 +1173,12 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     ],
     "invitation": "Now inviting a small number of moving companies to test the workflow.",
     "formHeading": "Let’s look at your moving estimate follow-up",
+    "form": {
+      "volumeLabel": "Roughly how many estimates remain unbooked each month?",
+      "spendLabel": "Do you already use a tool, service, or sales-team time to follow up on these estimates?",
+      "channelLabel": "Would reaching a customer about an unbooked estimate work better by phone call, text, or email?",
+      "relatedIssues": ["Booked surveys that are cancelled or missed", "Booked moves that are postponed close to the moving date"]
+    },
     "workflowTitle": "From sent estimate to confirmed move.",
     "workflowName": "Moving estimate follow-up",
     "outcomeDetail": "A callback is not a booked move.",
@@ -1196,7 +1238,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         "Approved questions and booking rules",
         "Booked moves, rescheduled moves and unresolved blockers"
       ],
-      "question": "How does your team follow up estimates that have not turned into bookings?"
+      "question": "How does your team currently follow up on estimates that have not turned into booked moves?"
     },
     "faqs": [
       {
@@ -1337,7 +1379,13 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
       "On-call team alerted"
     ],
     "invitation": "Now inviting focused pilot partners.",
-    "formHeading": "Let’s look at your overflow damage-call intake",
+    "formHeading": "Let’s look at your after-hours and overflow enquiry handling",
+    "form": {
+      "volumeLabel": "Roughly how many property-damage enquiries arrive after hours or while your team is unavailable each month?",
+      "spendLabel": "Do you already use an answering service, on-call rotation, or extra staff time to handle these enquiries?",
+      "channelLabel": "Would handling an urgent property-damage enquiry work best by phone call, text, or email?",
+      "relatedIssues": ["Enquiries that wait long enough for the customer to call another company", "Restoration jobs that are quoted but never confirmed"]
+    },
     "workflowTitle": "From unanswered risk to acknowledged on-call handoff.",
     "workflowName": "Overflow damage-call intake",
     "outcomeDetail": "A handoff needs acceptance. An alert is not dispatch.",
@@ -1397,7 +1445,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         "Approved restoration intake and urgency questions",
         "On-call alerts with acknowledgement rules"
       ],
-      "question": "What happens today when an urgent restoration call arrives and your staff cannot answer?"
+      "question": "How does your team currently handle a property-damage enquiry that arrives after hours or while the office is busy?"
     },
     "faqs": [
       {
@@ -1538,7 +1586,13 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
       "Next step emailed"
     ],
     "invitation": "Now inviting focused pilot partners.",
-    "formHeading": "Let’s look at your open repair proposal follow-up",
+    "formHeading": "Let’s look at your unapproved proposal follow-up",
+    "form": {
+      "volumeLabel": "Roughly how many repair or remedial-work proposals go unapproved each month?",
+      "spendLabel": "Do you already use a tool, service, or account-manager time to follow up on these?",
+      "channelLabel": "Would reaching a client about an open proposal work better by phone call, email, or text?",
+      "relatedIssues": ["Approved jobs that are delayed or rescheduled by the client", "Maintenance contracts that lapse without renewal"]
+    },
     "workflowTitle": "From open repair proposal to an actionable decision.",
     "workflowName": "Open repair proposal follow-up",
     "outcomeDetail": "Approval follows your formal authorization process.",
@@ -1598,7 +1652,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         "Approved commercial answers and escalation rules",
         "Decisions, questions and next actions recorded"
       ],
-      "question": "How does your team follow up repair proposals that remain open?"
+      "question": "How does your team currently follow up on a quoted repair or remedial-work proposal that has not been approved?"
     },
     "faqs": [
       {
@@ -1739,6 +1793,12 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     ],
     "invitation": "Now inviting focused pilot partners.",
     "formHeading": "Let’s look at your open quote follow-up",
+    "form": {
+      "volumeLabel": "Roughly how many B2B quotes go unconverted each month?",
+      "spendLabel": "Do you already use a tool, service, or sales-team time to follow up on these?",
+      "channelLabel": "Would reaching a customer about an open quote work better by phone call, email, or text?",
+      "relatedIssues": ["Regular accounts that go quiet and stop reordering", "Orders placed elsewhere after a slow quote turnaround"]
+    },
     "workflowTitle": "From open quote to order decision or next action.",
     "workflowName": "Open quote follow-up",
     "outcomeDetail": "A buyer’s response is not an accepted order.",
@@ -1798,7 +1858,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         "Approved quote information and contact rules",
         "Orders, declines and next actions recorded"
       ],
-      "question": "How does your inside-sales team follow up quotes that receive no response?"
+      "question": "How does your sales team currently follow up on a quote that has not turned into an order?"
     },
     "faqs": [
       {
@@ -1939,6 +1999,12 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     ],
     "invitation": "Now inviting focused pilot partners.",
     "formHeading": "Let’s look at your missed consultation follow-up",
+    "form": {
+      "volumeLabel": "Roughly how many initial consultations are missed each month?",
+      "spendLabel": "Do you already use a tool, automated flow, or front-desk time to follow up on missed consultations?",
+      "channelLabel": "Would reaching a consultation no-show work better by phone call, text, or email?",
+      "relatedIssues": ["Cancelled appointment slots go unfilled", "Failed payments on packages or memberships"]
+    },
     "workflowTitle": "From missed consultation to another approved appointment.",
     "workflowName": "Missed consultation follow-up",
     "outcomeDetail": "Track attendance after the consultation.",
@@ -1998,7 +2064,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         "Approved availability, privacy and contact rules",
         "Rebooked appointments and human handoffs"
       ],
-      "question": "How does your front desk follow up missed initial consultations?"
+      "question": "How does your front desk currently follow up when a prospective patient misses an initial consultation?"
     },
     "faqs": [
       {
@@ -2149,6 +2215,12 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     ],
     "invitation": "Now inviting focused pilot partners.",
     "formHeading": "Let’s look at your declined repair follow-up",
+    "form": {
+      "volumeLabel": "Roughly how many quoted repairs get postponed or declined each month?",
+      "spendLabel": "Do you already use a tool, service, or advisor time to follow up on these?",
+      "channelLabel": "Would reaching a customer about a declined repair work better by phone call, text, or email?",
+      "relatedIssues": ["Cancelled appointment slots go unfilled", "Customers who never return for recommended follow-up service"]
+    },
     "workflowTitle": "From declined work to a scheduled repair or clear follow-up.",
     "workflowName": "Declined repair follow-up",
     "outcomeDetail": "A callback or visit is not completed repair work.",
@@ -2208,7 +2280,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         "Shop-approved recommendations and contact rules",
         "Scheduled work, callbacks and future follow-ups"
       ],
-      "question": "How do your service advisors follow up repairs that customers decline or postpone?"
+      "question": "How does your service team currently follow up on a quoted repair that the customer postponed or declined?"
     },
     "faqs": [
       {
@@ -2352,7 +2424,13 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     "channel": "Email",
     "illustrationLabels": ["Help requested", "Blocker understood", "Approved guidance emailed"],
     "invitation": "Now inviting teams to a focused retention pilot.",
-    "formHeading": "Where do your paid users get stuck?",
+    "formHeading": "Let’s look at your subscriber save process",
+    "form": {
+      "volumeLabel": "Roughly how many premium subscribers ask to cancel each month?",
+      "spendLabel": "Do you already use a cancellation flow, retention tool, or team time to retain these subscribers?",
+      "channelLabel": "Would cancelling subscribers be more likely to respond by phone call, text, or email?",
+      "relatedIssues": ["Failed or declined subscription payments", "Users who sign up but never activate"]
+    },
     "description": "Automate retention follow-up when paying users get stuck or consider cancelling. A voice agent uncovers the blocker, guides an approved next step and follows up by email, helping your team support more subscribers without handling every conversation manually.",
     "title": "AI App Retention Automation | Revomatix",
     "metaDescription": "Help paid AI-app subscribers overcome product friction with AI voice follow-up and email. Explore a focused retention pilot with Revomatix.",
@@ -2409,7 +2487,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         "One supportable use case and approved guidance",
         "Helpful actions, explicit choices and later renewal outcomes"
       ],
-      "question": "Where do paid subscribers get stuck before they cancel?"
+      "question": "How does your team currently handle a paying subscriber who asks to cancel after failing to reach value?"
     },
     "faqs": [
       {
@@ -2522,7 +2600,13 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
     "channel": "SMS",
     "illustrationLabels": ["Cancellation help requested", "Reason understood", "Schedule change confirmed"],
     "invitation": "Now inviting subscription brands to a focused retention pilot.",
-    "formHeading": "Why do your subscribers cancel?",
+    "formHeading": "Let’s look at your subscription cancellations",
+    "form": {
+      "volumeLabel": "Roughly how many subscribers cancel or skip a shipment each month?",
+      "spendLabel": "Do you already use a tool, retention flow, or team time to retain these customers?",
+      "channelLabel": "Would a cancelling subscriber be more likely to respond by phone call, text, or email?",
+      "relatedIssues": ["Failed payments on recurring orders", "Customers who make one purchase and never reorder"]
+    },
     "description": "Automate follow-up with subscribers considering cancellation. A voice agent understands the reason, helps them adjust deliveries or choose an approved option, and confirms the change by text, saving your retention team time on routine conversations.",
     "title": "Ecommerce Retention Automation | Revomatix",
     "metaDescription": "Help subscribers resolve delivery and subscription issues with AI voice follow-up and SMS confirmation. Explore an ecommerce retention pilot.",
@@ -2579,7 +2663,7 @@ export const voicePages: Record<VoicePageConfig["path"], VoicePageConfig> = {
         "One approved action and contact route",
         "Completed changes, later orders and staff time"
       ],
-      "question": "Which subscription cancellation reason would you address first?"
+      "question": "How does your team currently handle a cancellation request or a subscriber who wants to skip a replenishment?"
     },
     "faqs": [
       {
