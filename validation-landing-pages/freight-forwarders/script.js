@@ -33,7 +33,7 @@ const COPY = {
     title: 'From request to ready quote',
     intro: 'Your carriers and agents keep using email. Revomatix keeps the replies together and prepares the decision for your manager.',
     steps: [
-      { title: 'Enter the request', body: 'Route, dates, cargo, mode (road, sea or air) and any special conditions.', tag: 'Soon: forward the customer’s email' },
+      { title: 'Enter the request', body: 'Route, dates, cargo, mode (road, sea or air) and any special conditions. Enter it yourself, forward the customer’s email, or let Revomatix read new requests from the mailbox when needed.' },
       { title: 'We email your carriers', body: 'One separate email per carrier or agent, with a reference so replies stay together.' },
       { title: 'We read and compare the replies', body: 'Prices, extras, validity and currency, side by side.' },
       { title: 'You approve and send', body: 'Review the quote with your margin and send it to the customer.' }
@@ -181,7 +181,7 @@ function renderHeroPreview() {
 function renderComparison() {
   const item = COPY.problems.comparison;
   const flow = (items) => items.map((text, index) => `<span>${text}</span>${index < items.length - 1 ? '<b aria-hidden="true">→</b>' : ''}`).join('');
-  document.querySelector('[data-comparison]').innerHTML = `<div class="comparison-title"><span class="example-label">${item.label}</span><h3>${item.title}</h3></div><div class="comparison-row"><strong>Without</strong><div>${flow(item.without)}</div></div><div class="comparison-row is-with"><strong>With Revomatix</strong><div>${flow(item.with)}</div></div>`;
+  document.querySelector('[data-comparison]').innerHTML = `<div class="comparison-title"><span class="example-label">${item.label}</span><h2 id="comparison-title">${item.title}</h2><p>See where the manual work disappears while the manager keeps the final decision.</p></div><div class="comparison-grid"><div class="comparison-row"><strong>Without</strong><div>${flow(item.without)}</div></div><div class="comparison-row is-with"><strong>With Revomatix</strong><div>${flow(item.with)}</div></div></div>`;
 }
 
 function requestRows(items, selectedId) {
@@ -245,7 +245,7 @@ function renderCopy() {
   document.querySelectorAll('[data-copy]').forEach((element) => { const value = getCopyValue(element.dataset.copy); if (typeof value === 'string') element.textContent = value; });
   document.querySelector('[data-list="hero.modes"]').innerHTML = COPY.hero.modes.map((mode) => `<span class="mode-pill ${safeClass(mode)}">${mode}</span>`).join('');
   document.querySelector('[data-list="problems.items"]').innerHTML = COPY.problems.items.map((item) => `<article class="pain-card"><span class="pain-icon">${ICONS[item.icon]}</span><h3>${item.title}</h3><p>${item.feels}</p><div class="pain-action"><strong>Revomatix</strong><span>${item.action}</span></div></article>`).join('');
-  document.querySelector('[data-list="workflow.steps"]').innerHTML = COPY.workflow.steps.map((item, index) => `<li class="step-card"><span class="step-number">0${index + 1}</span><h3>${item.title}</h3><p>${item.body}</p>${item.tag ? `<span class="soon-tag">${item.tag}</span>` : ''}</li>`).join('');
+  document.querySelector('[data-list="workflow.steps"]').innerHTML = COPY.workflow.steps.map((item, index) => `<li class="step-card"><span class="step-number">0${index + 1}</span><h3>${item.title}</h3><p>${item.body}</p></li>`).join('');
   document.querySelector('[data-list="control.items"]').innerHTML = COPY.control.items.map((item) => `<article class="control-card"><span class="control-icon">${ICONS[item.icon]}</span><h3>${item.title}</h3><p>${item.body}</p></article>`).join('');
   document.querySelector('[data-list="integrations.items"]').innerHTML = COPY.integrations.items.map((name) => `<div><span>${name}</span><span class="coming-badge">Coming soon</span></div>`).join('');
   document.querySelector('[data-list="form.points"]').innerHTML = COPY.form.points.map((item) => `<li>${item}</li>`).join('');
