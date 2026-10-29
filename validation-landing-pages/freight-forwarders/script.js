@@ -1,5 +1,5 @@
 const FORM_ENDPOINT = window.REVOMATIX_FORM_ENDPOINT || '';
-const CONTACT_EMAIL = 'hello@revomatix.example';
+const CONTACT_EMAIL = 'sales@revomatix.com';
 
 const COPY = {
   nav: { cta: 'Get early access' },

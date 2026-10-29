@@ -16,7 +16,7 @@ Open [http://127.0.0.1:4173/freight-forwarders/](http://127.0.0.1:4173/freight-f
 
 - **Copy, integrations, form choices and FAQ:** edit the `COPY` object near the top of `script.js`.
 - **Colours and design tokens:** edit the CSS variables at the top of `styles.css`.
-- **Contact email:** replace `hello@revomatix.example` in `script.js`.
+- **Contact email:** edit `CONTACT_EMAIL` near the top of `script.js`.
 - **Form endpoint:** set `FORM_ENDPOINT` at the top of `script.js` to a Formspree, Netlify Forms-compatible, or similar endpoint. Leave it empty to use the honest mail-client fallback.
 
 The form shows the success message only after a configured endpoint confirms that the submission was accepted. With no endpoint, it opens a pre-filled email and tells the visitor to send it.
@@ -49,7 +49,6 @@ The existing Vite build copies this folder into the production output and keeps 
 
 ## Before launch
 
-1. Replace the placeholder contact email.
-2. Configure and test the form endpoint.
-3. Add a real absolute Open Graph image URL when a share image and public domain are available.
-4. Confirm the final public URL and add a canonical link if required.
+1. Configure and test a form endpoint if you want submissions stored without opening the visitor's email app.
+2. Add a real absolute Open Graph image URL when a share image is available.
+3. Add a canonical link if required.
