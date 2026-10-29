@@ -1,6 +1,6 @@
 # Revomatix freight-forwarder landing page
 
-A standalone, static marketing page for validating Revomatix with road and groupage freight forwarders. It uses plain HTML, CSS and JavaScript. There is no build step, backend, analytics or cookie tracking.
+A standalone, static marketing page for validating Revomatix with road, sea and air freight forwarders. It uses plain HTML, CSS and JavaScript. The page itself has no framework, backend, analytics or cookie tracking.
 
 ## Run locally
 
@@ -14,12 +14,14 @@ Open [http://127.0.0.1:4173/freight-forwarders/](http://127.0.0.1:4173/freight-f
 
 ## Edit the page
 
-- **Copy, integrations, form choices and FAQ:** edit the `COPY` object near the top of `script.js`.
+- **Copy, pain points, workflow, RFQ examples, V2 concept, form choices and FAQ:** edit the `COPY` object near the top of `script.js`.
 - **Colours and design tokens:** edit the CSS variables at the top of `styles.css`.
 - **Contact email:** edit `CONTACT_EMAIL` near the top of `script.js`.
 - **Form endpoint:** set `FORM_ENDPOINT` at the top of `script.js` to a Formspree, Netlify Forms-compatible, or similar endpoint. Leave it empty to use the honest mail-client fallback.
 
 The form shows the success message only after a configured endpoint confirms that the submission was accepted. With no endpoint, it opens a pre-filled email and tells the visitor to send it.
+
+The product examples are illustrative. Mode filters and request rows are interactive, while the delayed carrier reply is a visual simulation. `prefers-reduced-motion` disables that animation.
 
 ## Deploy
 
