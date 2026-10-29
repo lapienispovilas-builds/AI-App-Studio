@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/", "destination": "/freight-forwarders/index.html" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }

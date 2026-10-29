@@ -4,7 +4,7 @@ const path = window.location.pathname.replace(/\/$/, '') || '/'
 
 async function start() {
   if (path === '/') {
-    window.location.replace(`/moving${window.location.search}${window.location.hash}`)
+    window.location.replace(`/freight-forwarders/index.html${window.location.search}${window.location.hash}`)
     return
   }
 

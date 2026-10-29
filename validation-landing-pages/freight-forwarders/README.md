@@ -4,13 +4,13 @@ A standalone, static marketing page for validating Revomatix with road and group
 
 ## Run locally
 
-From the repository root:
+From the `validation-landing-pages` directory:
 
 ```bash
-python3 -m http.server 4173 --directory freight-forwarders
+python3 -m http.server 4173
 ```
 
-Open [http://127.0.0.1:4173](http://127.0.0.1:4173).
+Open [http://127.0.0.1:4173/freight-forwarders/](http://127.0.0.1:4173/freight-forwarders/).
 
 ## Edit the page
 
@@ -23,15 +23,15 @@ The form shows the success message only after a configured endpoint confirms tha
 
 ## Deploy
 
-This folder can be deployed without a build command.
+The existing Vite build copies this folder into the production output. Vercel rewrites the root URL to this page while preserving the existing industry routes.
 
 ### Vercel
 
-1. Import the Git repository.
-2. Set **Root Directory** to `validation-landing-pages/freight-forwarders` if the repository root is `AI-App-Studio`, or `freight-forwarders` if the Vite project is the repository root.
-3. Choose **Other** as the framework preset.
-4. Leave Build Command empty and set Output Directory to `.`.
-5. Deploy, then add the production form endpoint and contact email before outreach.
+1. Use the existing Revomatix Vercel project.
+2. Keep its current Vite build settings and repository root.
+3. Push these changes to the production branch.
+4. Vercel will build the existing app, copy this page and serve it at `/`.
+5. Verify `/`, `/moving` and another existing industry route after deployment.
 
 ### Netlify
 
