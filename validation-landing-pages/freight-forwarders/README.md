@@ -23,7 +23,7 @@ The form shows the success message only after a configured endpoint confirms tha
 
 ## Deploy
 
-The existing Vite build copies this folder into the production output. Vercel rewrites the root URL to this page while preserving the existing industry routes.
+The existing Vite build copies this folder into the production output and keeps the React application shell as `app.html`. Vercel serves this page at the root URL while preserving the existing industry routes through that application shell.
 
 ### Vercel
 
