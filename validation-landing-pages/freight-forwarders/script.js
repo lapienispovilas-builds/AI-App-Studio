@@ -39,6 +39,22 @@ const COPY = {
       { title: 'You approve and send', body: 'Review the quote with your margin and send it to the customer.' }
     ]
   },
+  carriers: {
+    title: 'All your carriers in one place',
+    intro: 'Keep your carriers, their lanes and their usual terms together, so every request goes to the right ones.',
+    items: [
+      { title: 'Find the right carrier', body: 'Keep your carrier list by country, lane and transport type: road, sea or air.', icon: 'route' },
+      { title: 'Send one clean request', body: 'Choose several carriers. Each gets a separate email from your own mailbox.', icon: 'mail' },
+      { title: 'Know who answers', body: 'See who replies quickly, who is usually cheapest and who stays silent.', icon: 'clock' },
+      { title: 'Email stays familiar', body: 'Carriers reply by normal email. There is no new portal for them to learn.', icon: 'check' }
+    ],
+    partners: [
+      { name: 'Carrier North', type: 'Road', lanes: 'Baltics · Germany · Benelux', last: '18 min', response: 'Usually within 1 hour' },
+      { name: 'Agent Baltic', type: 'Sea', lanes: 'Klaipeda · Rotterdam · Hamburg', last: '42 min', response: 'Usually same day' },
+      { name: 'Agent Sky', type: 'Air', lanes: 'VNO · FRA · ORD', last: '1 h 12 min', response: 'Usually within 2 hours' },
+      { name: 'Carrier West', type: 'Road', lanes: 'Poland · Germany · France', last: 'No reply', response: '3 of last 5 requests' }
+    ]
+  },
   product: {
     title: 'Road, sea and air quotes in the same desk',
     intro: 'Pick a request, compare the real carrier totals and prepare the next reply. The examples below use made-up data.',
@@ -98,12 +114,17 @@ const COPY = {
     ]
   },
   control: {
-    title: 'Your carriers, your margins, your approval',
+    title: 'We read, we draft, you approve',
+    intro: 'Revomatix prepares the work. Your manager checks the result and makes the decision.',
     items: [
-      { title: 'Your carriers', body: 'Add the carriers and agents you already work with, by mode and lane. We write to them, they reply by email.', icon: 'people' },
-      { title: 'Your margins', body: 'Set your rules once. Every quote shows carrier price, margin and customer price.', icon: 'margin' },
-      { title: 'Your approval', body: 'Every message is checked by a manager before it goes out.', icon: 'check' }
-    ]
+      { step: 'Read', body: 'Carrier replies and attachments are read from your normal email.', icon: 'mail' },
+      { step: 'Draft', body: 'Offers are compared, your margin is applied and the customer reply is prepared.', icon: 'margin' },
+      { step: 'You approve', body: 'Your manager checks every message. Nothing is sent or booked without approval.', icon: 'check' }
+    ],
+    learningTitle: 'The more it works with your carriers, the faster it gets.',
+    learningBody: 'It will learn how your carriers usually quote and how you apply pricing rules from the work your managers approve.',
+    learningBadge: 'Coming soon',
+    note: 'Revomatix is a draft assistant, not an autopilot. Your manager stays in control.'
   },
   integrations: {
     title: 'Next: the best deals from the platforms, in the same place',
@@ -167,7 +188,7 @@ const statusClass = (status) => status === 'Price in' || status === 'Ready to de
 function renderHeroPreview() {
   const target = document.querySelector('[data-hero-preview]');
   target.innerHTML = `
-    <div class="preview-card">
+    <figure class="visual-figure"><div class="preview-card visual-frame">
       <div class="mock-titlebar"><div><span class="example-label">Example</span><strong>RFQ Desk</strong></div><span class="mail-status"><i></i>Email connected</span></div>
       <div class="reply-banner" data-hero-banner><span>↘</span> New carrier reply received</div>
       <div class="preview-body">
@@ -175,7 +196,7 @@ function renderHeroPreview() {
         <div class="preview-table-wrap"><table class="preview-table"><colgroup><col style="width:18%"><col style="width:31%"><col style="width:15%"><col style="width:17%"><col style="width:19%"></colgroup><thead><tr><th>RFQ</th><th>Route</th><th>Replies</th><th>Cheapest</th><th>Status</th></tr></thead><tbody><tr><td>1001</td><td>Vilnius → Berlin</td><td data-hero-replies>1 of 3</td><td data-hero-price>850 EUR</td><td><span class="mock-chip is-needs">Needs you</span></td></tr><tr><td>1004</td><td>Vilnius → Hamburg</td><td>5 of 5</td><td>690 EUR</td><td><span class="mock-chip is-ready">Ready</span></td></tr></tbody></table></div>
         <div class="preview-lower"><div class="preview-quotes"><small>Carrier quotes · RFQ-1001</small><div class="quote-line is-best"><span>Carrier A</span><strong>850 EUR</strong><em>Whole shipment</em></div><div class="quote-line"><span>Carrier B</span><strong>995 EUR</strong><em>Fuel + tail-lift included</em></div></div><div class="preview-draft"><small>Draft customer reply</small><p>We can offer Vilnius to Berlin for <strong>1,050 EUR</strong>.</p><button type="button" tabindex="-1">Review and send</button></div></div>
       </div>
-    </div>`;
+    </div><figcaption class="visual-caption visual-caption-dark">Example quote desk with carrier replies and a draft customer offer.</figcaption></figure>`;
 }
 
 function renderComparison() {
@@ -224,10 +245,10 @@ function renderProductContent() {
 
 function renderProductDemo() {
   const target = document.querySelector('[data-rfq-demo]');
-  target.innerHTML = `<div class="rfq-shell"><div class="rfq-titlebar"><div><strong>RFQ Desk</strong><span class="example-label">Example data</span></div><div class="rfq-tabs">${COPY.product.tabs.map((tab, index) => `<button type="button" class="${index === 0 ? 'is-active' : ''}" ${index ? 'aria-disabled="true"' : ''}>${tab}</button>`).join('')}</div></div>
+  target.innerHTML = `<figure class="visual-figure"><div class="rfq-shell visual-frame"><div class="rfq-titlebar"><div><strong>RFQ Desk</strong><span class="example-label">Example data</span></div><div class="rfq-tabs">${COPY.product.tabs.map((tab, index) => `<button type="button" class="${index === 0 ? 'is-active' : ''}" ${index ? 'aria-disabled="true"' : ''}>${tab}</button>`).join('')}</div></div>
     <div class="rfq-toolbar"><div class="filter-chips">${COPY.product.filters.map((filter) => `<button type="button" class="${filter === selectedFilter ? 'is-active' : ''}" data-mode-filter="${filter}">${filter}</button>`).join('')}</div><span>${COPY.product.summary}</span></div>
     <div class="rfq-grid"><div class="request-panel"><div class="request-table-wrap"><table class="request-table"><thead><tr><th>Request</th><th>Mode</th><th>Route</th><th>Replies</th><th>Cheapest</th><th>Status</th></tr></thead><tbody data-request-body></tbody></table></div></div><div class="detail-panel" data-detail-panel></div></div>
-    <p class="rfq-footer">${COPY.product.footer}</p></div>`;
+    <p class="rfq-footer">${COPY.product.footer}</p></div><figcaption class="visual-caption visual-caption-dark">Carrier replies compared side by side, with the manager’s margin and draft reply.</figcaption></figure>`;
   target.querySelectorAll('[data-mode-filter]').forEach((button) => button.addEventListener('click', () => {
     selectedFilter = button.dataset.modeFilter;
     target.querySelectorAll('[data-mode-filter]').forEach((item) => item.classList.toggle('is-active', item === button));
@@ -236,9 +257,14 @@ function renderProductDemo() {
   renderProductContent();
 }
 
+function renderPartnerDemo() {
+  const rows = COPY.carriers.partners.map((partner) => `<tr><td data-label="Carrier"><strong>${partner.name}</strong></td><td data-label="Type"><span class="mode-pill ${safeClass(partner.type)}">${partner.type}</span></td><td data-label="Lanes">${partner.lanes}</td><td data-label="Last reply">${partner.last}</td><td data-label="Usual response">${partner.response}</td></tr>`).join('');
+  document.querySelector('[data-partner-demo]').innerHTML = `<figure class="visual-figure"><div class="partner-shell visual-frame"><div class="partner-topbar"><div><strong>Carrier list</strong><span class="example-label">Example data</span></div><span>4 partners</span></div><div class="partner-table-wrap"><table class="partner-table"><thead><tr><th>Carrier</th><th>Type</th><th>Lanes</th><th>Last reply</th><th>Usual response</th></tr></thead><tbody>${rows}</tbody></table></div></div><figcaption class="visual-caption">Fictional carrier records grouped by transport type, lanes and response habits.</figcaption></figure>`;
+}
+
 function renderConcept() {
   const data = COPY.integrations.concept;
-  document.querySelector('[data-concept-preview]').innerHTML = `<div class="concept-shell"><div class="concept-topbar"><div><span class="coming-badge">Concept preview · Coming soon</span><h3>${data.title}</h3></div><span class="example-label">Example</span></div><div class="concept-grid"><aside class="source-panel"><strong>Sources</strong>${data.sources.map((source, index) => `<div class="source-chip ${index === 0 ? 'is-active' : ''}"><span>${source}</span>${index ? '<small>Coming soon</small>' : '<small>Active</small>'}</div>`).join('')}<div class="source-chip"><span>More sources for sea and air later</span></div></aside><div class="offers-panel"><div class="offers-head"><strong>Ranked offers</strong><span>Best options first</span></div>${data.offers.map((offer) => `<div class="offer-row"><span class="offer-rank">${offer.rank}</span><div><strong>${offer.carrier}</strong><small>${offer.source}</small></div><div><strong>${offer.price}</strong><small>Pickup ${offer.pickup}</small></div>${offer.tag ? `<span class="offer-tag">${offer.tag}</span>` : '<span></span>'}<button type="button">Open thread</button></div>`).join('')}</div><aside class="match-card"><span class="example-label">Example</span><small>New load matches your lanes</small><h4>Vilnius → Berlin</h4><p>2 pallets · 640 kg<br>Pickup tomorrow</p><button type="button">Offer to carriers</button></aside></div></div>`;
+  document.querySelector('[data-concept-preview]').innerHTML = `<figure class="visual-figure"><div class="concept-shell visual-frame"><div class="concept-topbar"><div><span class="coming-badge">Concept preview · Coming soon</span><h3>${data.title}</h3></div><span class="example-label">Example</span></div><div class="concept-grid"><aside class="source-panel"><strong>Sources</strong>${data.sources.map((source, index) => `<div class="source-chip ${index === 0 ? 'is-active' : ''}"><span>${source}</span>${index ? '<small>Coming soon</small>' : '<small>Active</small>'}</div>`).join('')}<div class="source-chip"><span>More sources for sea and air later</span></div></aside><div class="offers-panel"><div class="offers-head"><strong>Ranked offers</strong><span>Best options first</span></div>${data.offers.map((offer) => `<div class="offer-row"><span class="offer-rank">${offer.rank}</span><div><strong>${offer.carrier}</strong><small>${offer.source}</small></div><div><strong>${offer.price}</strong><small>Pickup ${offer.pickup}</small></div>${offer.tag ? `<span class="offer-tag">${offer.tag}</span>` : '<span></span>'}<button type="button">Open thread</button></div>`).join('')}</div><aside class="match-card"><span class="example-label">Example</span><small>New load matches your lanes</small><h4>Vilnius → Berlin</h4><p>2 pallets · 640 kg<br>Pickup tomorrow</p><button type="button">Offer to carriers</button></aside></div></div><figcaption class="visual-caption">Concept: planned platform offers and carrier emails ranked in one view.</figcaption></figure>`;
 }
 
 function renderCopy() {
@@ -246,14 +272,16 @@ function renderCopy() {
   document.querySelector('[data-list="hero.modes"]').innerHTML = COPY.hero.modes.map((mode) => `<span class="mode-pill ${safeClass(mode)}">${mode}</span>`).join('');
   document.querySelector('[data-list="problems.items"]').innerHTML = COPY.problems.items.map((item) => `<article class="pain-card"><span class="pain-icon">${ICONS[item.icon]}</span><h3>${item.title}</h3><p>${item.feels}</p><div class="pain-action"><strong>Revomatix</strong><span>${item.action}</span></div></article>`).join('');
   document.querySelector('[data-list="workflow.steps"]').innerHTML = COPY.workflow.steps.map((item, index) => `<li class="step-card"><span class="step-number">0${index + 1}</span><h3>${item.title}</h3><p>${item.body}</p></li>`).join('');
-  document.querySelector('[data-list="control.items"]').innerHTML = COPY.control.items.map((item) => `<article class="control-card"><span class="control-icon">${ICONS[item.icon]}</span><h3>${item.title}</h3><p>${item.body}</p></article>`).join('');
+  document.querySelector('[data-list="carriers.items"]').innerHTML = COPY.carriers.items.map((item) => `<article class="carrier-benefit"><span class="control-icon">${ICONS[item.icon]}</span><h3>${item.title}</h3><p>${item.body}</p></article>`).join('');
+  document.querySelector('[data-list="control.items"]').innerHTML = COPY.control.items.map((item, index) => `<article class="approval-step"><span class="approval-number">0${index + 1}</span><span class="control-icon">${ICONS[item.icon]}</span><h3>${item.step}</h3><p>${item.body}</p></article>`).join('<span class="approval-arrow" aria-hidden="true">→</span>');
+  document.querySelector('[data-learning-note]').innerHTML = `<div><span class="coming-badge">${COPY.control.learningBadge}</span><h3>${COPY.control.learningTitle}</h3><p>${COPY.control.learningBody}</p></div><p class="manager-note">${COPY.control.note}</p>`;
   document.querySelector('[data-list="integrations.items"]').innerHTML = COPY.integrations.items.map((name) => `<div><span>${name}</span><span class="coming-badge">Coming soon</span></div>`).join('');
   document.querySelector('[data-list="form.points"]').innerHTML = COPY.form.points.map((item) => `<li>${item}</li>`).join('');
   document.querySelector('[data-modes]').innerHTML = COPY.form.modes.map((mode) => `<label class="check-option"><input type="checkbox" name="modes" value="${mode}" /><span>${mode}</span></label>`).join('');
   document.querySelector('[data-platforms]').innerHTML = COPY.form.platforms.map((platform) => `<label class="check-option"><input type="checkbox" name="platforms" value="${platform}" /><span>${platform}</span></label>`).join('');
   document.querySelector('[data-list="faq.items"]').innerHTML = COPY.faq.items.map((item) => `<details class="faq-item"><summary>${item.question}</summary><p>${item.answer}</p></details>`).join('');
   const contact = document.querySelector('[data-contact-email]'); contact.textContent = CONTACT_EMAIL; contact.href = `mailto:${CONTACT_EMAIL}`;
-  renderHeroPreview(); renderComparison(); renderProductDemo(); renderConcept();
+  renderHeroPreview(); renderComparison(); renderPartnerDemo(); renderProductDemo(); renderConcept();
 }
 
 function setupNavigation() {

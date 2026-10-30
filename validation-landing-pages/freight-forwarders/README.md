@@ -14,14 +14,14 @@ Open [http://127.0.0.1:4173/freight-forwarders/](http://127.0.0.1:4173/freight-f
 
 ## Edit the page
 
-- **Copy, pain points, workflow, RFQ examples, V2 concept, form choices and FAQ:** edit the `COPY` object near the top of `script.js`.
+- **Copy, pain points, workflow, carrier list, manager-approval flow, RFQ examples, V2 concept, form choices and FAQ:** edit the `COPY` object near the top of `script.js`.
 - **Colours and design tokens:** edit the CSS variables at the top of `styles.css`.
 - **Contact email:** edit `CONTACT_EMAIL` near the top of `script.js`.
 - **Form endpoint:** set `FORM_ENDPOINT` at the top of `script.js` to a Formspree, Netlify Forms-compatible, or similar endpoint. Leave it empty to use the honest mail-client fallback.
 
 The form shows the success message only after a configured endpoint confirms that the submission was accepted. With no endpoint, it opens a pre-filled email and tells the visitor to send it.
 
-The product examples are illustrative. Mode filters and request rows are interactive, while the delayed carrier reply is a visual simulation. `prefers-reduced-motion` disables that animation.
+The product examples use fictional data. Mode filters and request rows are interactive, while the delayed carrier reply is a visual simulation. The platform board and adaptive-learning note are visibly marked as coming soon. `prefers-reduced-motion` disables the reply animation.
 
 ## Deploy
 
